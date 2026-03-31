@@ -1,0 +1,72 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getDb } from '@/lib/mongodb';
+import { ObjectId } from 'mongodb';
+
+export async function GET(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  try {
+    const params = await context.params;
+    const db = await getDb();
+    const program = await db.collection('programs').findOne({ _id: new ObjectId(params.id) });
+    
+    if (!program) {
+      return NextResponse.json({ success: false, error: 'Program not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, data: program });
+  } catch (error) {
+    console.error('Error fetching program:', error);
+    return NextResponse.json({ success: false, error: 'Failed to fetch program' }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  try {
+    const params = await context.params;
+    const body = await req.json();
+    const { name, duration, university, description } = body;
+
+    if (!name || !duration) {
+      return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
+    }
+
+    const db = await getDb();
+    const result = await db.collection('programs').updateOne(
+      { _id: new ObjectId(params.id) },
+      {
+        $set: {
+          name,
+          duration,
+          university: university || '',
+          description: description || '',
+          updatedAt: new Date(),
+        }
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ success: false, error: 'Program not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, data: { _id: params.id, name, duration, university, description } });
+  } catch (error) {
+    console.error('Error updating program:', error);
+    return NextResponse.json({ success: false, error: 'Failed to update program' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  try {
+    const params = await context.params;
+    const db = await getDb();
+    const result = await db.collection('programs').deleteOne({ _id: new ObjectId(params.id) });
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json({ success: false, error: 'Program not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, data: { deleted: true } });
+  } catch (error) {
+    console.error('Error deleting program:', error);
+    return NextResponse.json({ success: false, error: 'Failed to delete program' }, { status: 500 });
+  }
+}
