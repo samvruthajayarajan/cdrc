@@ -9,7 +9,7 @@ export default function AdminDashboard() {
     totalUniversities: 0,
     totalPrograms: 0,
     totalEnrollments: 0,
-    totalStudents: 0
+    totalContacts: 0
   });
   const [migrating, setMigrating] = useState(false);
   const [migrateMessage, setMigrateMessage] = useState('');
@@ -20,14 +20,31 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
+      // Fetch real data from APIs
+      const [universitiesRes, enrollmentsRes, contactsRes] = await Promise.all([
+        fetch('/api/universities'),
+        fetch('/api/enrollments'),
+        fetch('/api/contact')
+      ]);
+
+      const universitiesData = await universitiesRes.json();
+      const enrollmentsData = await enrollmentsRes.json();
+      const contactsData = await contactsRes.json();
+
       setStats({
-        totalUniversities: 14,
-        totalPrograms: 120,
-        totalEnrollments: 450,
-        totalStudents: 10000
+        totalUniversities: universitiesData.success ? universitiesData.data.length : 0,
+        totalPrograms: 0, // Will be calculated from universities data
+        totalEnrollments: enrollmentsData.success ? enrollmentsData.data.length : 0,
+        totalContacts: contactsData.success ? contactsData.data.length : 0
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
+      setStats({
+        totalUniversities: 0,
+        totalPrograms: 0,
+        totalEnrollments: 0,
+        totalContacts: 0
+      });
     }
   };
 
@@ -240,71 +257,12 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
-            0
+            {stats.totalContacts}
           </div>
         </Link>
       </div>
 
-      {/* Recent Enrollments Table */}
-      <div style={{
-        background: '#fff',
-        borderRadius: '12px',
-        padding: '2rem',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-        border: '1px solid #e5e7eb',
-        marginBottom: '2rem'
-      }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1f2937', marginBottom: '1.5rem' }}>
-          Recent Enrollments
-        </h2>
-        
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
-                <th style={{ textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6b7280' }}>Name</th>
-                <th style={{ textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6b7280' }}>Program</th>
-                <th style={{ textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6b7280' }}>Date</th>
-                <th style={{ textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6b7280' }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#1f2937' }}>Amit Kumar</td>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>Data Science & Analytics</td>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>2024-03-05</td>
-                <td style={{ padding: '1rem' }}>
-                  <span style={{ padding: '0.25rem 0.75rem', background: '#d1fae5', color: '#065f46', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>
-                    Approved
-                  </span>
-                </td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#1f2937' }}>Priya Patel</td>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>MBA in Finance</td>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>2024-02-10</td>
-                <td style={{ padding: '1rem' }}>
-                  <span style={{ padding: '0.25rem 0.75rem', background: '#fef3c7', color: '#92400e', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>
-                    Pending
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#1f2937' }}>Rahul Sharma</td>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>Computer Science & Engineering</td>
-                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>2024-01-15</td>
-                <td style={{ padding: '1rem' }}>
-                  <span style={{ padding: '0.25rem 0.75rem', background: '#d1fae5', color: '#065f46', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>
-                    Approved
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Migration Section - Keep existing functionality */}
+      {/* Database Management */}
       <div style={{
         background: '#fff',
         borderRadius: '12px',
