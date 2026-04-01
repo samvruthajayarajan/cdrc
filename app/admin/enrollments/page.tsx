@@ -39,6 +39,37 @@ export default function EnrollmentsManagement() {
     }
   };
 
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
+      const response = await fetch(`/api/enrollments/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      
+      if (response.ok) {
+        fetchEnrollments();
+      } else {
+        alert('Failed to update status');
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Error updating status');
+    }
+  };
+
+  const getStatusStyle = (status?: string) => {
+    const currentStatus = status || 'pending';
+    switch (currentStatus) {
+      case 'approved':
+        return { background: '#dcfce7', color: '#16a34a', border: '1px solid #86efac' };
+      case 'rejected':
+        return { background: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5' };
+      default:
+        return { background: '#fef3c7', color: '#d97706', border: '1px solid #fcd34d' };
+    }
+  };
+
   const filteredEnrollments = enrollments.filter(enr =>
     enr.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     enr.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -47,31 +78,31 @@ export default function EnrollmentsManagement() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
+    <div style={{ minHeight: '100vh', background: '#fff' }}>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
+        background: '#fff',
         padding: '2rem',
-        color: '#fff'
+        borderBottom: '1px solid #e2e8f0'
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <Link href="/admin" style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            color: '#fff',
+            color: '#1e40af',
             textDecoration: 'none',
             marginBottom: '1rem',
-            opacity: 0.9
+            fontWeight: 600
           }}>
             <ArrowLeft size={20} />
             Back to Dashboard
           </Link>
           <div>
-            <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem' }}>
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937' }}>
               Enrollment Inquiries
             </h1>
-            <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>
+            <p style={{ fontSize: '1.1rem', color: '#6b7280' }}>
               {enrollments.length} inquiries received
             </p>
           </div>
@@ -191,7 +222,8 @@ export default function EnrollmentsManagement() {
                         padding: '0.75rem',
                         background: '#f8fafc',
                         borderRadius: '0.5rem',
-                        border: '1px solid #e2e8f0'
+                        border: '1px solid #e2e8f0',
+                        marginBottom: '1rem'
                       }}>
                         <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '0.25rem' }}>
                           MESSAGE
@@ -201,6 +233,33 @@ export default function EnrollmentsManagement() {
                         </div>
                       </div>
                     )}
+
+                    {/* Status Dropdown */}
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+                        Status
+                      </div>
+                      <select
+                        value={enr.status || 'pending'}
+                        onChange={(e) => handleStatusChange(enr._id || '', e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '0.625rem 0.875rem',
+                          borderRadius: '0.5rem',
+                          border: '2px solid #e2e8f0',
+                          fontSize: '0.875rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          outline: 'none',
+                          transition: 'all 0.3s',
+                          ...getStatusStyle(enr.status)
+                        }}
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 

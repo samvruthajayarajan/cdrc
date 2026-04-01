@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Mail, Phone, Users, Clock } from '@/components/Icon';
+import { ArrowLeft, Mail, Phone, Users, Clock, Eye, Trash2 } from '@/components/Icon';
 
 interface ContactMessage {
   _id: string;
@@ -37,6 +37,29 @@ export default function ContactMessagesPage() {
     }
   };
 
+  const handleDelete = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete the message from ${name}?`)) return;
+
+    try {
+      const response = await fetch(`/api/contact/${id}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        alert('Message deleted successfully!');
+        if (selectedMessage?._id === id) {
+          setSelectedMessage(null);
+        }
+        fetchMessages();
+      } else {
+        alert('Failed to delete message');
+      }
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      alert('Error deleting message');
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -49,30 +72,30 @@ export default function ContactMessagesPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
+    <div style={{ minHeight: '100vh', background: '#fff' }}>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
+        background: '#fff',
         padding: '2rem',
-        color: '#fff'
+        borderBottom: '1px solid #e2e8f0'
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <Link href="/admin" style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            color: '#fff',
+            color: '#1e40af',
             textDecoration: 'none',
             marginBottom: '1rem',
-            opacity: 0.9
+            fontWeight: 600
           }}>
             <ArrowLeft size={20} />
             Back to Dashboard
           </Link>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 900 }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#1f2937' }}>
             Contact Messages
           </h1>
-          <p style={{ opacity: 0.9, marginTop: '0.5rem' }}>
+          <p style={{ color: '#6b7280', marginTop: '0.5rem' }}>
             {messages.length} total messages
           </p>
         </div>
@@ -204,12 +227,86 @@ export default function ContactMessagesPage() {
                   <div style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
+                    justifyContent: 'space-between',
                     gap: '0.5rem',
-                    fontSize: '0.75rem',
-                    color: '#94a3b8'
+                    paddingTop: '0.75rem',
+                    borderTop: '1px solid #e2e8f0',
+                    marginTop: '0.75rem'
                   }}>
-                    <Clock size={14} />
-                    {formatDate(msg.createdAt)}
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '0.5rem',
+                      fontSize: '0.75rem',
+                      color: '#94a3b8'
+                    }}>
+                      <Clock size={14} />
+                      {formatDate(msg.createdAt)}
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedMessage(msg);
+                        }}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.375rem',
+                          padding: '0.375rem 0.75rem',
+                          background: '#dbeafe',
+                          color: '#1e40af',
+                          border: 'none',
+                          borderRadius: '0.5rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          transition: 'all 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#1e40af';
+                          e.currentTarget.style.color = '#fff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = '#dbeafe';
+                          e.currentTarget.style.color = '#1e40af';
+                        }}
+                      >
+                        <Eye size={14} />
+                        View
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(msg._id, msg.name);
+                        }}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.375rem',
+                          padding: '0.375rem 0.75rem',
+                          background: '#fee2e2',
+                          color: '#dc2626',
+                          border: 'none',
+                          borderRadius: '0.5rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          transition: 'all 0.3s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#dc2626';
+                          e.currentTarget.style.color = '#fff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = '#fee2e2';
+                          e.currentTarget.style.color = '#dc2626';
+                        }}
+                      >
+                        <Trash2 size={14} />
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

@@ -61,286 +61,287 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: '2.5rem', background: '#fff', minHeight: '100vh' }}>
       {/* Header */}
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem' }}>
-          Dashboard Overview
+      <div style={{ marginBottom: '2.5rem' }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937', marginBottom: '0.5rem', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+          Dashboard
         </h1>
-        <p style={{ color: '#64748b', fontSize: '1rem' }}>
-          Welcome back! Here's what's happening with your platform today.
-        </p>
       </div>
 
       {/* Stats Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
         gap: '1.5rem',
         marginBottom: '2.5rem'
       }}>
-        {statCards.map((stat, index) => (
-          <Link
-            key={index}
-            href={stat.link}
-            style={{
-              textDecoration: 'none',
-              background: '#fff',
-              borderRadius: '1.25rem',
-              padding: '1.75rem',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-              border: '1px solid #e2e8f0',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.1)';
-              e.currentTarget.style.borderColor = stat.color;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
-              e.currentTarget.style.borderColor = '#e2e8f0';
-            }}
-          >
-            <div style={{
-              position: 'absolute',
-              top: '-20px',
-              right: '-20px',
-              width: '100px',
-              height: '100px',
-              background: stat.bgColor,
-              borderRadius: '50%',
-              opacity: 0.5
-            }} />
-            
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
-                <div style={{
-                  width: '56px',
-                  height: '56px',
-                  background: stat.bgColor,
-                  borderRadius: '14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: stat.color
-                }}>
-                  {stat.icon}
-                </div>
-                <span style={{
-                  padding: '0.375rem 0.75rem',
-                  background: '#dcfce7',
-                  color: '#16a34a',
-                  borderRadius: '1rem',
-                  fontSize: '0.75rem',
-                  fontWeight: 700
-                }}>
-                  {stat.change}
-                </span>
-              </div>
-              
-              <h3 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.25rem' }}>
-                {stat.value.toLocaleString()}
-              </h3>
-              <p style={{ fontSize: '0.875rem', color: '#64748b', fontWeight: 500 }}>
-                {stat.label}
-              </p>
+        <Link
+          href="/admin/universities"
+          style={{
+            textDecoration: 'none',
+            background: '#fff',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+            border: '1px solid #e5e7eb',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Universities</span>
+            <div style={{ width: '32px', height: '32px', background: '#dbeafe', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <GraduationCap size={18} color="#3b82f6" />
             </div>
-          </Link>
-        ))}
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+            {stats.totalUniversities}
+          </div>
+        </Link>
+
+        <Link
+          href="/admin/programs"
+          style={{
+            textDecoration: 'none',
+            background: '#fff',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+            border: '1px solid #e5e7eb',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Programs</span>
+            <div style={{ width: '32px', height: '32px', background: '#fef3c7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <BookOpen size={18} color="#f59e0b" />
+            </div>
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+            {stats.totalPrograms}
+          </div>
+        </Link>
+
+        <Link
+          href="/admin/open-school"
+          style={{
+            textDecoration: 'none',
+            background: '#fff',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+            border: '1px solid #e5e7eb',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Open School Courses</span>
+            <div style={{ width: '32px', height: '32px', background: '#d1fae5', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <BookOpen size={18} color="#10b981" />
+            </div>
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+            5
+          </div>
+        </Link>
+
+        <Link
+          href="/admin/enrollments"
+          style={{
+            textDecoration: 'none',
+            background: '#fff',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+            border: '1px solid #e5e7eb',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Enrollments</span>
+            <div style={{ width: '32px', height: '32px', background: '#e9d5ff', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Users size={18} color="#a855f7" />
+            </div>
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+            {stats.totalEnrollments}
+          </div>
+        </Link>
+
+        <Link
+          href="/admin/contacts"
+          style={{
+            textDecoration: 'none',
+            background: '#fff',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+            border: '1px solid #e5e7eb',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Contact Messages</span>
+            <div style={{ width: '32px', height: '32px', background: '#fee2e2', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+          </div>
+          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+            0
+          </div>
+        </Link>
       </div>
 
-      {/* Quick Actions */}
+      {/* Recent Enrollments Table */}
       <div style={{
         background: '#fff',
-        borderRadius: '1.25rem',
+        borderRadius: '12px',
         padding: '2rem',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-        border: '1px solid #e2e8f0',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+        border: '1px solid #e5e7eb',
         marginBottom: '2rem'
       }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '1.5rem' }}>
-          Quick Actions
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1f2937', marginBottom: '1.5rem' }}>
+          Recent Enrollments
         </h2>
         
-        {/* Migration Button */}
-        <div style={{ marginBottom: '1.5rem', padding: '1rem', background: '#fef3c7', borderRadius: '0.75rem', border: '1px solid #fbbf24' }}>
-          <p style={{ fontSize: '0.9rem', color: '#92400e', marginBottom: '0.75rem' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
+                <th style={{ textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6b7280' }}>Name</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6b7280' }}>Program</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6b7280' }}>Date</th>
+                <th style={{ textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: '#6b7280' }}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#1f2937' }}>Amit Kumar</td>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>Data Science & Analytics</td>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>2024-03-05</td>
+                <td style={{ padding: '1rem' }}>
+                  <span style={{ padding: '0.25rem 0.75rem', background: '#d1fae5', color: '#065f46', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>
+                    Approved
+                  </span>
+                </td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#1f2937' }}>Priya Patel</td>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>MBA in Finance</td>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>2024-02-10</td>
+                <td style={{ padding: '1rem' }}>
+                  <span style={{ padding: '0.25rem 0.75rem', background: '#fef3c7', color: '#92400e', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>
+                    Pending
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#1f2937' }}>Rahul Sharma</td>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>Computer Science & Engineering</td>
+                <td style={{ padding: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>2024-01-15</td>
+                <td style={{ padding: '1rem' }}>
+                  <span style={{ padding: '0.25rem 0.75rem', background: '#d1fae5', color: '#065f46', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>
+                    Approved
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Migration Section - Keep existing functionality */}
+      <div style={{
+        background: '#fff',
+        borderRadius: '12px',
+        padding: '2rem',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+        border: '1px solid #e5e7eb'
+      }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1f2937', marginBottom: '1.5rem' }}>
+          Database Management
+        </h2>
+        
+        <div style={{ padding: '1.25rem', background: '#fef3c7', borderRadius: '8px', border: '1px solid #fbbf24', marginBottom: '1rem' }}>
+          <p style={{ fontSize: '0.875rem', color: '#92400e', marginBottom: '1rem', lineHeight: 1.6 }}>
             <strong>Database Migration:</strong> Click below to add slugs to existing universities (required for detail pages to work)
           </p>
           <button
             onClick={handleMigrate}
             disabled={migrating}
             style={{
-              padding: '0.75rem 1.5rem',
-              background: migrating ? '#94a3b8' : '#1e40af',
+              padding: '0.625rem 1.25rem',
+              background: migrating ? '#9ca3af' : '#1e40af',
               color: '#fff',
               border: 'none',
-              borderRadius: '0.5rem',
+              borderRadius: '6px',
               fontWeight: 600,
               cursor: migrating ? 'not-allowed' : 'pointer',
-              fontSize: '0.9rem'
+              fontSize: '0.875rem',
+              transition: 'all 0.2s'
             }}
           >
             {migrating ? 'Migrating...' : 'Run Migration'}
           </button>
           {migrateMessage && (
-            <p style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: migrateMessage.includes('✅') ? '#16a34a' : '#dc2626' }}>
+            <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: migrateMessage.includes('✅') ? '#16a34a' : '#dc2626', fontWeight: 500 }}>
               {migrateMessage}
             </p>
           )}
-        </div>
-        
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '1rem'
-        }}>
-          <Link
-            href="/admin/universities/create"
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              padding: '1.25rem 1.5rem',
-              background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-              color: '#fff',
-              borderRadius: '1rem',
-              fontWeight: 600,
-              fontSize: '0.95rem',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(59, 130, 246, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
-            }}
-          >
-            <div style={{
-              width: '40px',
-              height: '40px',
-              background: 'rgba(255,255,255,0.2)',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <Plus size={22} />
-            </div>
-            <div>
-              <div style={{ fontWeight: 700, marginBottom: '0.125rem' }}>Add University</div>
-              <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>Create new university profile</div>
-            </div>
-          </Link>
-
-          <Link
-            href="/admin/programs/create"
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              padding: '1.25rem 1.5rem',
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-              color: '#fff',
-              borderRadius: '1rem',
-              fontWeight: 600,
-              fontSize: '0.95rem',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
-            }}
-          >
-            <div style={{
-              width: '40px',
-              height: '40px',
-              background: 'rgba(255,255,255,0.2)',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <Plus size={22} />
-            </div>
-            <div>
-              <div style={{ fontWeight: 700, marginBottom: '0.125rem' }}>Add Program</div>
-              <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>Create new academic program</div>
-            </div>
-          </Link>
-
-          <Link
-            href="/admin/enrollments"
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              padding: '1.25rem 1.5rem',
-              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-              color: '#fff',
-              borderRadius: '1rem',
-              fontWeight: 600,
-              fontSize: '0.95rem',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 20px rgba(245, 158, 11, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(245, 158, 11, 0.3)';
-            }}
-          >
-            <div style={{
-              width: '40px',
-              height: '40px',
-              background: 'rgba(255,255,255,0.2)',
-              borderRadius: '10px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <Users size={22} />
-            </div>
-            <div>
-              <div style={{ fontWeight: 700, marginBottom: '0.125rem' }}>View Enrollments</div>
-              <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>Manage student applications</div>
-            </div>
-          </Link>
-        </div>
-      </div>
-
-      {/* Recent Activity */}
-      <div style={{
-        background: '#fff',
-        borderRadius: '1.25rem',
-        padding: '2rem',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-        border: '1px solid #e2e8f0'
-      }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '1.5rem' }}>
-          Recent Activity
-        </h2>
-        <div style={{ color: '#64748b', textAlign: 'center', padding: '2rem' }}>
-          No recent activity to display
         </div>
       </div>
     </div>

@@ -50,14 +50,7 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* CTA button */}
-          <Link href="/login" style={{
-            background: '#1e40af', color: '#fff', padding: '0.75rem 1.75rem',
-            borderRadius: 50, fontWeight: 600, fontSize: '1rem', textDecoration: 'none',
-            whiteSpace: 'nowrap', flexShrink: 0,
-          }} id="nav-cta">
-            Login
-          </Link>
+
 
           {/* Hamburger — shown on mobile via JS toggle */}
           <button onClick={() => setOpen(!open)} id="hamburger"
@@ -81,13 +74,6 @@ export default function Navbar() {
                 {l.label}
               </Link>
             ))}
-            <Link href="/login" onClick={() => setOpen(false)} style={{
-              display: 'block', textAlign: 'center', margin: '0.5rem 0 0',
-              background: '#1e40af', color: '#fff', padding: '0.75rem',
-              borderRadius: 50, fontWeight: 600, fontSize: '0.875rem', textDecoration: 'none',
-            }}>
-              Login
-            </Link>
           </div>
         )}
       </nav>
@@ -96,7 +82,6 @@ export default function Navbar() {
       <style>{`
         @media (max-width: 768px) {
           #desktop-nav { display: none !important; }
-          #nav-cta { display: none !important; }
           #hamburger { display: flex !important; }
         }
       `}</style>

@@ -332,6 +332,49 @@ export default function ContactPage() {
           }
         `}</style>
       </section>
+
+      {/* Admin Access Section */}
+      <section style={{ padding: '3rem 2rem', background: '#f9fafb', borderTop: '1px solid #e5e7eb' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', textAlign: 'center' }}>
+          <AnimateOnScroll animation="fadeUp">
+            <div style={{ 
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              padding: '0.875rem 2rem',
+              background: '#fff',
+              border: '2px solid #e5e7eb',
+              borderRadius: '50px',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#1e40af';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(30, 64, 175, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = '#e5e7eb';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            onClick={() => window.location.href = '/login'}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e40af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span style={{ 
+                color: '#1e40af', 
+                fontWeight: 600, 
+                fontSize: '0.95rem',
+                letterSpacing: '0.01em'
+              }}>
+                Admin Access
+              </span>
+            </div>
+          </AnimateOnScroll>
+        </div>
+      </section>
     </div>
   );
 }

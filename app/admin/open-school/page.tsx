@@ -64,32 +64,32 @@ export default function OpenSchoolManagement() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
+    <div style={{ minHeight: '100vh', background: '#fff' }}>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
+        background: '#fff',
         padding: '2rem',
-        color: '#fff'
+        borderBottom: '1px solid #e2e8f0'
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <Link href="/admin" style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            color: '#fff',
+            color: '#1e40af',
             textDecoration: 'none',
             marginBottom: '1rem',
-            opacity: 0.9
+            fontWeight: 600
           }}>
             <ArrowLeft size={20} />
             Back to Dashboard
           </Link>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
-              <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem' }}>
+              <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937' }}>
                 Manage Open School
               </h1>
-              <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>
+              <p style={{ fontSize: '1.1rem', color: '#6b7280' }}>
                 {boards.length} boards in total
               </p>
             </div>
@@ -100,8 +100,8 @@ export default function OpenSchoolManagement() {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.875rem 1.5rem',
-                background: '#fff',
-                color: '#1e40af',
+                background: '#1e40af',
+                color: '#fff',
                 borderRadius: '0.75rem',
                 textDecoration: 'none',
                 fontWeight: 600,
@@ -109,7 +109,7 @@ export default function OpenSchoolManagement() {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(255,255,255,0.3)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(30, 64, 175, 0.3)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'scale(1)';

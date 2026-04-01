@@ -64,19 +64,20 @@ export default function UniversitiesManagement() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
+    <div style={{ minHeight: '100vh', background: '#fff' }}>
       {/* Header */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
+        background: '#fff',
         padding: '2rem',
-        color: '#fff'
+        color: '#1f2937',
+        borderBottom: '1px solid #e5e7eb'
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <Link href="/admin" style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            color: '#fff',
+            color: '#6b7280',
             textDecoration: 'none',
             marginBottom: '1rem',
             opacity: 0.9
@@ -86,10 +87,10 @@ export default function UniversitiesManagement() {
           </Link>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
-              <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem' }}>
+              <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937' }}>
                 Manage Universities
               </h1>
-              <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>
+              <p style={{ fontSize: '1.1rem', opacity: 0.9, color: '#6b7280' }}>
                 {universities.length} universities in total
               </p>
             </div>
