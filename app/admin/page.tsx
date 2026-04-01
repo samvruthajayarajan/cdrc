@@ -78,10 +78,10 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div style={{ padding: '2.5rem', background: '#fff', minHeight: '100vh' }}>
+    <div style={{ padding: 'clamp(1rem, 4vw, 2.5rem)', background: '#fff', minHeight: '100vh' }}>
       {/* Header */}
-      <div style={{ marginBottom: '2.5rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937', marginBottom: '0.5rem', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <div style={{ marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
+        <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937', marginBottom: '0.5rem', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
           Dashboard
         </h1>
       </div>
@@ -89,24 +89,24 @@ export default function AdminDashboard() {
       {/* Stats Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: '1.5rem',
-        marginBottom: '2.5rem'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gap: 'clamp(1rem, 3vw, 1.5rem)',
+        marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)'
       }}>
         <Link
           href="/admin/universities"
           style={{
             textDecoration: 'none',
             background: '#fff',
-            borderRadius: '12px',
-            padding: '1.75rem',
+            borderRadius: 'clamp(8px, 2vw, 12px)',
+            padding: 'clamp(1.25rem, 3vw, 1.75rem)',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
             border: '1px solid #e5e7eb',
             transition: 'all 0.2s ease',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem'
+            gap: 'clamp(0.5rem, 2vw, 0.75rem)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
@@ -116,12 +116,12 @@ export default function AdminDashboard() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Universities</span>
-            <div style={{ width: '32px', height: '32px', background: '#dbeafe', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#6b7280', fontWeight: 500 }}>Universities</span>
+            <div style={{ width: 'clamp(28px, 6vw, 32px)', height: 'clamp(28px, 6vw, 32px)', background: '#dbeafe', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <GraduationCap size={18} color="#3b82f6" />
             </div>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
             {stats.totalUniversities}
           </div>
         </Link>
@@ -131,15 +131,15 @@ export default function AdminDashboard() {
           style={{
             textDecoration: 'none',
             background: '#fff',
-            borderRadius: '12px',
-            padding: '1.75rem',
+            borderRadius: 'clamp(8px, 2vw, 12px)',
+            padding: 'clamp(1.25rem, 3vw, 1.75rem)',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
             border: '1px solid #e5e7eb',
             transition: 'all 0.2s ease',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem'
+            gap: 'clamp(0.5rem, 2vw, 0.75rem)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
@@ -149,12 +149,12 @@ export default function AdminDashboard() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Programs</span>
-            <div style={{ width: '32px', height: '32px', background: '#fef3c7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#6b7280', fontWeight: 500 }}>Programs</span>
+            <div style={{ width: 'clamp(28px, 6vw, 32px)', height: 'clamp(28px, 6vw, 32px)', background: '#fef3c7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <BookOpen size={18} color="#f59e0b" />
             </div>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
             {stats.totalPrograms}
           </div>
         </Link>
@@ -164,15 +164,15 @@ export default function AdminDashboard() {
           style={{
             textDecoration: 'none',
             background: '#fff',
-            borderRadius: '12px',
-            padding: '1.75rem',
+            borderRadius: 'clamp(8px, 2vw, 12px)',
+            padding: 'clamp(1.25rem, 3vw, 1.75rem)',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
             border: '1px solid #e5e7eb',
             transition: 'all 0.2s ease',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem'
+            gap: 'clamp(0.5rem, 2vw, 0.75rem)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
@@ -182,12 +182,12 @@ export default function AdminDashboard() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Open School Courses</span>
-            <div style={{ width: '32px', height: '32px', background: '#d1fae5', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#6b7280', fontWeight: 500 }}>Open School Courses</span>
+            <div style={{ width: 'clamp(28px, 6vw, 32px)', height: 'clamp(28px, 6vw, 32px)', background: '#d1fae5', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <BookOpen size={18} color="#10b981" />
             </div>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
             5
           </div>
         </Link>
@@ -197,15 +197,15 @@ export default function AdminDashboard() {
           style={{
             textDecoration: 'none',
             background: '#fff',
-            borderRadius: '12px',
-            padding: '1.75rem',
+            borderRadius: 'clamp(8px, 2vw, 12px)',
+            padding: 'clamp(1.25rem, 3vw, 1.75rem)',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
             border: '1px solid #e5e7eb',
             transition: 'all 0.2s ease',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem'
+            gap: 'clamp(0.5rem, 2vw, 0.75rem)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
@@ -215,12 +215,12 @@ export default function AdminDashboard() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Enrollments</span>
-            <div style={{ width: '32px', height: '32px', background: '#e9d5ff', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#6b7280', fontWeight: 500 }}>Enrollments</span>
+            <div style={{ width: 'clamp(28px, 6vw, 32px)', height: 'clamp(28px, 6vw, 32px)', background: '#e9d5ff', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Users size={18} color="#a855f7" />
             </div>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
             {stats.totalEnrollments}
           </div>
         </Link>
@@ -230,15 +230,15 @@ export default function AdminDashboard() {
           style={{
             textDecoration: 'none',
             background: '#fff',
-            borderRadius: '12px',
-            padding: '1.75rem',
+            borderRadius: 'clamp(8px, 2vw, 12px)',
+            padding: 'clamp(1.25rem, 3vw, 1.75rem)',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
             border: '1px solid #e5e7eb',
             transition: 'all 0.2s ease',
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
-            gap: '0.75rem'
+            gap: 'clamp(0.5rem, 2vw, 0.75rem)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
@@ -248,15 +248,15 @@ export default function AdminDashboard() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>Contact Messages</span>
-            <div style={{ width: '32px', height: '32px', background: '#fee2e2', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#6b7280', fontWeight: 500 }}>Contact Messages</span>
+            <div style={{ width: 'clamp(28px, 6vw, 32px)', height: 'clamp(28px, 6vw, 32px)', background: '#fee2e2', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                 <polyline points="22,6 12,13 2,6"/>
               </svg>
             </div>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
             {stats.totalContacts}
           </div>
         </Link>
@@ -265,38 +265,38 @@ export default function AdminDashboard() {
       {/* Database Management */}
       <div style={{
         background: '#fff',
-        borderRadius: '12px',
-        padding: '2rem',
+        borderRadius: 'clamp(8px, 2vw, 12px)',
+        padding: 'clamp(1.25rem, 3vw, 2rem)',
         boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
         border: '1px solid #e5e7eb'
       }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1f2937', marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 700, color: '#1f2937', marginBottom: 'clamp(1rem, 3vw, 1.5rem)' }}>
           Database Management
         </h2>
         
-        <div style={{ padding: '1.25rem', background: '#fef3c7', borderRadius: '8px', border: '1px solid #fbbf24', marginBottom: '1rem' }}>
-          <p style={{ fontSize: '0.875rem', color: '#92400e', marginBottom: '1rem', lineHeight: 1.6 }}>
+        <div style={{ padding: 'clamp(1rem, 3vw, 1.25rem)', background: '#fef3c7', borderRadius: '8px', border: '1px solid #fbbf24', marginBottom: '1rem' }}>
+          <p style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#92400e', marginBottom: '1rem', lineHeight: 1.6 }}>
             <strong>Database Migration:</strong> Click below to add slugs to existing universities (required for detail pages to work)
           </p>
           <button
             onClick={handleMigrate}
             disabled={migrating}
             style={{
-              padding: '0.625rem 1.25rem',
+              padding: 'clamp(0.5rem, 2vw, 0.625rem) clamp(1rem, 3vw, 1.25rem)',
               background: migrating ? '#9ca3af' : '#1e40af',
               color: '#fff',
               border: 'none',
               borderRadius: '6px',
               fontWeight: 600,
               cursor: migrating ? 'not-allowed' : 'pointer',
-              fontSize: '0.875rem',
+              fontSize: 'clamp(0.75rem, 2vw, 0.875rem)',
               transition: 'all 0.2s'
             }}
           >
             {migrating ? 'Migrating...' : 'Run Migration'}
           </button>
           {migrateMessage && (
-            <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: migrateMessage.includes('✅') ? '#16a34a' : '#dc2626', fontWeight: 500 }}>
+            <p style={{ marginTop: '1rem', fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: migrateMessage.includes('✅') ? '#16a34a' : '#dc2626', fontWeight: 500 }}>
               {migrateMessage}
             </p>
           )}
