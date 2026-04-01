@@ -14,7 +14,23 @@ export default function OpenSchoolPage() {
   const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    fetch('/api/open-school').then(r => r.json()).then(data => { setBoards(data); setLoading(false); }).catch(() => setLoading(false));
+    fetch('/api/open-school')
+      .then(r => r.json())
+      .then(data => { 
+        // Ensure data is an array, if it's an error object or not an array, use empty array
+        if (Array.isArray(data)) {
+          setBoards(data);
+        } else {
+          console.error('API returned non-array data:', data);
+          setBoards([]);
+        }
+        setLoading(false); 
+      })
+      .catch(error => {
+        console.error('Failed to fetch boards:', error);
+        setBoards([]);
+        setLoading(false);
+      });
   }, []);
 
   const toggleProgram = (boardIndex: number, programIndex: number) => {
