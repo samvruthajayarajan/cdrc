@@ -246,7 +246,6 @@ export default function EnrollmentsManagement() {
                           width: '100%',
                           padding: '0.625rem 0.875rem',
                           borderRadius: '0.5rem',
-                          border: '2px solid #e2e8f0',
                           fontSize: '0.875rem',
                           fontWeight: 600,
                           cursor: 'pointer',
