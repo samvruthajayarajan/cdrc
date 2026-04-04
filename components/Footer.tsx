@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 
 const socialLinks = [
@@ -25,8 +26,38 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer style={{ background: '#2d3748', color: '#fff', padding: '3rem 2rem 1.5rem' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+    <footer style={{ 
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e40af 100%)', 
+      color: '#fff', 
+      padding: '4rem 2rem 2rem',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Background decoration */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <div style={{ 
+          position: 'absolute', 
+          top: '20%', 
+          right: '10%', 
+          width: '200px', 
+          height: '200px', 
+          background: 'rgba(255,255,255,0.05)', 
+          borderRadius: '50%', 
+          filter: 'blur(40px)'
+        }} />
+        <div style={{ 
+          position: 'absolute', 
+          bottom: '10%', 
+          left: '15%', 
+          width: '150px', 
+          height: '150px', 
+          background: 'rgba(255,255,255,0.03)', 
+          borderRadius: '50%', 
+          filter: 'blur(30px)'
+        }} />
+      </div>
+      
+      <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(4, 1fr)', 
@@ -37,14 +68,48 @@ export default function Footer() {
 
           {/* About CDRC */}
           <div>
-            <h4 style={{ color: '#60a5fa', fontWeight: 700, marginBottom: '1rem', fontSize: '1rem' }}>About CDRC</h4>
-            <p style={{ color: '#cbd5e0', fontSize: '0.875rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+            <h4 style={{ 
+              color: '#fff', 
+              fontWeight: 700, 
+              marginBottom: '1rem', 
+              fontSize: '1.1rem',
+              textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+            }}>About CDRC</h4>
+            <p style={{ 
+              color: 'rgba(255,255,255,0.9)', 
+              fontSize: '0.9rem', 
+              lineHeight: 1.7, 
+              marginBottom: '1.5rem',
+              textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+            }}>
               Career Development & Research Centre provides quality online education through UGC-approved universities and open schooling programs.
             </p>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               {socialLinks.map((s, i) => (
                 <a key={i} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center text-white no-underline transition-transform hover:scale-110 ${s.bg}`}>
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#fff',
+                    textDecoration: 'none',
+                    transition: 'all 0.3s ease',
+                    background: 'rgba(255,255,255,0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  }}>
                   {s.svg}
                 </a>
               ))}
@@ -53,7 +118,13 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 style={{ color: '#60a5fa', fontWeight: 700, marginBottom: '1rem', fontSize: '1rem' }}>Quick Links</h4>
+            <h4 style={{ 
+              color: '#fff', 
+              fontWeight: 700, 
+              marginBottom: '1rem', 
+              fontSize: '1.1rem',
+              textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+            }}>Quick Links</h4>
             {[
               { href: '/', label: 'Home' },
               { href: '/about', label: 'About Us' },
@@ -63,14 +134,21 @@ export default function Footer() {
             ].map(l => (
               <Link key={l.href} href={l.href} style={{ 
                 display: 'block', 
-                color: '#cbd5e0', 
+                color: 'rgba(255,255,255,0.9)', 
                 textDecoration: 'none', 
-                marginBottom: '0.5rem', 
-                fontSize: '0.875rem',
-                transition: 'color 0.2s'
+                marginBottom: '0.75rem', 
+                fontSize: '0.9rem',
+                transition: 'all 0.3s ease',
+                textShadow: '0 1px 5px rgba(0,0,0,0.2)'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = '#fff'}
-              onMouseLeave={(e) => e.currentTarget.style.color = '#cbd5e0'}>
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#fff';
+                e.currentTarget.style.transform = 'translateX(5px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'rgba(255,255,255,0.9)';
+                e.currentTarget.style.transform = 'translateX(0)';
+              }}>
                 {l.label}
               </Link>
             ))}
@@ -78,23 +156,46 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 style={{ color: '#60a5fa', fontWeight: 700, marginBottom: '1rem', fontSize: '1rem' }}>Contact Info</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'start', gap: '0.5rem' }}>
-                <span style={{ color: '#cbd5e0', fontSize: '0.875rem' }}>✉️</span>
-                <span style={{ color: '#cbd5e0', fontSize: '0.875rem' }}>info@cdrc.edu.in</span>
+            <h4 style={{ 
+              color: '#fff', 
+              fontWeight: 700, 
+              marginBottom: '1rem', 
+              fontSize: '1.1rem',
+              textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+            }}>Contact Info</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
+                <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem' }}>✉️</span>
+                <span style={{ 
+                  color: 'rgba(255,255,255,0.9)', 
+                  fontSize: '0.9rem',
+                  textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+                }}>info@cdrc.edu.in</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'start', gap: '0.5rem' }}>
-                <span style={{ color: '#cbd5e0', fontSize: '0.875rem' }}>📞</span>
-                <span style={{ color: '#cbd5e0', fontSize: '0.875rem' }}>0467-2211200</span>
+              <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
+                <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem' }}>📞</span>
+                <span style={{ 
+                  color: 'rgba(255,255,255,0.9)', 
+                  fontSize: '0.9rem',
+                  textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+                }}>0467-2211200</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'start', gap: '0.5rem' }}>
-                <span style={{ color: '#cbd5e0', fontSize: '0.875rem' }}>📱</span>
-                <span style={{ color: '#cbd5e0', fontSize: '0.875rem' }}>+91 9846446055</span>
+              <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
+                <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem' }}>📱</span>
+                <span style={{ 
+                  color: 'rgba(255,255,255,0.9)', 
+                  fontSize: '0.9rem',
+                  textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+                }}>+91 9846446055</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'start', gap: '0.5rem' }}>
-                <span style={{ color: '#cbd5e0', fontSize: '0.875rem' }}>📍</span>
-                <span style={{ color: '#cbd5e0', fontSize: '0.875rem', lineHeight: 1.5 }}>
+              <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
+                <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem' }}>📍</span>
+                <span style={{ 
+                  color: 'rgba(255,255,255,0.9)', 
+                  fontSize: '0.9rem', 
+                  lineHeight: 1.6,
+                  textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+                }}>
                   City Centre Building, 2nd Floor<br/>
                   Kanhangad, Kasargod<br/>
                   Kerala - 671315
@@ -105,27 +206,55 @@ export default function Footer() {
 
           {/* Office Hours */}
           <div>
-            <h4 style={{ color: '#60a5fa', fontWeight: 700, marginBottom: '1rem', fontSize: '1rem' }}>Office Hours</h4>
-            <div style={{ color: '#cbd5e0', fontSize: '0.875rem', marginBottom: '0.75rem' }}>
-              <div style={{ marginBottom: '0.5rem' }}>Monday - Saturday</div>
-              <div>9:00 AM - 6:00 PM</div>
+            <h4 style={{ 
+              color: '#fff', 
+              fontWeight: 700, 
+              marginBottom: '1rem', 
+              fontSize: '1.1rem',
+              textShadow: '0 2px 10px rgba(0,0,0,0.3)'
+            }}>Office Hours</h4>
+            <div style={{ 
+              color: 'rgba(255,255,255,0.9)', 
+              fontSize: '0.9rem', 
+              marginBottom: '1rem',
+              textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+            }}>
+              <div style={{ marginBottom: '0.75rem', fontWeight: 600 }}>Monday - Saturday</div>
+              <div style={{ marginBottom: '1rem' }}>9:00 AM - 6:00 PM</div>
+              <div style={{ marginBottom: '1.5rem' }}>Sunday: Closed</div>
             </div>
-            <div style={{ color: '#cbd5e0', fontSize: '0.875rem', marginBottom: '1rem' }}>
-              Sunday: Closed
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ color: '#60a5fa', fontSize: '1.25rem' }}>ℹ️</span>
-              <span style={{ color: '#60a5fa', fontSize: '0.875rem', fontWeight: 600 }}>24/7 Online Support Available</span>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.75rem',
+              background: 'rgba(255,255,255,0.1)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '12px',
+              padding: '1rem',
+              border: '1px solid rgba(255,255,255,0.2)'
+            }}>
+              <span style={{ color: '#fff', fontSize: '1.5rem' }}>💬</span>
+              <span style={{ 
+                color: '#fff', 
+                fontSize: '0.9rem', 
+                fontWeight: 600,
+                textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+              }}>24/7 Online Support Available</span>
             </div>
           </div>
         </div>
 
         <div style={{ 
-          borderTop: '1px solid #4a5568', 
-          paddingTop: '1.5rem', 
+          borderTop: '1px solid rgba(255,255,255,0.2)', 
+          paddingTop: '2rem', 
           textAlign: 'center'
         }}>
-          <p style={{ color: '#9ca3af', fontSize: '0.875rem', margin: 0 }}>
+          <p style={{ 
+            color: 'rgba(255,255,255,0.8)', 
+            fontSize: '0.9rem', 
+            margin: 0,
+            textShadow: '0 1px 5px rgba(0,0,0,0.2)'
+          }}>
             © 2025 CDRC - Career Development & Research Centre. All rights reserved.
           </p>
         </div>

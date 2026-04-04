@@ -77,7 +77,9 @@ export default function UniversitiesManagement() {
         background: '#fff',
         padding: 'clamp(1rem, 4vw, 2rem)',
         color: '#1f2937',
-        borderBottom: '1px solid #e5e7eb'
+        borderBottom: '1px solid #e5e7eb',
+        position: 'relative',
+        zIndex: 100
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <Link href="/admin" style={{
@@ -107,6 +109,7 @@ export default function UniversitiesManagement() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '0.5rem',
                 padding: 'clamp(0.75rem, 2vw, 0.875rem) clamp(1rem, 3vw, 1.5rem)',
                 background: '#1e40af',
@@ -116,7 +119,8 @@ export default function UniversitiesManagement() {
                 fontWeight: 600,
                 fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                 transition: 'all 0.3s ease',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                minWidth: 'fit-content'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'scale(1.05)';
@@ -128,7 +132,7 @@ export default function UniversitiesManagement() {
               }}
             >
               <Plus size={20} />
-              <span style={{ display: isMobile ? 'none' : 'inline' }}>Add University</span>
+              Add University
             </Link>
           </div>
         </div>

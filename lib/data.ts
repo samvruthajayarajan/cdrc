@@ -8,6 +8,14 @@ export interface University {
   accreditation: string;
   logoInitial: string;
   programs: Program[];
+  // Extended fields for featured universities
+  id?: string;
+  slug?: string;
+  image?: string;
+  location?: string;
+  description?: string;
+  facilities?: string[];
+  ranking?: string;
 }
 
 export interface OpenSchoolProgram {
@@ -88,6 +96,13 @@ export const universitiesDataExtra: University[] = [
   },
   {
     name: 'AMITY University', accreditation: 'UGC Approved | NAAC A++', logoInitial: 'A',
+    id: 'amity',
+    slug: 'amity',
+    image: 'from-blue-600 to-blue-900',
+    location: 'Noida, Uttar Pradesh',
+    description: 'Amity University is one of India\'s premier private universities, renowned for its world-class infrastructure and academic excellence. With NAAC A++ accreditation and WES recognition, Amity offers globally benchmarked online programs designed for working professionals. Its online programs combine cutting-edge curriculum with flexible learning to help students advance their careers.',
+    facilities: ['Digital Library', 'Online Labs', 'Career Support', 'Live Mentorship', 'Industry Tie-ups', 'Placement Assistance'],
+    ranking: 'NAAC A++',
     programs: [
       { name: 'BACHELOR OF ARTS (BA)', duration: '3 Years' },
       { name: 'BACHELOR OF BUSINESS ADMINISTRATION (BBA)', duration: '3 Years' },
@@ -113,6 +128,13 @@ export const universitiesDataExtra: University[] = [
   },
   {
     name: 'GLA University', accreditation: 'UGC Approved | NAAC Accredited', logoInitial: 'G',
+    id: 'gla',
+    slug: 'gla',
+    image: 'from-green-600 to-green-900',
+    location: 'Mathura, Uttar Pradesh',
+    description: 'GLA University is a leading private university in North India, known for its strong industry connections and placement record. Established in 1991, it offers a wide range of UGC-approved online programs with a focus on practical skills and employability. The university\'s online platform provides a seamless learning experience with dedicated academic support.',
+    facilities: ['E-Learning Portal', 'Virtual Classrooms', 'Placement Cell', 'Online Assessments', 'Study Material', 'Doubt Sessions'],
+    ranking: 'NAAC A',
     programs: [
       { name: 'B COM', duration: '3 Years' },
       { name: 'BBA (MM, HRM, FM, BANKING & INSURANCE)', duration: '3 Years' },
@@ -123,6 +145,13 @@ export const universitiesDataExtra: University[] = [
   },
   {
     name: 'MANIPAL University JAIPUR', accreditation: 'UGC Approved | NAAC Accredited', logoInitial: 'M',
+    id: 'manipal',
+    slug: 'manipal',
+    image: 'from-red-600 to-red-900',
+    location: 'Jaipur, Rajasthan',
+    description: 'Manipal University Jaipur is a prestigious institution under the Manipal Education Group, one of India\'s most trusted education brands. The university offers UGC-DEB approved online programs with 20+ specializations, combining academic rigor with industry relevance. Students benefit from Manipal\'s vast alumni network and strong corporate partnerships.',
+    facilities: ['Smart Learning Platform', 'Live Interactive Sessions', 'Industry Mentors', 'Career Services', 'Digital Library', 'Alumni Network'],
+    ranking: 'NAAC A+',
     programs: [
       { name: 'BBA (HRM, MARKETING, FINANCE & ACCOUNTING)', duration: '3 Years' },
       { name: 'B COM', duration: '3 Years' },
@@ -147,6 +176,13 @@ export const universitiesDataExtra: University[] = [
   },
   {
     name: 'JAIN University', accreditation: 'UGC Approved | NAAC Accredited', logoInitial: 'J',
+    id: 'jain',
+    slug: 'jain',
+    image: 'from-purple-600 to-purple-900',
+    location: 'Bangalore, Karnataka',
+    description: 'Jain University (Deemed-to-be University) is a NAAC A++ accredited institution based in Bangalore, known for its innovative Work-Learn-Play (WLP) model. The university\'s online programs are designed to be flexible and industry-aligned, allowing students to balance work and studies effectively. Jain\'s strong focus on holistic development sets it apart in the online education space.',
+    facilities: ['WLP Learning Model', 'Online Proctored Exams', 'Career Counseling', 'Industry Projects', 'Peer Learning', 'Mobile App Access'],
+    ranking: 'NAAC A++',
     programs: [
       { name: 'BBA (WLP)', duration: '3 Years' },
       { name: 'BCOM (WLP)', duration: '3 Years' },
@@ -190,9 +226,53 @@ export const universitiesDataExtra: University[] = [
       { name: 'MASTER OF LIBRARY AND INFORMATION SCIENCES', duration: '1 Year' },
     ],
   },
+  {
+    name: 'Chandigarh University', accreditation: 'UGC Approved | NAAC A+', logoInitial: 'C',
+    id: 'chandigarh',
+    slug: 'chandigarh',
+    image: 'from-orange-500 to-orange-800',
+    location: 'Mohali, Punjab',
+    description: 'Chandigarh University is a NAAC A+ accredited institution and one of the fastest-growing universities in India. Ranked among the top private universities, it offers UGC-DEB approved online programs with a strong emphasis on technology and innovation. The university\'s online division provides a rich learning experience backed by world-class faculty and industry partnerships.',
+    facilities: ['CU Online Portal', 'Live Webinars', 'Placement Support', 'Digital Resources', 'Industry Certifications', 'Peer Community'],
+    ranking: 'NAAC A+',
+    programs: [
+      { name: 'BBA', duration: '3 Years' },
+      { name: 'BCOM', duration: '3 Years' },
+      { name: 'BCA', duration: '3 Years' },
+      { name: 'MBA (MARKETING, FINANCE, HR, IT)', duration: '2 Years' },
+      { name: 'MCA', duration: '2 Years' },
+      { name: 'MCOM', duration: '2 Years' },
+    ],
+  },
+  {
+    name: 'Lovely Professional University', accreditation: 'UGC Approved | NAAC A++', logoInitial: 'L',
+    id: 'lpu',
+    slug: 'lpu',
+    image: 'from-yellow-500 to-yellow-800',
+    location: 'Phagwara, Punjab',
+    description: 'Lovely Professional University (LPU) is one of India\'s largest private universities with a NAAC A++ accreditation and a vibrant campus of over 30,000 students. LPU\'s online programs are designed with a global perspective, offering flexible schedules and industry-relevant curriculum. The university is known for its exceptional placement record and strong industry connections across sectors.',
+    facilities: ['LPU Online App', 'Virtual Labs', 'Career Hub', 'Live Classes', 'International Tie-ups', 'Scholarship Programs'],
+    ranking: 'NAAC A++',
+    programs: [
+      { name: 'BBA', duration: '3 Years' },
+      { name: 'BCOM', duration: '3 Years' },
+      { name: 'BCA', duration: '3 Years' },
+      { name: 'BA (ENGLISH, ECONOMICS, POLITICAL SCIENCE)', duration: '3 Years' },
+      { name: 'MBA (MARKETING, FINANCE, HR, OPERATIONS)', duration: '2 Years' },
+      { name: 'MCA', duration: '2 Years' },
+      { name: 'MCOM', duration: '2 Years' },
+    ],
+  },
 ];
 
 export const allUniversities: University[] = [...universitiesData, ...universitiesDataExtra];
+
+// The 6 featured universities with full detail data, keyed by slug
+export const featuredUniversities: University[] = allUniversities.filter((u) => u.slug !== undefined);
+
+export function getUniversityBySlug(slug: string): University | undefined {
+  return featuredUniversities.find((u) => u.slug === slug);
+}
 
 export const openSchoolData: Board[] = [
   {

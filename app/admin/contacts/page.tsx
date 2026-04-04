@@ -77,7 +77,9 @@ export default function ContactMessagesPage() {
       <div style={{
         background: '#fff',
         padding: '2rem',
-        borderBottom: '1px solid #e2e8f0'
+        borderBottom: '1px solid #e2e8f0',
+        position: 'relative',
+        zIndex: 100
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <Link href="/admin" style={{

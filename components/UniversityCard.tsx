@@ -16,8 +16,7 @@ interface UniversityCardProps {
 export default function UniversityCard({ name, slug, accreditation, programs, image }: UniversityCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
-  return (
-    <Link href={`/universities/${slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%', cursor: 'pointer' }}>
+  const cardContent = (
       <div 
         style={{
           background: '#fff',
@@ -37,7 +36,7 @@ export default function UniversityCard({ name, slug, accreditation, programs, im
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* University Icon or Image */}
-        {image ? (
+        {image && image.startsWith('http') ? (
           <div style={{
             width: '100%',
             height: '180px',
@@ -111,20 +110,31 @@ export default function UniversityCard({ name, slug, accreditation, programs, im
         </p>
 
         {/* View Details Button */}
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          color: '#1e40af',
-          fontWeight: 600,
-          fontSize: '0.95rem'
-        }}>
-          View Details
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </div>
+        {slug && (
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            color: '#1e40af',
+            fontWeight: 600,
+            fontSize: '0.95rem'
+          }}>
+            View Details
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </div>
+        )}
       </div>
+    );
+
+  if (!slug) {
+    return <div style={{ height: '100%' }}>{cardContent}</div>;
+  }
+
+  return (
+    <Link href={`/universities/${slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%', cursor: 'pointer' }}>
+      {cardContent}
     </Link>
   );
 }

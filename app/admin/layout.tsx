@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { GraduationCap, Users, BookOpen, TrendingUp, Menu, X, Award, Mail, LogOut } from '@/components/Icon';
+import { GraduationCap, Users, BookOpen, TrendingUp, Menu, X, Award, Mail, LogOut, Globe, Search } from '@/components/Icon';
 
 const menuItems = [
   { icon: <TrendingUp size={22} />, label: 'Dashboard', href: '/admin' },
@@ -12,6 +12,7 @@ const menuItems = [
   { icon: <Award size={22} />, label: 'Open School', href: '/admin/open-school' },
   { icon: <Users size={22} />, label: 'Enrollments', href: '/admin/enrollments' },
   { icon: <Mail size={22} />, label: 'Contact Messages', href: '/admin/contacts' },
+  { icon: <Search size={22} />, label: 'Course Finder', href: '/admin/course-finder' },
 ];
 
 export default function AdminLayout({ children }: { children: any }) {
@@ -77,20 +78,42 @@ export default function AdminLayout({ children }: { children: any }) {
         @media (max-width: 768px) {
           .mobile-header {
             display: flex !important;
+            z-index: 30 !important;
           }
           
           .sidebar {
             transform: translateX(${isMobileMenuOpen ? '0' : '-100%'});
+            z-index: 25 !important;
           }
           
           .main-content {
             margin-left: 0 !important;
             padding-top: 64px !important;
+            z-index: 20 !important;
+            position: relative !important;
           }
           
           .mobile-overlay {
             display: ${isMobileMenuOpen ? 'block' : 'none'} !important;
+            z-index: 15 !important;
           }
+        }
+        
+        @media (min-width: 769px) {
+          .main-content {
+            z-index: 20 !important;
+            position: relative !important;
+          }
+          
+          .sidebar {
+            z-index: 10 !important;
+          }
+        }
+        
+        /* Ensure all page headers have higher z-index */
+        .main-content > * {
+          position: relative;
+          z-index: 21;
         }
       `}</style>
 
@@ -109,7 +132,7 @@ export default function AdminLayout({ children }: { children: any }) {
           justifyContent: 'space-between',
           padding: '0 1rem',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          zIndex: 1001
+          zIndex: 30
         }}>
           <Link href="/admin" style={{ textDecoration: 'none', color: '#fff' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -160,7 +183,7 @@ export default function AdminLayout({ children }: { children: any }) {
             right: 0,
             bottom: 0,
             background: 'rgba(0,0,0,0.5)',
-            zIndex: 999
+            zIndex: 15
           }}
         />
 
@@ -173,8 +196,10 @@ export default function AdminLayout({ children }: { children: any }) {
           height: '100vh',
           overflowY: 'auto',
           boxShadow: '4px 0 24px rgba(0,0,0,0.12)',
-          zIndex: 1000,
-          transition: 'transform 0.3s ease'
+          zIndex: 10,
+          transition: 'transform 0.3s ease',
+          left: 0,
+          top: 0
         }}>
           {/* Logo */}
           <div style={{
@@ -278,6 +303,29 @@ export default function AdminLayout({ children }: { children: any }) {
                 <div style={{ fontSize: '0.75rem', opacity: 0.6 }}>admin@cdrc.edu.in</div>
               </div>
             </div>
+            <Link
+              href="/"
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                padding: '0.75rem',
+                background: 'rgba(255,255,255,0.1)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '0.5rem',
+                color: 'rgba(255,255,255,0.85)',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+                marginBottom: '0.5rem'
+              }}
+            >
+              <Globe size={18} />
+              View Website
+            </Link>
             <button
               onClick={handleLogout}
               style={{
@@ -296,14 +344,8 @@ export default function AdminLayout({ children }: { children: any }) {
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.3)';
-                e.currentTarget.style.color = '#fff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
-                e.currentTarget.style.color = '#fca5a5';
-              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.3)'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.2)'; e.currentTarget.style.color = '#fca5a5'; }}
             >
               <LogOut size={18} />
               Logout
@@ -315,7 +357,9 @@ export default function AdminLayout({ children }: { children: any }) {
         <main className="main-content" style={{
           marginLeft: '280px',
           flex: 1,
-          minHeight: '100vh'
+          minHeight: '100vh',
+          position: 'relative',
+          zIndex: 20
         }}>
           {children}
         </main>

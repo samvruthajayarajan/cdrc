@@ -80,7 +80,7 @@ export default function AdminDashboard() {
   return (
     <div style={{ padding: 'clamp(1rem, 4vw, 2.5rem)', background: '#fff', minHeight: '100vh' }}>
       {/* Header */}
-      <div style={{ marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)' }}>
+      <div style={{ marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)', position: 'relative', zIndex: 100 }}>
         <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937', marginBottom: '0.5rem', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
           Dashboard
         </h1>

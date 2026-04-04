@@ -6,6 +6,8 @@ import Chatbot from '@/components/Chatbot';
 import ScrollTop from '@/components/ScrollTop';
 import { usePathname } from 'next/navigation';
 
+import CourseFinder from '@/components/CourseFinder';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isLoginPage = pathname === '/login';
@@ -13,18 +15,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700;900&family=Poppins:wght@400;600;700;800;900&family=Raleway:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+      </head>
       <body>
         {isLoginPage || isAdminPage ? (
           <>{children}</>
         ) : (
           <>
             <Navbar />
-            <main style={{ paddingTop: 90 }}>
+            <main style={{ paddingTop: 0 }}>
               {children}
             </main>
             <Footer />
             <Chatbot />
             <ScrollTop />
+            <CourseFinder />
           </>
         )}
       </body>

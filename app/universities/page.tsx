@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -28,15 +28,17 @@ export default function UniversitiesPage() {
   const fetchUniversities = async () => {
     try {
       const response = await fetch('/api/universities');
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
       const data = await response.json();
       if (data.success) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mappedUniversities = data.data.map((uni: any) => ({
           name: uni.name,
           slug: uni.slug || uni.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
           accreditation: uni.naac || uni.accreditation,
           naac: uni.naac || uni.accreditation,
           programs: uni.programs || [],
-          image: uni.image
+          image: uni.image && uni.image.startsWith('http') ? uni.image : undefined,
         }));
         setUniversities(mappedUniversities);
       }
@@ -58,7 +60,7 @@ export default function UniversitiesPage() {
           <AnimateOnScroll animation="fadeUp">
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.75rem', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)', borderRadius: '50px', color: '#fff', fontSize: '0.9rem', fontWeight: 600, marginBottom: '2rem', border: '1px solid rgba(255,255,255,0.3)' }}>
               <Award size={18} />
-              UGC APPROVED & NAAC ACCREDITED
+              UGC APPROVED &amp; NAAC ACCREDITED
             </div>
           </AnimateOnScroll>
           <AnimateOnScroll animation="fadeUp" delay={100}>
@@ -70,11 +72,18 @@ export default function UniversitiesPage() {
           <AnimateOnScroll animation="fadeUp" delay={300}>
             <div style={{ maxWidth: 650, margin: '0 auto', position: 'relative' }}>
               <Search size={22} style={{ position: 'absolute', left: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: '#64748b', pointerEvents: 'none', zIndex: 2 }} />
-              <input type="text" placeholder="Search universities by name..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} style={{ width: '100%', padding: '1.25rem 1.5rem 1.25rem 4rem', fontSize: '1.05rem', border: 'none', borderRadius: '60px', background: '#fff', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', outline: 'none', transition: 'all 0.3s ease', color: '#1e293b' }} />
+              <input
+                type="text"
+                placeholder="Search universities by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ width: '100%', padding: '1.25rem 1.5rem 1.25rem 4rem', fontSize: '1.05rem', border: 'none', borderRadius: '60px', background: '#fff', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', outline: 'none', transition: 'all 0.3s ease', color: '#1e293b' }}
+              />
             </div>
           </AnimateOnScroll>
         </div>
       </section>
+
       <section style={{ padding: '6rem 2rem', background: '#f8fafc' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <AnimateOnScroll animation="fadeUp">
@@ -86,6 +95,7 @@ export default function UniversitiesPage() {
               <div style={{ fontSize: '0.95rem', color: '#64748b' }}>Click any card to explore programs</div>
             </div>
           </AnimateOnScroll>
+
           {loading ? (
             <div style={{ textAlign: 'center', padding: '6rem 2rem' }}>
               <div style={{ display: 'inline-block', width: '50px', height: '50px', border: '4px solid #e2e8f0', borderTop: '4px solid #1e40af', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
@@ -103,7 +113,12 @@ export default function UniversitiesPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '2.5rem' }}>
               {filteredUniversities.map((uni, index) => (
                 <AnimateOnScroll key={index} animation="fadeUp" delay={index * 80}>
-                  <Link href={`/universities/${uni.slug}`} style={{ textDecoration: 'none', display: 'block' }} onMouseEnter={() => setHoveredCard(index)} onMouseLeave={() => setHoveredCard(null)}>
+                  <Link
+                    href={`/universities/${uni.slug}`}
+                    style={{ textDecoration: 'none', display: 'block' }}
+                    onMouseEnter={() => setHoveredCard(index)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                  >
                     <div style={{ position: 'relative', background: '#fff', borderRadius: '20px', overflow: 'hidden', boxShadow: hoveredCard === index ? '0 25px 60px rgba(30, 64, 175, 0.25)' : '0 10px 30px rgba(0,0,0,0.08)', transform: hoveredCard === index ? 'translateY(-8px)' : 'translateY(0)', transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer', height: '100%' }}>
                       <div style={{ position: 'relative', height: '240px', overflow: 'hidden', background: '#e2e8f0' }}>
                         {uni.image ? (
@@ -141,6 +156,7 @@ export default function UniversitiesPage() {
           )}
         </div>
       </section>
+
       <section style={{ padding: '6rem 2rem', background: 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <AnimateOnScroll animation="fadeUp">

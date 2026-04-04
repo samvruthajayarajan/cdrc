@@ -20,9 +20,16 @@ export default function EnrollmentsManagement() {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     fetchEnrollments();
+    
+    // Check if mobile on mount and resize
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const fetchEnrollments = async () => {
@@ -82,27 +89,31 @@ export default function EnrollmentsManagement() {
       {/* Header */}
       <div style={{
         background: '#fff',
-        padding: '2rem',
-        borderBottom: '1px solid #e2e8f0'
+        padding: 'clamp(1rem, 4vw, 2rem)',
+        color: '#1f2937',
+        borderBottom: '1px solid #e5e7eb',
+        position: 'relative',
+        zIndex: 100
       }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
           <Link href="/admin" style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            color: '#1e40af',
+            color: '#6b7280',
             textDecoration: 'none',
             marginBottom: '1rem',
-            fontWeight: 600
+            opacity: 0.9,
+            fontSize: 'clamp(0.875rem, 2vw, 1rem)'
           }}>
             <ArrowLeft size={20} />
             Back to Dashboard
           </Link>
           <div>
-            <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
               Enrollment Inquiries
             </h1>
-            <p style={{ fontSize: '1.1rem', color: '#6b7280' }}>
+            <p style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.1rem)', opacity: 0.9, color: '#6b7280' }}>
               {enrollments.length} inquiries received
             </p>
           </div>
@@ -110,13 +121,13 @@ export default function EnrollmentsManagement() {
       </div>
 
       {/* Main Content */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: 'clamp(1rem, 4vw, 2rem)' }}>
         {/* Search Bar */}
         <div style={{
           background: '#fff',
-          borderRadius: '1rem',
-          padding: '1.5rem',
-          marginBottom: '2rem',
+          borderRadius: 'clamp(0.75rem, 2vw, 1rem)',
+          padding: 'clamp(1rem, 3vw, 1.5rem)',
+          marginBottom: 'clamp(1rem, 3vw, 2rem)',
           boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
         }}>
           <div style={{ position: 'relative' }}>
@@ -128,10 +139,10 @@ export default function EnrollmentsManagement() {
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
                 width: '100%',
-                padding: '0.875rem 1rem 0.875rem 3rem',
+                padding: 'clamp(0.75rem, 2vw, 0.875rem) 1rem clamp(0.75rem, 2vw, 0.875rem) 3rem',
                 border: '2px solid #e2e8f0',
                 borderRadius: '0.75rem',
-                fontSize: '1rem',
+                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                 outline: 'none',
                 transition: 'border-color 0.3s'
               }}
@@ -149,51 +160,55 @@ export default function EnrollmentsManagement() {
         ) : filteredEnrollments.length === 0 ? (
           <div style={{
             background: '#fff',
-            borderRadius: '1rem',
-            padding: '4rem',
+            borderRadius: 'clamp(0.75rem, 2vw, 1rem)',
+            padding: 'clamp(2rem, 6vw, 4rem)',
             textAlign: 'center',
             boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
           }}>
-            <p style={{ fontSize: '1.1rem', color: '#64748b' }}>
+            <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', color: '#64748b' }}>
               {searchTerm ? 'No enrollments found matching your search.' : 'No enrollment inquiries yet.'}
             </p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gap: 'clamp(1rem, 3vw, 1.5rem)' }}>
             {filteredEnrollments.map((enr, index) => (
               <div key={enr._id || index} style={{
                 background: '#fff',
-                borderRadius: '1rem',
-                padding: '1.5rem',
+                borderRadius: 'clamp(0.75rem, 2vw, 1rem)',
+                padding: 'clamp(1rem, 4vw, 1.5rem)',
                 boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
                 border: '1px solid #e2e8f0',
                 transition: 'all 0.3s'
               }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
+                  gap: 'clamp(1rem, 3vw, 1.5rem)' 
+                }}>
                   {/* Left Column */}
                   <div>
-                    <div style={{ marginBottom: '1rem' }}>
+                    <div style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                         <Users size={18} color="#1e40af" />
-                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
                           Student
                         </span>
                       </div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e293b' }}>
+                      <div style={{ fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', fontWeight: 700, color: '#1e293b' }}>
                         {enr.studentName}
                       </div>
                     </div>
 
-                    <div style={{ marginBottom: '1rem' }}>
+                    <div style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
                         <Mail size={16} color="#64748b" />
-                        <span style={{ fontSize: '0.875rem', color: '#64748b' }}>
+                        <span style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#64748b', wordBreak: 'break-word' }}>
                           {enr.email}
                         </span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <Phone size={16} color="#64748b" />
-                        <span style={{ fontSize: '0.875rem', color: '#64748b' }}>
+                        <span style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#64748b' }}>
                           {enr.phone}
                         </span>
                       </div>
@@ -202,33 +217,33 @@ export default function EnrollmentsManagement() {
 
                   {/* Right Column */}
                   <div>
-                    <div style={{ marginBottom: '1rem' }}>
+                    <div style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                         <GraduationCap size={18} color="#1e40af" />
-                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
                           Program Details
                         </span>
                       </div>
-                      <div style={{ fontSize: '1rem', fontWeight: 600, color: '#1e293b', marginBottom: '0.25rem' }}>
+                      <div style={{ fontSize: 'clamp(0.9rem, 2.2vw, 1rem)', fontWeight: 600, color: '#1e293b', marginBottom: '0.25rem' }}>
                         {enr.program}
                       </div>
-                      <div style={{ fontSize: '0.875rem', color: '#64748b' }}>
+                      <div style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#64748b' }}>
                         {enr.university}
                       </div>
                     </div>
 
                     {enr.message && (
                       <div style={{
-                        padding: '0.75rem',
+                        padding: 'clamp(0.625rem, 2vw, 0.75rem)',
                         background: '#f8fafc',
                         borderRadius: '0.5rem',
                         border: '1px solid #e2e8f0',
-                        marginBottom: '1rem'
+                        marginBottom: 'clamp(0.75rem, 2vw, 1rem)'
                       }}>
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '0.25rem' }}>
+                        <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 700, color: '#64748b', marginBottom: '0.25rem' }}>
                           MESSAGE
                         </div>
-                        <div style={{ fontSize: '0.875rem', color: '#475569' }}>
+                        <div style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#475569', lineHeight: 1.5 }}>
                           {enr.message}
                         </div>
                       </div>
@@ -236,7 +251,7 @@ export default function EnrollmentsManagement() {
 
                     {/* Status Dropdown */}
                     <div>
-                      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+                      <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 700, color: '#64748b', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
                         Status
                       </div>
                       <select
@@ -244,9 +259,9 @@ export default function EnrollmentsManagement() {
                         onChange={(e) => handleStatusChange(enr._id || '', e.target.value)}
                         style={{
                           width: '100%',
-                          padding: '0.625rem 0.875rem',
+                          padding: 'clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.75rem, 2vw, 0.875rem)',
                           borderRadius: '0.5rem',
-                          fontSize: '0.875rem',
+                          fontSize: 'clamp(0.8rem, 2vw, 0.875rem)',
                           fontWeight: 600,
                           cursor: 'pointer',
                           outline: 'none',
@@ -265,10 +280,10 @@ export default function EnrollmentsManagement() {
                 {/* Date */}
                 {enr.createdAt && (
                   <div style={{ 
-                    marginTop: '1rem', 
-                    paddingTop: '1rem', 
+                    marginTop: 'clamp(0.75rem, 2vw, 1rem)', 
+                    paddingTop: 'clamp(0.75rem, 2vw, 1rem)', 
                     borderTop: '1px solid #e2e8f0',
-                    fontSize: '0.75rem',
+                    fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)',
                     color: '#94a3b8'
                   }}>
                     Submitted: {new Date(enr.createdAt).toLocaleString()}
