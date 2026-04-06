@@ -10,6 +10,7 @@ const menuItems = [
   { icon: <GraduationCap size={22} />, label: 'Universities', href: '/admin/universities' },
   { icon: <BookOpen size={22} />, label: 'Programs', href: '/admin/programs' },
   { icon: <Award size={22} />, label: 'Open School', href: '/admin/open-school' },
+  { icon: <Users size={22} />, label: 'Skills', href: '/admin/skills' },
   { icon: <Users size={22} />, label: 'Enrollments', href: '/admin/enrollments' },
   { icon: <Mail size={22} />, label: 'Contact Messages', href: '/admin/contacts' },
   { icon: <Search size={22} />, label: 'Course Finder', href: '/admin/course-finder' },
@@ -197,13 +198,15 @@ export default function AdminLayout({ children }: { children: any }) {
           overflowY: 'auto',
           boxShadow: '4px 0 24px rgba(0,0,0,0.12)',
           zIndex: 10,
+          display: 'flex',
+          flexDirection: 'column',
           transition: 'transform 0.3s ease',
           left: 0,
           top: 0
         }}>
           {/* Logo */}
           <div style={{
-            padding: '2rem 1.5rem',
+            padding: '1.25rem 1.5rem',
             borderBottom: '1px solid rgba(255,255,255,0.1)'
           }}>
             <Link href="/admin" style={{ textDecoration: 'none', color: '#fff' }}>
@@ -231,7 +234,7 @@ export default function AdminLayout({ children }: { children: any }) {
           </div>
 
           {/* Navigation */}
-          <nav style={{ padding: '1.5rem 0' }}>
+          <nav style={{ padding: '1rem 0', flex: 1 }}>
             {menuItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
               return (
@@ -243,8 +246,8 @@ export default function AdminLayout({ children }: { children: any }) {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '1rem',
-                    padding: '0.875rem 1.5rem',
-                    margin: '0.25rem 1rem',
+                    padding: '0.6rem 1.25rem',
+                    margin: '0.1rem 0.75rem',
                     borderRadius: '0.75rem',
                     textDecoration: 'none',
                     color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
@@ -276,33 +279,12 @@ export default function AdminLayout({ children }: { children: any }) {
 
           {/* User Info */}
           <div style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            padding: '1.5rem',
+            padding: '1rem 1.5rem 1.5rem',
             borderTop: '1px solid rgba(255,255,255,0.1)',
-            background: 'rgba(0,0,0,0.2)'
+            background: 'rgba(0,0,0,0.2)',
+            marginTop: 'auto'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 700,
-                fontSize: '1rem'
-              }}>
-                A
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>Admin User</div>
-                <div style={{ fontSize: '0.75rem', opacity: 0.6 }}>admin@cdrc.edu.in</div>
-              </div>
-            </div>
+
             <Link
               href="/"
               style={{
