@@ -74,7 +74,7 @@ export default function AdminDashboard() {
     { icon: <GraduationCap size={28} />, label: 'Universities', value: stats.totalUniversities, change: '+12%', color: '#3b82f6', bgColor: '#eff6ff', link: '/admin/universities' },
     { icon: <BookOpen size={28} />, label: 'Programs', value: stats.totalPrograms, change: '+8%', color: '#10b981', bgColor: '#f0fdf4', link: '/admin/programs' },
     { icon: <Users size={28} />, label: 'Enrollments', value: stats.totalEnrollments, change: '+23%', color: '#f59e0b', bgColor: '#fffbeb', link: '/admin/enrollments' },
-    { icon: <TrendingUp size={28} />, label: 'Students', value: stats.totalStudents, change: '+15%', color: '#8b5cf6', bgColor: '#faf5ff', link: '#' },
+    { icon: <TrendingUp size={28} />, label: 'Contact Messages', value: stats.totalContacts, change: '+15%', color: '#8b5cf6', bgColor: '#faf5ff', link: '/admin/contacts' },
   ];
 
   return (
