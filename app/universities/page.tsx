@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 import { Search, GraduationCap, Award } from '@/components/Icon';
+import { allUniversities } from '@/lib/data';
 
 interface University {
   name: string; slug: string; accreditation: string;
@@ -20,16 +21,27 @@ export default function UniversitiesPage() {
   const [search, setSearch] = useState('');
   const [hovered, setHovered] = useState<number | null>(null);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapUni = (u: any) => ({
+    name: u.name,
+    slug: u.slug || u.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+    accreditation: u.naac || u.ranking || u.accreditation,
+    programs: u.programs || [],
+    image: u.image?.startsWith('http') ? u.image : undefined,
+  });
+
   useEffect(() => {
     fetch('/api/universities').then(r => r.json()).then(d => {
-      if (d.success) setUniversities(d.data.map((u: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
-        name: u.name,
-        slug: u.slug || u.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''),
-        accreditation: u.naac || u.accreditation,
-        programs: u.programs || [],
-        image: u.image?.startsWith('http') ? u.image : undefined,
-      })));
-    }).catch(console.error).finally(() => setLoading(false));
+      if (d.success && d.data?.length) {
+        setUniversities(d.data.map(mapUni));
+      } else {
+        // Empty DB (e.g. fresh deployment) — use static data
+        setUniversities(allUniversities.map(mapUni));
+      }
+    }).catch(() => {
+      // API error — use static data
+      setUniversities(allUniversities.map(mapUni));
+    }).finally(() => setLoading(false));
   }, []);
 
   const filtered = universities.filter(u => u.name.toLowerCase().includes(search.toLowerCase()));

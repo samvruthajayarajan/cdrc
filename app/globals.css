@@ -220,6 +220,12 @@ nav a {
 .stagger-grid > *:nth-child(5) { transition-delay: 0.32s !important; }
 .stagger-grid > *:nth-child(6) { transition-delay: 0.40s !important; }
 
+/* Spinner */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 /* Page transition */
 @keyframes pageEnter {
   from { opacity: 0; transform: translateY(16px); }
@@ -338,4 +344,39 @@ nav a {
     padding-top: 8rem !important;
     padding-bottom: 2rem !important;
   }
+}
+
+/* University detail page responsive */
+@media (max-width: 768px) {
+  /* Banner height reduction on mobile */
+  .uni-banner {
+    height: 280px !important;
+  }
+  /* Programs grid single column */
+  .programs-grid {
+    grid-template-columns: 1fr !important;
+  }
+  /* Facilities grid single column */
+  .facilities-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* University card hover — CSS fallback for non-JS */
+.uni-card {
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+.uni-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(67, 97, 238, 0.18);
+}
+
+/* Program card hover */
+.program-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.program-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(30, 64, 175, 0.12);
+  border-color: #1e40af !important;
 }

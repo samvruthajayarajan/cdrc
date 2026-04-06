@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, MapPin, Award, BookOpen, GraduationCap, Building } from '@/components/Icon';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 import EnrollmentModal from '@/components/EnrollmentModal';
+import { allUniversities } from '@/lib/data';
 
 interface University {
   _id?: string;
@@ -31,38 +32,51 @@ export default function UniversityDetailPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // Helper to resolve a university from raw data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolveUniversity = (uni: any): University => ({
+      ...uni,
+      location: uni.location || 'India',
+      naac: uni.naac || uni.ranking || uni.accreditation || 'UGC Approved',
+      description: uni.description || `${uni.name} is a UGC-approved university offering quality online degree programs with flexible learning options for working professionals.`,
+      facilities: uni.facilities?.length ? uni.facilities : ['Online Learning Platform', 'Digital Library', 'Student Support', 'Live Classes', 'Career Guidance', 'Online Assessments'],
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const matchSlug = (uni: any) =>
+      uni.slug === slug ||
+      uni.slug?.startsWith(slug + '-') ||
+      uni.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === slug;
+
     fetch('/api/universities')
       .then(r => {
         if (!r.ok) throw new Error(`API error: ${r.status}`);
         return r.json();
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then(data => {
-        if (data.success && data.data) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const found = data.data.find((uni: any) => 
-            uni.slug === slug || 
-            uni.slug?.startsWith(slug + '-') ||
-            uni.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === slug
-          );
+        if (data.success && data.data?.length) {
+          const found = data.data.find(matchSlug);
           if (found) {
-            setUniversity({
-              ...found,
-              location: found.location || 'India',
-              naac: found.naac || found.accreditation || 'UGC Approved',
-              description: found.description || `${found.name} is a UGC-approved university offering quality online degree programs with flexible learning options for working professionals.`,
-              facilities: found.facilities?.length ? found.facilities : ['Online Learning Platform', 'Digital Library', 'Student Support', 'Live Classes', 'Career Guidance', 'Online Assessments'],
-            });
+            setUniversity(resolveUniversity(found));
           } else {
-            setError('University not found');
+            // API returned data but slug not found — try static fallback
+            const staticFound = allUniversities.find(matchSlug);
+            if (staticFound) setUniversity(resolveUniversity(staticFound));
+            else setError('University not found');
           }
         } else {
-          setError('Failed to load universities');
+          // API returned no data (empty DB) — use static fallback
+          const staticFound = allUniversities.find(matchSlug);
+          if (staticFound) setUniversity(resolveUniversity(staticFound));
+          else setError('University not found');
         }
         setLoading(false);
       })
       .catch(() => {
-        setError('Failed to load university');
+        // Network/API error — use static fallback
+        const staticFound = allUniversities.find(matchSlug);
+        if (staticFound) setUniversity(resolveUniversity(staticFound));
+        else setError('University not found');
         setLoading(false);
       });
   }, [slug]);
