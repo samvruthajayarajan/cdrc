@@ -1,160 +1,178 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
-import { Search, GraduationCap, Award } from '@/components/Icon';
-import { allUniversities } from '@/lib/data';
+import { Search, MapPin, GraduationCap } from '@/components/Icon';
 
 interface University {
-  name: string; slug: string; accreditation: string;
-  naac?: string; programs: Array<{ name: string; duration: string }>; image?: string;
+  name: string;
+  slug: string;
+  naac?: string;
+  location?: string;
+  programs: Array<{ name: string; duration: string }>;
+  image?: string;
 }
 
-const ACCENT = '#4361EE';
-const COLORS = ['#4361EE','#7c3aed','#0891b2','#059669','#dc2626','#d97706','#2563eb','#9333ea'];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapUni = (u: any): University => ({
+  name: u.name,
+  slug: u.slug || u.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+  naac: u.naac || u.ranking || u.accreditation,
+  location: u.location || 'India',
+  programs: u.programs || [],
+  image: u.image?.startsWith('http') ? u.image : undefined,
+});
+
+const UNI_IMAGES = [
+  'https://images.pexels.com/photos/207692/pexels-photo-207692.jpeg?auto=compress&cs=tinysrgb&w=800',
+  'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=800',
+  'https://images.pexels.com/photos/159490/yale-university-landscape-universities-schools-159490.jpeg?auto=compress&cs=tinysrgb&w=800',
+  'https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=800',
+  'https://images.pexels.com/photos/2982449/pexels-photo-2982449.jpeg?auto=compress&cs=tinysrgb&w=800',
+  'https://images.pexels.com/photos/1205651/pexels-photo-1205651.jpeg?auto=compress&cs=tinysrgb&w=800',
+];
 
 export default function UniversitiesPage() {
   const [universities, setUniversities] = useState<University[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [hovered, setHovered] = useState<number | null>(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapUni = (u: any) => ({
-    name: u.name,
-    slug: u.slug || u.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-    accreditation: u.naac || u.ranking || u.accreditation,
-    programs: u.programs || [],
-    image: u.image?.startsWith('http') ? u.image : undefined,
-  });
 
   useEffect(() => {
     fetch('/api/universities').then(r => r.json()).then(d => {
-      if (d.success && d.data?.length) {
-        setUniversities(d.data.map(mapUni));
-      } else {
-        // Empty DB (e.g. fresh deployment) — use static data
-        setUniversities(allUniversities.map(mapUni));
-      }
-    }).catch(() => {
-      // API error — use static data
-      setUniversities(allUniversities.map(mapUni));
-    }).finally(() => setLoading(false));
+      if (d.success && d.data?.length) setUniversities(d.data.map(mapUni));
+      else setUniversities([]);
+    }).catch(() => setUniversities([])).finally(() => setLoading(false));
   }, []);
 
-  const filtered = universities.filter(u => u.name.toLowerCase().includes(search.toLowerCase()));
+  const filtered = universities.filter(u =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
+    u.location?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#fff' }}>
+    <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ── HERO ── */}
-      <section style={{ background: `linear-gradient(135deg, #1e2fa8 0%, ${ACCENT} 55%, #7b93ff 100%)`, padding: 'calc(68px + 4rem) 2rem 5rem', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-          <div style={{ position: 'absolute', width: 500, height: 500, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', top: '-150px', right: '-150px', animation: 'float 9s ease-in-out infinite' }} />
-          <div style={{ position: 'absolute', width: 300, height: 300, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', bottom: '-80px', left: '5%', animation: 'float 11s ease-in-out infinite reverse' }} />
-          <div style={{ position: 'absolute', width: 90, height: 90, borderRadius: '18px', background: 'rgba(255,255,255,0.08)', top: '25%', left: '8%', transform: 'rotate(25deg)', animation: 'float 6s ease-in-out infinite' }} />
-          <div style={{ position: 'absolute', width: 60, height: 60, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', top: '15%', right: '15%', animation: 'float 5s ease-in-out infinite reverse' }} />
-        </div>
-
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: '4rem', flexWrap: 'wrap' }}>
-          {/* left */}
-          <div style={{ flex: '1 1 460px' }}>
-            <AnimateOnScroll animation="fadeUp">
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 50, padding: '5px 14px', color: '#fff', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7effa0', display: 'inline-block' }} />
-                India&apos;s Trusted University Network
-              </span>
-            </AnimateOnScroll>
-            <AnimateOnScroll animation="fadeUp" delay={80}>
-              <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, marginBottom: '1.1rem' }}>
-                Explore Our<br /><span style={{ color: '#b8ccff' }}>Partner Universities</span>
-              </h1>
-            </AnimateOnScroll>
-            <AnimateOnScroll animation="fadeUp" delay={160}>
-              <p style={{ color: 'rgba(255,255,255,0.78)', fontSize: '1rem', lineHeight: 1.75, maxWidth: 480, marginBottom: '2rem' }}>
-                15+ UGC-approved, NAAC-accredited universities offering world-class online degree programs across India.
-              </p>
-            </AnimateOnScroll>
-            <AnimateOnScroll animation="fadeUp" delay={240}>
-              <div style={{ position: 'relative', maxWidth: 460 }}>
-                <Search size={17} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none', zIndex: 2 }} />
-                <input type="text" placeholder="Search universities..." value={search} onChange={e => setSearch(e.target.value)}
-                  style={{ width: '100%', padding: '0.9rem 1.2rem 0.9rem 2.8rem', fontSize: '0.93rem', border: 'none', borderRadius: 50, background: '#fff', outline: 'none', color: '#1e293b', boxSizing: 'border-box', boxShadow: '0 8px 30px rgba(0,0,0,0.18)' }} />
-              </div>
-            </AnimateOnScroll>
-            <AnimateOnScroll animation="fadeUp" delay={300}>
-              <div style={{ display: 'flex', gap: '1.25rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
-                {['✓ UGC Approved','✓ NAAC Accredited','✓ WES Recognized'].map(t => (
-                  <span key={t} style={{ color: 'rgba(255,255,255,0.82)', fontSize: '0.8rem', fontWeight: 600 }}>{t}</span>
-                ))}
-              </div>
-            </AnimateOnScroll>
-          </div>
-
-          {/* right — 3 stat cards stacked */}
-          <div style={{ flex: '0 1 280px', display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
-            {[
-              { icon: <GraduationCap size={22} style={{ color: ACCENT }} />, value: '15+', label: 'Partner Universities' },
-              { icon: <Award size={22} style={{ color: ACCENT }} />, value: '95%', label: 'Placement Rate' },
-              { icon: <span style={{ fontSize: '1.2rem' }}>🎓</span>, value: '50K+', label: 'Students Enrolled' },
-            ].map((s, i) => (
-              <AnimateOnScroll key={i} animation="fadeUp" delay={i * 90 + 200}>
-                <div style={{ background: 'rgba(255,255,255,0.13)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255,255,255,0.22)', borderRadius: 16, padding: '1rem 1.4rem', display: 'flex', alignItems: 'center', gap: '0.9rem', animation: `floatBadge ${5 + i}s ease-in-out infinite ${i % 2 ? 'reverse' : ''}` }}>
-                  <div style={{ width: 42, height: 42, borderRadius: 11, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{s.icon}</div>
-                  <div>
-                    <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>{s.value}</div>
-                    <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.68)', marginTop: 2 }}>{s.label}</div>
-                  </div>
-                </div>
-              </AnimateOnScroll>
-            ))}
-          </div>
+      <section style={{
+        position: 'relative',
+        height: 420,
+        overflow: 'hidden',
+        backgroundImage: 'url(https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center 30%',
+      }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,15,40,0.6) 0%, rgba(10,15,40,0.75) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 2rem', paddingTop: 80, textAlign: 'center', zIndex: 1 }}>
+          <AnimateOnScroll animation="fadeUp">
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 50, padding: '5px 16px', color: '#fff', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
+              14+ Partner Universities
+            </div>
+            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '1rem' }}>
+              Find Your Dream University
+            </h1>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', maxWidth: 500, margin: '0 auto 2rem', lineHeight: 1.7 }}>
+              UGC-approved online degrees from India&apos;s top NAAC-accredited institutions.
+            </p>
+            <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
+              <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none', zIndex: 2 }} />
+              <input
+                type="text"
+                placeholder="Search universities or locations..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                style={{ width: '100%', padding: '0.9rem 1.25rem 0.9rem 2.75rem', borderRadius: 50, border: 'none', fontSize: '0.92rem', outline: 'none', color: '#0f172a', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.3)', boxSizing: 'border-box' }}
+              />
+            </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
-      {/* ── GRID ── */}
-      <section style={{ padding: '3.5rem 2rem 6rem', background: '#f8fafc' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b' }}>{filtered.length} Universities</span>
-            <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>Click a card to explore programs</span>
-          </div>
+      {/* ── STATS STRIP ── */}
+      <div style={{ background: '#1e40af', padding: '1rem 2rem' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' }}>
+          {[['14+', 'Universities'], ['500+', 'Programs'], ['UGC-DEB', 'Approved'], ['NAAC', 'Accredited']].map(([val, lbl]) => (
+            <div key={lbl} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>{val}</div>
+              <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>{lbl}</div>
+            </div>
+          ))}
+        </div>
+      </div>
 
+      {/* ── RESULTS COUNT ── */}
+      <div style={{ padding: '1.5rem 2rem 0' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <p style={{ fontSize: '0.88rem', color: '#64748b' }}>
+            Showing <strong style={{ color: '#0f172a' }}>{filtered.length}</strong> universities
+            {search && <> for &quot;<strong style={{ color: '#1e40af' }}>{search}</strong>&quot;</>}
+          </p>
+        </div>
+      </div>
+
+      {/* ── GRID ── */}
+      <section style={{ padding: '1.5rem 2rem 5rem' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           {loading ? (
             <div style={{ textAlign: 'center', padding: '5rem' }}>
-              <div style={{ display: 'inline-block', width: 42, height: 42, border: '4px solid #e2e8f0', borderTop: `4px solid ${ACCENT}`, borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+              <div style={{ display: 'inline-block', width: 40, height: 40, border: '4px solid #e2e8f0', borderTop: '4px solid #1e40af', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
             </div>
           ) : filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '4rem', background: '#fff', borderRadius: 18 }}>
+            <div style={{ textAlign: 'center', padding: '4rem' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏛️</div>
               <p style={{ color: '#64748b' }}>No universities found.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '1.4rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
               {filtered.map((uni, i) => {
-                const color = COLORS[i % COLORS.length];
-                const isHov = hovered === i;
+                const imgSrc = uni.image || UNI_IMAGES[i % UNI_IMAGES.length];
                 return (
-                  <AnimateOnScroll key={i} animation="fadeUp" delay={i * 45}>
-                    <Link href={`/universities/${uni.slug}`} style={{ textDecoration: 'none', display: 'block' }}
-                      onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
-                      <div style={{ background: '#fff', borderRadius: 18, overflow: 'hidden', border: `1.5px solid ${isHov ? color : '#e2e8f0'}`, boxShadow: isHov ? `0 12px 40px ${color}28` : '0 2px 10px rgba(0,0,0,0.06)', transform: isHov ? 'translateY(-5px)' : 'none', transition: 'all 0.28s ease', display: 'flex', flexDirection: 'column' }}>
-                        {/* banner */}
-                        <div style={{ height: 130, position: 'relative', background: `linear-gradient(135deg, ${color}ee, ${color}88)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          {uni.image
-                            ? <Image src={uni.image} alt={uni.name} fill style={{ objectFit: 'cover' }} onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
-                            : <span style={{ fontSize: '2.8rem', fontWeight: 900, color: 'rgba(255,255,255,0.28)' }}>{uni.name.charAt(0)}</span>
-                          }
-                          <span style={{ position: 'absolute', top: 10, right: 10, background: '#fff', borderRadius: 50, padding: '2px 9px', fontSize: '0.65rem', fontWeight: 800, color }}>NAAC ✓</span>
+                  <AnimateOnScroll key={i} animation="fadeUp" delay={(i % 6) * 60}>
+                    <Link href={`/universities/${uni.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+                      <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid #e2e8f0', background: '#fff', transition: 'all 0.25s', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
+                        onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = '0 20px 48px rgba(30,64,175,0.15)'; el.style.borderColor = '#93c5fd'; }}
+                        onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; el.style.borderColor = '#e2e8f0'; }}
+                      >
+                        {/* Image */}
+                        <div style={{ position: 'relative', height: 200, overflow: 'hidden' }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={imgSrc} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.06)'; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
+                            onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                          />
+                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 55%)' }} />
+                          {uni.naac && (
+                            <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(255,255,255,0.95)', color: '#1e40af', fontSize: '0.65rem', fontWeight: 800, padding: '4px 10px', borderRadius: 6, letterSpacing: '0.04em' }}>
+                              {uni.naac}
+                            </div>
+                          )}
+                          <div style={{ position: 'absolute', bottom: 12, left: 14, right: 14 }}>
+                            <div style={{ display: 'inline-block', background: '#1e40af', color: '#fff', fontSize: '0.6rem', fontWeight: 800, padding: '3px 9px', borderRadius: 4, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 4 }}>
+                              UGC Approved
+                            </div>
+                          </div>
                         </div>
-                        {/* body */}
-                        <div style={{ padding: '1.1rem 1.3rem 1.3rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                          <h3 style={{ fontSize: '0.97rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.35rem', lineHeight: 1.35 }}>{uni.name}</h3>
-                          <p style={{ fontSize: '0.76rem', color: '#64748b', lineHeight: 1.6, marginBottom: '0.9rem', flex: 1 }}>{uni.accreditation}</p>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <span style={{ fontSize: '0.72rem', fontWeight: 700, color, background: `${color}15`, padding: '3px 9px', borderRadius: 50 }}>{uni.programs?.length || 0}+ Programs</span>
-                            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: isHov ? color : '#cbd5e1', transition: 'color 0.2s' }}>Explore →</span>
+
+                        {/* Body */}
+                        <div style={{ padding: '1.25rem' }}>
+                          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.4rem' }}>{uni.name}</h3>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: '1rem' }}>
+                            <MapPin size={12} color="#94a3b8" />
+                            <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{uni.location}</span>
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.1rem', flexWrap: 'wrap' }}>
+                            {[`${uni.programs.length}+ Programs`, 'Online Mode', 'UG & PG'].map((tag, j) => (
+                              <span key={j} style={{ padding: '3px 10px', background: '#f1f5f9', color: '#475569', borderRadius: 50, fontSize: '0.72rem', fontWeight: 600 }}>{tag}</span>
+                            ))}
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }}>
+                            <span style={{ fontSize: '0.8rem', color: '#1e40af', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <GraduationCap size={14} color="#1e40af" /> Explore Programs
+                            </span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e40af" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                           </div>
                         </div>
                       </div>
@@ -168,12 +186,24 @@ export default function UniversitiesPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section style={{ padding: '5rem 2rem', background: `linear-gradient(135deg, #1e2fa8 0%, ${ACCENT} 100%)` }}>
-        <div style={{ maxWidth: 620, margin: '0 auto', textAlign: 'center' }}>
+      <section style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '3.5rem 2rem' }}>
+        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <h2 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', fontWeight: 900, color: '#fff', marginBottom: '0.9rem' }}>Ready to Start Your Journey?</h2>
-            <p style={{ color: 'rgba(255,255,255,0.78)', fontSize: '0.97rem', marginBottom: '2rem', lineHeight: 1.7 }}>Join thousands of students advancing their careers with CDRC.</p>
-            <Link href="/contact" style={{ display: 'inline-block', padding: '0.9rem 2.4rem', background: '#fff', color: ACCENT, borderRadius: 50, fontWeight: 800, fontSize: '0.97rem', textDecoration: 'none', boxShadow: '0 8px 28px rgba(0,0,0,0.15)' }}>Get Started →</Link>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>
+              Not sure which university to pick?
+            </h2>
+            <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '1.75rem', lineHeight: 1.7 }}>
+              Our counsellors provide free, personalised guidance to help you choose the right university and program.
+            </p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button onClick={() => { const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}
+                style={{ padding: '0.8rem 2rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+                Find My Course
+              </button>
+              <Link href="/contact" style={{ padding: '0.8rem 2rem', background: '#fff', color: '#374151', border: '1px solid #e2e8f0', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none' }}>
+                Talk to Counsellor
+              </Link>
+            </div>
           </AnimateOnScroll>
         </div>
       </section>

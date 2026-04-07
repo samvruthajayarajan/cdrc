@@ -190,8 +190,12 @@ export default function LoginPage() {
                 type="email"
                 placeholder="admin@cdrc.edu.in"
                 value={form.email}
+                autoComplete="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 onChange={e => {
-                  setForm(p => ({ ...p, email: e.target.value }));
+                  setForm(p => ({ ...p, email: e.target.value.trim() }));
                   setErrors(p => ({ ...p, email: '' }));
                 }}
                 style={{
@@ -255,8 +259,12 @@ export default function LoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
                 value={form.password}
+                autoComplete="current-password"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 onChange={e => {
-                  setForm(p => ({ ...p, password: e.target.value }));
+                  setForm(p => ({ ...p, password: e.target.value.trim() }));
                   setErrors(p => ({ ...p, password: '' }));
                 }}
                 style={{

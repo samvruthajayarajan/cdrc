@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const ADMIN_EMAIL = 'admin@cdrc.edu.in';
     const ADMIN_PASSWORD = 'cdrc@2025';
 
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    if (email?.trim().toLowerCase() === ADMIN_EMAIL && password?.trim() === ADMIN_PASSWORD) {
       // Create a simple session token
       const token = Buffer.from(`${email}:${Date.now()}`).toString('base64');
       

@@ -2,324 +2,100 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
-import { CheckCircle, Award, Globe, Briefcase } from '@/components/Icon';
+import { GraduationCap, Award, Globe, Briefcase, ArrowRight, Clock, Monitor, CheckCircle, BookOpen } from '@/components/Icon';
 
-const stats = [
-  { value: '10,000+', label: 'Students Enrolled' },
-  { value: '14+', label: 'Partner Universities' },
-  { value: '500+', label: 'Programs Available' },
-  { value: '10+', label: 'Years of Excellence' },
-];
+const RB = '#1a237e';   // royal blue dark
+const RBM = '#283593';  // royal blue mid
+const RBL = '#3949ab';  // royal blue light
+const RBA = '#5c6bc0';  // royal blue accent
 
-const highlights = [
-  { icon: <CheckCircle size={28} />, title: 'UGC-DEB Approved', desc: 'All programs comply with UGC Distance Education Bureau regulations.' },
-  { icon: <Award size={28} />, title: 'NAAC Accredited', desc: 'Partner universities hold NAAC A+ and A++ accreditation.' },
-  { icon: <Globe size={28} />, title: 'Globally Recognized', desc: 'WES evaluation available for international recognition of degrees.' },
-  { icon: <Briefcase size={28} />, title: 'Career Support', desc: 'Dedicated placement assistance and career counseling for all students.' },
+const services = [
+  { icon: <Clock size={28} color="#fff" />, title: '24 Hours Support', desc: 'Our dedicated team is available round the clock to assist you with any queries, no matter the time of day.' },
+  { icon: <GraduationCap size={28} color="#fff" />, title: 'University Admissions', desc: 'Expert guidance for enrolling in 14+ UGC-approved universities with the right program for your goals.' },
+  { icon: <Monitor size={28} color="#fff" />, title: 'Our Management', desc: 'Our management team comprises experienced education leaders dedicated to driving student excellence.' },
 ];
 
 export default function AboutPage() {
   return (
-    <div>
-      {/* Hero - Full Width Image with Overlay Content */}
-      <section style={{ 
-        position: 'relative', 
-        padding: '8rem 2rem 3rem',
-        overflow: 'visible',
-        minHeight: '75vh',
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '5rem'
+    <div style={{ background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
+
+      {/* ── 1. HERO — full-width dark image, centered text ── */}
+      <section style={{
+        position: 'relative', height: 440, overflow: 'hidden',
+        backgroundImage: 'url(/about-hero.jpg)',
+        backgroundSize: 'cover', backgroundPosition: 'center',
       }}>
-        {/* Background Image */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-          <Image 
-            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1600&q=80" 
-            alt="Students learning together" 
-            fill 
-            sizes="100vw"
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-            priority
-          />
-          <div style={{ 
-            position: 'absolute', 
-            inset: 0, 
-            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 64, 175, 0.75) 100%)'
-          }} />
-        </div>
-
-        {/* Content Overlay */}
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto', width: '100%' }}>
-          <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-            <div style={{ overflow: 'hidden', marginBottom: '2rem' }}>
-              <h1 style={{ 
-                fontSize: 'clamp(3rem, 7vw, 5rem)', 
-                fontWeight: 800, 
-                color: '#fff', 
-                marginBottom: 0,
-                lineHeight: 1.15,
-                letterSpacing: '-0.02em',
-                fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
-              }}>
-                <span className="slide-in-left" style={{ display: 'inline-block' }}>Your Gateway to</span>
-                <br/>
-                <span style={{ 
-                  display: 'inline-block',
-                  overflow: 'hidden',
-                  maxWidth: '100%'
-                }}>
-                  <span className="slide-in-right split-text" style={{ 
-                    display: 'inline-block',
-                    background: 'linear-gradient(135deg, #93c5fd 0%, #dbeafe 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    backgroundSize: '200% 200%',
-                    whiteSpace: 'nowrap'
-                  }}>Quality Education</span>
-                </span>
-              </h1>
-            </div>
-            
-            <AnimateOnScroll animation="fadeUp" delay={100}>
-              <p className="fade-in-up" style={{ 
-                color: 'rgba(255,255,255,0.95)', 
-                fontSize: '1.25rem', 
-                lineHeight: 1.8,
-                marginBottom: '2.5rem',
-                fontWeight: 400,
-                fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-                maxWidth: '750px',
-                margin: '0 auto 2.5rem'
-              }}>
-                Partner with India's top UGC-approved universities. Earn recognized degrees online with flexible learning, expert guidance, and career support.
-              </p>
-            </AnimateOnScroll>
-
-            <AnimateOnScroll animation="fadeUp" delay={200}>
-              <div style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap', marginBottom: '2rem', justifyContent: 'center', position: 'relative', zIndex: 30 }}>
-                <Link 
-                  href="/programs"
-                  className="button-hover-animation"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.75rem 1.75rem',
-                    background: '#fff',
-                    color: '#1e40af',
-                    borderRadius: '3rem',
-                    fontWeight: 700,
-                    fontSize: '0.9rem',
-                    textDecoration: 'none',
-                    boxShadow: '0 8px 30px rgba(255, 255, 255, 0.3)',
-                    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  Browse Programs
-                </Link>
-                <Link 
-                  href="/contact"
-                  className="button-hover-animation"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.75rem 1.75rem',
-                    background: 'transparent',
-                    color: '#fff',
-                    border: '2px solid rgba(255,255,255,0.4)',
-                    borderRadius: '3rem',
-                    fontWeight: 700,
-                    fontSize: '0.9rem',
-                    textDecoration: 'none',
-                    backdropFilter: 'blur(10px)',
-                    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  Talk to Expert
-                </Link>
-              </div>
-            </AnimateOnScroll>
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,15,50,0.65)' }} />
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: 80 }}>
+          <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
+            About <span style={{ color: '#90caf9' }}>Us</span>
+          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Link href="/" style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.9rem', textDecoration: 'none' }}>Home</Link>
+            <span style={{ color: 'rgba(255,255,255,0.4)' }}>/</span>
+            <span style={{ color: '#fff', fontSize: '0.9rem' }}>About Us</span>
           </div>
         </div>
-
-        {/* CSS Animations */}
-        <style>{`
-          @keyframes slideInLeft {
-            0% {
-              opacity: 0;
-              transform: translateX(-100px);
-            }
-            60% {
-              transform: translateX(10px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateX(0);
-            }
-          }
-
-          @keyframes slideInRight {
-            0% {
-              opacity: 0;
-              transform: translateX(100px);
-            }
-            60% {
-              transform: translateX(-10px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateX(0);
-            }
-          }
-
-          @keyframes splitBreak {
-            0% {
-              letter-spacing: -0.02em;
-              opacity: 0;
-              transform: scale(0.8);
-            }
-            30% {
-              letter-spacing: 0.15em;
-              opacity: 0.7;
-              transform: scale(1.05);
-            }
-            100% {
-              letter-spacing: -0.02em;
-              opacity: 1;
-              transform: scale(1);
-            }
-          }
-
-          @keyframes gradientShift {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
-          }
-
-          @keyframes fadeInUp {
-            0% {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          .slide-in-left {
-            animation: slideInLeft 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-          }
-
-          .slide-in-right {
-            animation: slideInRight 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both;
-          }
-
-          .split-text {
-            animation: splitBreak 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both, gradientShift 3s ease infinite 1.5s;
-          }
-
-          .fade-in-up {
-            animation: fadeInUp 0.8s ease-out 0.6s both;
-          }
-
-          .button-hover-animation {
-            position: relative;
-            overflow: hidden;
-          }
-
-          .button-hover-animation::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-          }
-
-          .button-hover-animation:hover::before {
-            width: 300px;
-            height: 300px;
-          }
-
-          .button-hover-animation:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.4);
-          }
-
-          @media (max-width: 768px) {
-            section > div > div {
-              padding: 0 1rem;
-            }
-          }
-        `}</style>
       </section>
 
-      {/* Mission */}
+      {/* ── 2. ABOUT US — left image, right text ── */}
       <section style={{ padding: '5rem 2rem', background: '#fff' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div className="about-grid-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
-            <AnimateOnScroll animation="slideRight">
-              <div style={{ position: 'relative', paddingBottom: '2rem' }}>
-                <div className="img-zoom-wrap" style={{ borderRadius: '1rem', overflow: 'hidden', position: 'relative', aspectRatio: '4/3', boxShadow: '0 10px 40px rgba(0,0,0,0.12)' }}>
-                  <Image src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=900&q=80" alt="Students in classroom" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} />
-                </div>
-                <div className="badge-float" style={{ position: 'absolute', bottom: 0, left: 0, background: '#1e40af', borderRadius: '0.75rem', padding: '1rem 1.25rem', boxShadow: '0 8px 24px rgba(30,64,175,0.4)' }}>
-                  <div style={{ color: '#fff', fontWeight: 900, fontSize: '1.5rem', lineHeight: 1 }}>10+</div>
-                  <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.7rem', marginTop: '0.2rem' }}>Years of Excellence</div>
-                </div>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+          <AnimateOnScroll animation="slideRight">
+            <div style={{ borderRadius: '1rem', overflow: 'hidden', position: 'relative', aspectRatio: '4/3', boxShadow: '0 12px 40px rgba(0,0,0,0.12)' }}>
+              <Image src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=800&q=80" alt="CDRC team" fill sizes="50vw" style={{ objectFit: 'cover' }} />
+            </div>
+          </AnimateOnScroll>
+
+          <AnimateOnScroll animation="slideLeft">
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '0.75rem' }}>
+                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 700 }}>About Us</span>
+                <span style={{ color: RBL }}>›</span>
               </div>
-            </AnimateOnScroll>
-            <AnimateOnScroll animation="slideLeft">
-              <div>
-                <h2 className="section-heading left-heading" style={{ textAlign: 'left' }}>Our <span style={{ color: '#1e40af' }}>Mission</span></h2>
-                <p style={{ color: '#6b7280', lineHeight: 1.8, marginBottom: '1rem', fontSize: '0.9rem' }}>
-                  CDRC is a leading education consultancy based in Kanhangad, Kerala, dedicated to making quality higher education accessible to all. We partner with 14+ UGC-approved, NAAC-accredited universities to offer 500+ online degree and diploma programs.
-                </p>
-                <p style={{ color: '#6b7280', lineHeight: 1.8, marginBottom: '1.75rem', fontSize: '0.9rem' }}>
-                  Our online degrees are fully equivalent to traditional degrees and are valid for government jobs, higher studies, and private sector employment across India and internationally. 73% of our graduates report career advancement within 2 years.
-                </p>
-                <Link href="/universities" className="btn-animated" style={{ background: '#1e40af', color: '#fff', padding: '0.75rem 1.75rem', borderRadius: 50, fontWeight: 600, textDecoration: 'none', fontSize: '0.9rem', display: 'inline-block' }}>
-                  Explore Universities
-                </Link>
-              </div>
-            </AnimateOnScroll>
-          </div>
+              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 900, color: '#0f172a', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
+                Your Gateway to<br />Quality Online Education
+              </h2>
+              <p style={{ color: '#64748b', lineHeight: 1.8, fontSize: '0.92rem', marginBottom: '1rem' }}>
+                CDRC — Centre for Distance and Remote Courses — is Kerala's most trusted education consultancy, headquartered in Kanhangad, Kasargod. Since 2014, we have been helping students across India access UGC-approved online degree programs from top NAAC-accredited universities.
+              </p>
+              <p style={{ color: '#64748b', lineHeight: 1.8, fontSize: '0.92rem', marginBottom: '2rem' }}>
+                We offer expert counselling, seamless admission support, and end-to-end guidance for 500+ programs across 14+ partner universities. Our degrees are fully recognized for government jobs, higher studies, and international careers through WES evaluation.
+              </p>
+              <Link href="/universities" style={{
+                display: 'inline-block', padding: '0.75rem 1.75rem',
+                background: RBL, color: '#fff', borderRadius: 8,
+                fontWeight: 700, textDecoration: 'none', fontSize: '0.9rem',
+                boxShadow: `0 4px 16px ${RBL}40`,
+              }}>Read Details</Link>
+            </div>
+          </AnimateOnScroll>
         </div>
-        <style>{`
-          @media (max-width: 768px) {
-            .about-grid-layout { grid-template-columns: 1fr !important; gap: 3rem !important; }
-          }
-        `}</style>
       </section>
 
-      {/* Highlights */}
-      <section style={{ padding: '5rem 2rem', background: '#f8fafc' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <AnimateOnScroll animation="fadeDown">
-            <h2 className="section-heading">What Makes Us <span style={{ color: '#1e40af' }}>Different</span></h2>
+      {/* ── 4. SERVICES — light grey, centered, 3 icon circles ── */}
+      <section style={{ padding: '5rem 2rem', background: '#f4f6fb' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <AnimateOnScroll animation="fadeUp">
+            <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '0.5rem' }}>
+                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 700 }}>Why Choose Us</span>
+                <span style={{ color: RBL }}>›</span>
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>Our Services</h2>
+              <p style={{ color: '#64748b', fontSize: '0.9rem', maxWidth: 560, margin: '0 auto', lineHeight: 1.7 }}>
+                We provide comprehensive education consultancy services to help students achieve their academic and career goals across India and internationally.
+              </p>
+            </div>
           </AnimateOnScroll>
-          <div className="stagger-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem' }}>
-            {highlights.map((h, i) => (
-              <AnimateOnScroll key={i} animation="rotateIn" delay={i * 80}>
-                <div className="feature-card" style={{ height: '100%' }}>
-                  <div style={{ marginBottom: '1rem', color: '#1e40af' }}>{h.icon}</div>
-                  <h3 style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '0.6rem', color: '#1f2937' }}>{h.title}</h3>
-                  <p style={{ color: '#6b7280', fontSize: '0.875rem', lineHeight: 1.7 }}>{h.desc}</p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2.5rem' }}>
+            {services.map((item, i) => (
+              <AnimateOnScroll key={i} animation="fadeUp" delay={i * 100}>
+                <div style={{ textAlign: 'center', padding: '0 1rem' }}>
+                  <div style={{ width: 72, height: 72, borderRadius: '50%', background: `linear-gradient(135deg, ${RBL}, ${RBA})`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', boxShadow: `0 6px 20px ${RBL}35` }}>{item.icon}</div>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.6rem' }}>{item.title}</h3>
+                  <p style={{ fontSize: '0.83rem', color: '#64748b', lineHeight: 1.7 }}>{item.desc}</p>
                 </div>
               </AnimateOnScroll>
             ))}
@@ -327,133 +103,83 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Info box */}
-      <section style={{ padding: '4rem 2rem', background: '#f8fafc' }}>
+      {/* ── 5. MISSION — dark royal blue rounded card, left text + right image ── */}
+      <section style={{ padding: '3rem 2rem' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <AnimateOnScroll animation="fadeUp">
-            <div style={{ 
-              background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)',
-              padding: '3rem 2.5rem',
-              borderRadius: '1.25rem',
-              boxShadow: '0 20px 60px rgba(30, 64, 175, 0.25)',
-              position: 'relative',
-              overflow: 'hidden'
+            <div style={{
+              background: `linear-gradient(135deg, ${RB} 0%, ${RBM} 100%)`,
+              borderRadius: '1.5rem', overflow: 'hidden',
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              minHeight: 380,
             }}>
-              {/* Decorative elements with animation */}
-              <div className="float-animation" style={{
-                position: 'absolute',
-                top: '-50px',
-                right: '-50px',
-                width: '200px',
-                height: '200px',
-                background: 'rgba(255,255,255,0.1)',
-                borderRadius: '50%',
-                filter: 'blur(40px)'
-              }} />
-              <div className="float-animation-reverse" style={{
-                position: 'absolute',
-                bottom: '-30px',
-                left: '-30px',
-                width: '150px',
-                height: '150px',
-                background: 'rgba(255,255,255,0.08)',
-                borderRadius: '50%',
-                filter: 'blur(30px)'
-              }} />
-
-              <div style={{ position: 'relative', zIndex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-                  <div className="bounce-animation" style={{
-                    width: '60px',
-                    height: '60px',
-                    background: 'rgba(255,255,255,0.15)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: '1rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '2rem',
-                    border: '2px solid rgba(255,255,255,0.2)',
-                    flexShrink: 0
-                  }}>
-                    🎓
-                  </div>
-                  <h3 style={{ 
-                    color: '#fff', 
-                    fontSize: 'clamp(1.25rem, 3vw, 1.75rem)', 
-                    fontWeight: 800,
-                    margin: 0,
-                    letterSpacing: '-0.01em'
-                  }}>
-                    UGC Recognized Online Education
-                  </h3>
+              <div style={{ padding: 'clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '1rem' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.82rem', fontWeight: 700 }}>Our Mission</span>
+                  <span style={{ color: 'rgba(255,255,255,0.5)' }}>›</span>
                 </div>
-                
-                <p style={{ 
-                  color: 'rgba(255,255,255,0.95)', 
-                  lineHeight: 1.8, 
-                  fontSize: '1rem',
-                  marginBottom: '2rem'
-                }}>
-                  All programs offered through CDRC are approved by the University Grants Commission (UGC) and are fully equivalent to traditional on-campus degrees. These degrees are accepted for government job applications (UPSC, SSC, Banking), higher studies (Masters, PhD), and private sector employment across India and internationally through WES evaluation.
+                <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.3rem)', fontWeight: 900, color: '#fff', lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
+                  Focused on<br />Your Education Journey
+                </h2>
+                <p style={{ color: 'rgba(255,255,255,0.75)', lineHeight: 1.8, fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                  CDRC is dedicated to making quality higher education accessible to all. We partner with India's top UGC-approved universities to offer flexible online degrees that are fully recognized for government jobs, higher studies, and international careers.
                 </p>
-
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-                  gap: '1rem'
-                }}>
-                  {[
-                    { icon: '✓', text: 'UGC-DEB Approved' },
-                    { icon: '✓', text: 'NAAC Accredited' },
-                    { icon: '✓', text: 'WES Evaluation Available' },
-                    { icon: '✓', text: 'Valid for Govt. Jobs' }
-                  ].map((item, i) => (
-                    <AnimateOnScroll key={i} animation="fadeUp" delay={i * 100}>
-                      <div className="ugc-feature-card" style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.75rem',
-                        background: 'rgba(255,255,255,0.1)',
-                        backdropFilter: 'blur(10px)',
-                        padding: '1rem 1.25rem',
-                        borderRadius: '0.75rem',
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        transition: 'all 0.3s ease',
-                        cursor: 'pointer'
-                      }}>
-                        <span className="pulse-animation" style={{
-                          width: '28px',
-                          height: '28px',
-                          background: 'rgba(255,255,255,0.2)',
-                          borderRadius: '50%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#fff',
-                          fontWeight: 900,
-                          fontSize: '1rem',
-                          flexShrink: 0,
-                          animationDelay: `${i * 0.2}s`
-                        }}>
-                          {item.icon}
-                        </span>
-                        <span style={{
-                          color: '#fff',
-                          fontSize: '0.9rem',
-                          fontWeight: 600
-                        }}>
-                          {item.text}
-                        </span>
-                      </div>
-                    </AnimateOnScroll>
-                  ))}
-                </div>
+                <Link href="/contact" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  background: '#fff', color: RB,
+                  padding: '0.75rem 1.6rem', borderRadius: 8,
+                  fontWeight: 800, textDecoration: 'none', fontSize: '0.88rem',
+                  alignSelf: 'flex-start',
+                }}>View More</Link>
               </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80"
+                alt="Education journey"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: 280 }}
+              />
             </div>
           </AnimateOnScroll>
         </div>
       </section>
+
+      {/* ── 6. SUCCESS STORIES — light grey, centered, 4 big stats ── */}
+      <section style={{ padding: '5rem 2rem', background: '#f4f6fb' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <AnimateOnScroll animation="fadeUp">
+            <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '0.5rem' }}>
+                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 700 }}>Our Success Story</span>
+                <span style={{ color: RBL }}>›</span>
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
+                Our Proven<br />Success Stories
+              </h2>
+              <p style={{ color: '#64748b', fontSize: '0.9rem', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
+                Our track record speaks for itself. Thousands of students have transformed their careers through CDRC's guidance and support.
+              </p>
+            </div>
+          </AnimateOnScroll>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem' }}>
+            {[
+              { value: '10K+', label: 'Students Enrolled' },
+              { value: '500+', label: 'Programs Available' },
+              { value: '10+', label: 'Years of Experience' },
+              { value: '98%', label: 'Positive Reviews' },
+            ].map((s, i) => (
+              <AnimateOnScroll key={i} animation="fadeUp" delay={i * 80}>
+                <div style={{ textAlign: 'center', padding: '2rem 1rem', background: '#fff', borderRadius: '1rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
+                  <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>{s.value}</div>
+                  <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 8, fontWeight: 500 }}>{s.label}</div>
+                </div>
+              </AnimateOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
     </div>
   );
 }

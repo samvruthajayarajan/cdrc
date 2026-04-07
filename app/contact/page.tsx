@@ -1,9 +1,57 @@
 'use client';
-import Marquee from '@/components/Marquee';
-import Image from 'next/image';
 import { useState } from 'react';
-import { Phone, Mail, MessageCircle, MapPin } from '@/components/Icon';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
+
+const INFO = [
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+      </svg>
+    ),
+    label: 'Phone',
+    lines: ['0467-2211200', '+91 9846446055', '+91 9562446055', '+91 7511100080'],
+    href: (v: string) => `tel:${v.replace(/\s/g, '')}`,
+    color: '#4361EE',
+    bg: '#eef2ff',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+      </svg>
+    ),
+    label: 'Email',
+    lines: ['info@cdrc.edu.in', 'admissions@cdrc.edu.in'],
+    href: (v: string) => `mailto:${v}`,
+    color: '#0f766e',
+    bg: '#f0fdfa',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+      </svg>
+    ),
+    label: 'WhatsApp',
+    lines: ['+91 9846446055'],
+    href: () => 'https://wa.me/919846446055',
+    color: '#16a34a',
+    bg: '#f0fdf4',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+      </svg>
+    ),
+    label: 'Address',
+    lines: ['City Centre Building, 2nd Floor', 'Near Bus Stand, Kanhangad', 'Kasargod, Kerala – 671315'],
+    href: () => '',
+    color: '#b45309',
+    bg: '#fffbeb',
+  },
+];
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
@@ -14,7 +62,7 @@ export default function ContactPage() {
     const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = 'Name is required';
     if (!form.email.trim()) e.email = 'Email is required';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Invalid email format';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Invalid email';
     if (!form.message.trim()) e.message = 'Message is required';
     return e;
   }
@@ -34,347 +82,245 @@ export default function ContactPage() {
     } catch { setStatus('error'); }
   }
 
-  const contacts = [
-    { icon: <Phone size={26} />, title: 'Phone Numbers', items: [
-      { text: '0467-2211200', href: 'tel:04672211200' },
-      { text: '+91 9846446055', href: 'tel:+919846446055' },
-      { text: '+91 9562446055', href: 'tel:+919562446055' },
-      { text: '+91 7511100080', href: 'tel:+917511100080' },
-    ]},
-    { icon: <Mail size={26} />, title: 'Email Addresses', items: [
-      { text: 'info@cdrc.edu.in', href: 'mailto:info@cdrc.edu.in' },
-      { text: 'admissions@cdrc.edu.in', href: 'mailto:admissions@cdrc.edu.in' },
-    ]},
-    { icon: <MessageCircle size={26} />, title: 'WhatsApp', items: [
-      { text: '+91 9846446055', href: 'https://wa.me/919846446055' },
-    ]},
-    { icon: <MapPin size={26} />, title: 'Office Address', items: [
-      { text: 'City Centre Building, 2nd Floor', href: '' },
-      { text: 'Near Bus Stand, Kanhangad', href: '' },
-      { text: 'Kasargod, Kerala - 671315', href: '' },
-    ]},
-  ];
-
-  const inputStyle = (field: string): React.CSSProperties => ({
-    width: '100%', padding: '0.875rem 1rem',
-    border: `1px solid ${errors[field] ? '#ef4444' : '#e5e7eb'}`,
-    borderRadius: '0.5rem', fontSize: '0.95rem', fontFamily: 'inherit',
-    outline: 'none', transition: 'border-color 0.2s', background: '#fff', color: '#1f2937',
-  });
+  const field = (key: keyof typeof form, label: string, type = 'text', placeholder = '', required = false) => (
+    <div>
+      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        {label}{required && <span style={{ color: '#ef4444', marginLeft: 2 }}>*</span>}
+      </label>
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={form[key]}
+        onChange={e => { setForm(p => ({ ...p, [key]: e.target.value })); setErrors(p => ({ ...p, [key]: '' })); }}
+        style={{
+          width: '100%', padding: '0.8rem 1rem', borderRadius: 10, fontFamily: 'inherit',
+          fontSize: '0.92rem', outline: 'none', transition: 'border-color 0.2s, box-shadow 0.2s',
+          border: `1.5px solid ${errors[key] ? '#ef4444' : '#e2e8f0'}`,
+          background: '#f8fafc', color: '#0f172a',
+        }}
+        onFocus={e => { e.currentTarget.style.borderColor = '#4361EE'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,97,238,0.1)'; e.currentTarget.style.background = '#fff'; }}
+        onBlur={e => { e.currentTarget.style.borderColor = errors[key] ? '#ef4444' : '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#f8fafc'; }}
+      />
+      {errors[key] && <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.3rem' }}>{errors[key]}</p>}
+    </div>
+  );
 
   return (
-    <div>
+    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+
       {/* Hero */}
-      <section style={{ position: 'relative', padding: '16rem 2rem 11rem', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0 }}>
-          <Image src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1600&q=80" alt="Team working" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'center 30%' }} priority />
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,16,40,0.82)' }} />
+      <section style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+        {/* Background image */}
+        <img
+          src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80"
+          alt="Office"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+        />
+        {/* Overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.92) 0%, rgba(67,97,238,0.75) 100%)' }} />
+
+        {/* Dot grid pattern */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
+
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '9rem 2rem 5rem', width: '100%' }}>
+          {/* Breadcrumb */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
+            <span>Home</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+            <span style={{ color: '#93c5fd' }}>Contact</span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '2rem', alignItems: 'flex-end' }} className="contact-hero-grid">
+            <div>
+              <h1 style={{ fontSize: 'clamp(2.8rem,6vw,4.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.05, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
+                Get in Touch<br />
+                <span style={{ color: '#90e0ef' }}>With Our Team</span>
+              </h1>
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '1.05rem', lineHeight: 1.8, maxWidth: 500, marginBottom: '2rem' }}>
+                Have questions about admissions, fees, or programs? Our counselors are ready to help — Monday to Saturday, 9 AM to 6 PM.
+              </p>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <a href="tel:+919846446055" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '12px 24px', borderRadius: 10, fontWeight: 700, fontSize: '0.9rem', textDecoration: 'none', boxShadow: '0 4px 20px rgba(67,97,238,0.5)' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                  Call Now
+                </a>
+                <a href="https://wa.me/919846446055" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.1)', color: '#fff', padding: '12px 24px', borderRadius: 10, fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                  WhatsApp Us
+                </a>
+              </div>
+            </div>
+
+            {/* Right — quick stats */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', minWidth: 200 }} className="contact-hero-stats">
+              {[
+                { num: '24h', label: 'Response time' },
+                { num: '10K+', label: 'Students helped' },
+                { num: 'Free', label: 'Counseling' },
+              ].map((s, i) => (
+                <div key={i} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 12, padding: '0.875rem 1.25rem', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#90e0ef', lineHeight: 1, minWidth: 52 }}>{s.num}</div>
+                  <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto' }}>
-          <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', marginBottom: '1rem' }}>Contact Us</h1>
-          <p style={{ color: '#cbd5e1', fontSize: '1.05rem', maxWidth: 560, lineHeight: 1.8 }}>
-            Get in touch with our admission counselors — Monday to Saturday, 9 AM to 6 PM.
-          </p>
-        </div>
+
+        {/* Bottom fade into page bg */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, background: 'linear-gradient(to bottom, transparent, #f8fafc)', pointerEvents: 'none' }} />
       </section>
 
-      <Marquee />
-
-      {/* Contact cards */}
-      <section style={{ padding: '5rem 2rem 4rem', background: '#fff' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <h2 className="section-heading">Get In <span style={{ color: '#1e40af' }}>Touch</span></h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-            {contacts.map((c, i) => (
-              <AnimateOnScroll key={c.title} animation={i % 2 === 0 ? 'fadeLeft' : 'fadeRight'} delay={i * 100}>
-                <div className="feature-card">
-                  <div style={{ marginBottom: '1rem', color: '#1e40af' }}>{c.icon}</div>
-                  <h3 style={{ fontWeight: 700, fontSize: '1rem', marginBottom: '0.875rem', color: '#1f2937' }}>{c.title}</h3>
-                  {c.items.map((item, idx) => (
-                    item.href
-                      ? <a key={idx} href={item.href} target={item.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
-                          style={{ display: 'block', color: '#1e40af', textDecoration: 'none', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.875rem' }}>
-                          {item.text}
-                        </a>
-                      : <p key={idx} style={{ color: '#6b7280', marginBottom: '0.25rem', fontSize: '0.875rem' }}>{item.text}</p>
-                  ))}
+      {/* Info cards */}
+      <section style={{ padding: '4rem 2rem 0', background: '#f8fafc' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.25rem', marginTop: '-3rem' }} className="info-cards-grid">
+            {INFO.map((c, i) => (
+              <AnimateOnScroll key={c.label} animation="fadeUp" delay={i * 70}>
+                <div style={{ background: '#fff', borderRadius: 16, padding: '1.5rem', border: '1.5px solid #f1f5f9', boxShadow: '0 4px 16px rgba(0,0,0,0.06)', transition: 'all 0.25s', height: '100%' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = c.color; e.currentTarget.style.boxShadow = `0 8px 28px ${c.color}22`; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#f1f5f9'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                  <div style={{ width: 46, height: 46, borderRadius: 12, background: c.bg, color: c.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                    {c.icon}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>{c.label}</div>
+                  {c.lines.map((line, j) => {
+                    const href = c.href(line);
+                    return href
+                      ? <a key={j} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
+                          style={{ display: 'block', color: c.color, fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none', lineHeight: 1.7 }}>{line}</a>
+                      : <p key={j} style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.7, margin: 0 }}>{line}</p>;
+                  })}
                 </div>
               </AnimateOnScroll>
             ))}
           </div>
-
-          {/* Office hours */}
-          <AnimateOnScroll animation="fadeUp">
-            <div style={{ 
-              background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', 
-              padding: '2.5rem 3rem', 
-              borderRadius: '1.25rem', 
-              border: '1px solid #bfdbfe',
-              marginBottom: '4rem',
-              boxShadow: '0 4px 16px rgba(30, 64, 175, 0.08)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-                  borderRadius: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(30, 64, 175, 0.25)'
-                }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                  </svg>
-                </div>
-                <h3 style={{ 
-                  color: '#1e40af', 
-                  fontWeight: 700, 
-                  fontSize: '1.25rem',
-                  margin: 0
-                }}>
-                  Office Hours
-                </h3>
-              </div>
-              
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-                gap: '2rem'
-              }}>
-                <div style={{
-                  background: 'rgba(255,255,255,0.7)',
-                  backdropFilter: 'blur(10px)',
-                  padding: '1.5rem',
-                  borderRadius: '0.75rem',
-                  border: '1px solid rgba(255,255,255,0.5)'
-                }}>
-                  <p style={{ 
-                    color: '#1e40af', 
-                    fontWeight: 700, 
-                    marginBottom: '0.5rem', 
-                    fontSize: '0.875rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em'
-                  }}>
-                    Monday – Saturday
-                  </p>
-                  <p style={{ 
-                    color: '#1f2937', 
-                    fontSize: '1.125rem',
-                    fontWeight: 600
-                  }}>
-                    9:00 AM – 6:00 PM
-                  </p>
-                </div>
-                
-                <div style={{
-                  background: 'rgba(255,255,255,0.7)',
-                  backdropFilter: 'blur(10px)',
-                  padding: '1.5rem',
-                  borderRadius: '0.75rem',
-                  border: '1px solid rgba(255,255,255,0.5)'
-                }}>
-                  <p style={{ 
-                    color: '#1e40af', 
-                    fontWeight: 700, 
-                    marginBottom: '0.5rem', 
-                    fontSize: '0.875rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em'
-                  }}>
-                    Sunday
-                  </p>
-                  <p style={{ 
-                    color: '#64748b', 
-                    fontSize: '1.125rem',
-                    fontWeight: 600
-                  }}>
-                    Closed
-                  </p>
-                </div>
-                
-                <div style={{
-                  background: 'rgba(255,255,255,0.7)',
-                  backdropFilter: 'blur(10px)',
-                  padding: '1.5rem',
-                  borderRadius: '0.75rem',
-                  border: '1px solid rgba(255,255,255,0.5)'
-                }}>
-                  <p style={{ 
-                    color: '#1e40af', 
-                    fontWeight: 700, 
-                    marginBottom: '0.5rem', 
-                    fontSize: '0.875rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em'
-                  }}>
-                    WhatsApp Support
-                  </p>
-                  <p style={{ 
-                    color: '#1f2937', 
-                    fontSize: '0.95rem',
-                    fontWeight: 500,
-                    lineHeight: 1.5
-                  }}>
-                    Quick response during office hours
-                  </p>
-                </div>
-              </div>
-            </div>
-          </AnimateOnScroll>
         </div>
       </section>
 
-      {/* Contact Form */}
-      <section style={{ padding: '5rem 2rem 6rem', background: '#fff', borderTop: '1px solid #e5e7eb' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }} className="contact-form-grid">
+      {/* Form + hours */}
+      <section style={{ padding: '5rem 2rem 6rem', background: '#f8fafc' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: '3rem', alignItems: 'start' }} className="contact-grid">
 
-            {/* Left — info */}
-            <AnimateOnScroll animation="slideRight">
-              <div style={{ paddingTop: '3rem' }}>
-                <h2 className="section-heading left-heading" style={{ textAlign: 'left' }}>Send Us a <span style={{ color: '#1e40af' }}>Message</span></h2>
-                <p style={{ color: '#6b7280', lineHeight: 1.8, marginBottom: '2rem', fontSize: '0.95rem' }}>
-                  Have a question about admissions, programs, or fees? Fill in the form and our counselors will get back to you within 24 hours.
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  {[
-                    { icon: <Phone size={20} color="#1e40af" />, label: 'Call Us', value: '+91 9846446055' },
-                    { icon: <Mail size={20} color="#1e40af" />, label: 'Email Us', value: 'info@cdrc.edu.in' },
-                    { icon: <MapPin size={20} color="#1e40af" />, label: 'Visit Us', value: 'City Centre Building, 2nd Floor, Near Bus Stand, Kanhangad, Kasargod, Kerala - 671315' },
-                  ].map((item, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                      <div style={{ width: 44, height: 44, background: '#dbeafe', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{item.icon}</div>
-                      <div>
-                        <div style={{ fontWeight: 700, color: '#1f2937', fontSize: '0.875rem', marginBottom: '0.2rem' }}>{item.label}</div>
-                        <div style={{ color: '#6b7280', fontSize: '0.875rem', lineHeight: 1.5 }}>{item.value}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+          {/* Left — hours + map placeholder */}
+          <AnimateOnScroll animation="slideRight">
+            <div>
+              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Office Hours</span>
+              <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.2, marginBottom: '0.75rem' }}>
+                We&apos;re here<br />when you need us
+              </h2>
+              <p style={{ color: '#64748b', fontSize: '0.92rem', lineHeight: 1.75, marginBottom: '2rem' }}>
+                Drop by, call, or send us a message. Our team is ready to guide you through admissions, fees, and program selection.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2.5rem' }}>
+                {[
+                  { day: 'Monday – Saturday', time: '9:00 AM – 6:00 PM', open: true },
+                  { day: 'Sunday', time: 'Closed', open: false },
+                ].map(row => (
+                  <div key={row.day} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.875rem 1.25rem', borderRadius: 12, background: '#fff', border: '1.5px solid #f1f5f9' }}>
+                    <span style={{ fontWeight: 600, fontSize: '0.88rem', color: '#0f172a' }}>{row.day}</span>
+                    <span style={{ fontWeight: 700, fontSize: '0.85rem', color: row.open ? '#16a34a' : '#94a3b8', background: row.open ? '#f0fdf4' : '#f8fafc', padding: '3px 12px', borderRadius: 50 }}>{row.time}</span>
+                  </div>
+                ))}
               </div>
-            </AnimateOnScroll>
 
-            {/* Right — form */}
-            <AnimateOnScroll animation="slideLeft">
-              <div style={{ background: '#fff', borderRadius: '1rem', padding: '2.5rem', boxShadow: '0 10px 40px rgba(0,0,0,0.12)', border: '1px solid #e5e7eb', marginTop: '3rem' }}>
+              {/* Map embed placeholder */}
+              <div style={{ borderRadius: 16, overflow: 'hidden', border: '1.5px solid #e2e8f0', height: 220, background: '#e2e8f0', position: 'relative' }}>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3893.0539388!2d74.9717!3d12.3547!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba4a4e1b1b1b1b1%3A0x0!2sCity+Centre+Building%2C+Kanhangad%2C+Kasaragod%2C+Kerala+671315!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                  width="100%" height="220" style={{ border: 0, display: 'block' }} allowFullScreen loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+              <a
+                href="https://www.google.com/maps/search/City+Centre+Building+Kanhangad+Kasaragod+Kerala+671315"
+                target="_blank" rel="noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: '0.875rem', color: '#4361EE', fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none' }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Get Directions
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </AnimateOnScroll>
+
+          {/* Right — form */}
+          <AnimateOnScroll animation="slideLeft">
+            <div style={{ background: '#fff', borderRadius: 20, padding: '2.5rem', boxShadow: '0 8px 40px rgba(0,0,0,0.08)', border: '1.5px solid #f1f5f9' }}>
               {status === 'success' ? (
                 <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
-                  <h3 style={{ color: '#16a34a', fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>Message Sent!</h3>
-                  <p style={{ color: '#6b7280', fontSize: '0.9rem' }}>Thank you for reaching out. Our team will contact you within 24 hours.</p>
-                  <button onClick={() => setStatus('idle')} style={{ marginTop: '1.5rem', background: '#1e40af', color: '#fff', padding: '0.75rem 1.75rem', borderRadius: 50, border: 'none', fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem' }}>
+                  <div style={{ width: 72, height: 72, background: '#f0fdf4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 style={{ color: '#0f172a', fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.5rem' }}>Message Sent!</h3>
+                  <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.7 }}>Our team will get back to you within 24 hours.</p>
+                  <button onClick={() => setStatus('idle')} style={{ marginTop: '1.5rem', background: '#4361EE', color: '#fff', padding: '10px 28px', borderRadius: 50, border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit' }}>
                     Send Another
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit}>
-                  <h3 style={{ fontWeight: 800, fontSize: '1.25rem', color: '#1f2937', marginBottom: '1.75rem' }}>Contact Form</h3>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', color: '#374151', marginBottom: '0.4rem' }}>Full Name *</label>
-                      <input type="text" placeholder="Your full name" value={form.name}
-                        onChange={e => { setForm(p => ({ ...p, name: e.target.value })); setErrors(p => ({ ...p, name: '' })); }}
-                        style={inputStyle('name')} />
-                      {errors.name && <p style={{ color: '#ef4444', fontSize: '0.78rem', marginTop: '0.25rem' }}>{errors.name}</p>}
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', color: '#374151', marginBottom: '0.4rem' }}>Email Address *</label>
-                      <input type="email" placeholder="your@email.com" value={form.email}
-                        onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setErrors(p => ({ ...p, email: '' })); }}
-                        style={inputStyle('email')} />
-                      {errors.email && <p style={{ color: '#ef4444', fontSize: '0.78rem', marginTop: '0.25rem' }}>{errors.email}</p>}
-                    </div>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.25rem' }}>Send a Message</h3>
+                    <p style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Fill in the form and we&apos;ll be in touch shortly.</p>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', color: '#374151', marginBottom: '0.4rem' }}>Phone Number</label>
-                      <input type="tel" placeholder="+91 XXXXXXXXXX" value={form.phone}
-                        onChange={e => setForm(p => ({ ...p, phone: e.target.value }))}
-                        style={inputStyle('')} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', color: '#374151', marginBottom: '0.4rem' }}>Subject</label>
-                      <input type="text" placeholder="e.g. Admission Inquiry" value={form.subject}
-                        onChange={e => setForm(p => ({ ...p, subject: e.target.value }))}
-                        style={inputStyle('')} />
-                    </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    {field('name', 'Full Name', 'text', 'Your name', true)}
+                    {field('email', 'Email', 'email', 'you@email.com', true)}
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    {field('phone', 'Phone', 'tel', '+91 XXXXXXXXXX')}
+                    {field('subject', 'Subject', 'text', 'e.g. Admission Inquiry')}
                   </div>
 
-                  <div style={{ marginBottom: '1.5rem' }}>
-                    <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', color: '#374151', marginBottom: '0.4rem' }}>Message *</label>
-                    <textarea placeholder="Write your message here..." value={form.message} rows={5}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      Message <span style={{ color: '#ef4444' }}>*</span>
+                    </label>
+                    <textarea
+                      placeholder="Write your message here..."
+                      value={form.message} rows={5}
                       onChange={e => { setForm(p => ({ ...p, message: e.target.value })); setErrors(p => ({ ...p, message: '' })); }}
-                      style={{ ...inputStyle('message'), resize: 'vertical' }} />
-                    {errors.message && <p style={{ color: '#ef4444', fontSize: '0.78rem', marginTop: '0.25rem' }}>{errors.message}</p>}
+                      style={{
+                        width: '100%', padding: '0.8rem 1rem', borderRadius: 10, fontFamily: 'inherit',
+                        fontSize: '0.92rem', outline: 'none', resize: 'vertical', transition: 'border-color 0.2s, box-shadow 0.2s',
+                        border: `1.5px solid ${errors.message ? '#ef4444' : '#e2e8f0'}`,
+                        background: '#f8fafc', color: '#0f172a',
+                      }}
+                      onFocus={e => { e.currentTarget.style.borderColor = '#4361EE'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(67,97,238,0.1)'; e.currentTarget.style.background = '#fff'; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = errors.message ? '#ef4444' : '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#f8fafc'; }}
+                    />
+                    {errors.message && <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.3rem' }}>{errors.message}</p>}
                   </div>
 
-                  {status === 'error' && <p style={{ color: '#ef4444', fontSize: '0.875rem', marginBottom: '1rem' }}>Something went wrong. Please try again.</p>}
+                  {status === 'error' && <p style={{ color: '#ef4444', fontSize: '0.82rem' }}>Something went wrong. Please try again.</p>}
 
                   <button type="submit" disabled={status === 'loading'}
-                    style={{ width: '100%', background: '#1e40af', color: '#fff', padding: '0.875rem', border: 'none', borderRadius: 50, fontWeight: 700, fontSize: '1rem', cursor: 'pointer', opacity: status === 'loading' ? 0.7 : 1, transition: 'all 0.3s' }}>
-                    {status === 'loading' ? 'Sending...' : 'Send Message →'}
+                    style={{ width: '100%', background: 'linear-gradient(135deg,#4361EE,#4895ef)', color: '#fff', padding: '0.9rem', border: 'none', borderRadius: 12, fontWeight: 700, fontSize: '0.95rem', cursor: 'pointer', opacity: status === 'loading' ? 0.7 : 1, transition: 'all 0.2s', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                    onMouseEnter={e => { if (status !== 'loading') { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(67,97,238,0.4)'; } }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                    {status === 'loading' ? 'Sending…' : <>Send Message <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></>}
                   </button>
                 </form>
               )}
             </div>
-            </AnimateOnScroll>
-          </div>
-        </div>
-        <style>{`
-          @media (max-width: 768px) {
-            .contact-form-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
-          }
-        `}</style>
-      </section>
-
-      {/* Admin Access Section */}
-      <section style={{ padding: '3rem 2rem', background: '#f9fafb', borderTop: '1px solid #e5e7eb' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', textAlign: 'center' }}>
-          <AnimateOnScroll animation="fadeUp">
-            <div style={{ 
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              padding: '0.875rem 2rem',
-              background: '#fff',
-              border: '2px solid #e5e7eb',
-              borderRadius: '50px',
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#1e40af';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(30, 64, 175, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = '#e5e7eb';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-            onClick={() => window.location.href = '/login'}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e40af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-              <span style={{ 
-                color: '#1e40af', 
-                fontWeight: 600, 
-                fontSize: '0.95rem',
-                letterSpacing: '0.01em'
-              }}>
-                Admin Access
-              </span>
-            </div>
           </AnimateOnScroll>
         </div>
       </section>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .contact-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .info-cards-grid { grid-template-columns: 1fr 1fr !important; }
+          .contact-hero-grid { grid-template-columns: 1fr !important; }
+          .contact-hero-stats { display: none !important; }
+        }
+        @media (max-width: 480px) {
+          .info-cards-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

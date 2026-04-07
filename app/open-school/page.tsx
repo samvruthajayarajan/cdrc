@@ -1,227 +1,171 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Board } from '@/lib/data';
 import EnrollmentModal from '@/components/EnrollmentModal';
-import Marquee from '@/components/Marquee';
-import Image from 'next/image';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
-import { Award } from '@/components/Icon';
+import { Search, BookOpen } from '@/components/Icon';
+
+const RB = '#4169e1';
+const RBD = '#2a4db5';
+const RBL = '#e8eef9';
 
 export default function OpenSchoolPage() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<{ university: string; program: string } | null>(null);
-  const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState('');
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    fetch('/api/open-school')
-      .then(r => r.json())
-      .then(data => { 
-        // Ensure data is an array, if it's an error object or not an array, use empty array
-        if (Array.isArray(data)) {
-          setBoards(data);
-        } else {
-          console.error('API returned non-array data:', data);
-          setBoards([]);
-        }
-        setLoading(false); 
-      })
-      .catch(error => {
-        console.error('Failed to fetch boards:', error);
-        setBoards([]);
-        setLoading(false);
-      });
+    fetch('/api/open-school').then(r => r.json()).then(data => {
+      setBoards(Array.isArray(data) ? data : []);
+      setLoading(false);
+    }).catch(() => { setBoards([]); setLoading(false); });
   }, []);
 
-  const toggleProgram = (boardIndex: number, programIndex: number) => {
-    const key = `${boardIndex}-${programIndex}`;
-    setExpandedPrograms(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(key)) {
-        newSet.delete(key);
-      } else {
-        newSet.add(key);
-      }
-      return newSet;
-    });
-  };
+  const toggle = (key: string) => setExpanded(prev => {
+    const s = new Set(prev); s.has(key) ? s.delete(key) : s.add(key); return s;
+  });
 
-  const truncateText = (text: string, maxLength: number) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-  };
+  const filtered = boards.filter(b => b.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div>
-      <section style={{ position: 'relative', padding: '16rem 2rem 11rem', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0 }}>
-          <Image src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1600&q=80" alt="Students in classroom" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'center 40%', transform: 'scale(1.08)' }} priority />
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,16,40,0.82)' }} />
-        </div>
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto' }}>
-          <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', marginBottom: '1rem' }}>Open School Programs</h1>
-          <p style={{ color: '#cbd5e1', fontSize: '1.05rem', maxWidth: 560, lineHeight: 1.8 }}>
-            Flexible Class 10 & 12 education — study at your own pace, certificates equivalent to CBSE/ICSE.
-          </p>
+    <div style={{ background: '#f0f4ff', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
+
+      {/* ── HERO ── */}
+      <section style={{
+        position: 'relative', height: 380, overflow: 'hidden',
+        backgroundImage: 'url(/open-school-hero.jpg)',
+        backgroundSize: 'cover', backgroundPosition: 'center 40%',
+      }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,15,40,0.55)' }} />
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', paddingBottom: '3.5rem', paddingLeft: '2rem', paddingRight: '2rem', textAlign: 'center', zIndex: 2 }}>
+          <AnimateOnScroll animation="fadeUp">
+            <span style={{ display: 'inline-block', color: '#90caf9', fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.05em', marginBottom: '0.6rem' }}>
+              Open School
+            </span>
+            <h1 style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: '1.5rem', lineHeight: 1.15 }}>
+              We&apos;ll help you complete<br />your Class 10 &amp; 12
+            </h1>
+            <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
+              <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none', zIndex: 2 }} />
+              <input
+                type="text"
+                placeholder="Search boards..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                style={{ width: '100%', padding: '0.9rem 1.25rem 0.9rem 2.75rem', borderRadius: 50, border: 'none', fontSize: '0.92rem', outline: 'none', color: '#0f172a', boxSizing: 'border-box', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}
+              />
+            </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
-      <Marquee />
-
-      <section style={{ padding: '5rem 2rem', background: '#fff' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <AnimateOnScroll animation="fadeUp">
-            <h2 className="section-heading">Open <span style={{ color: '#1e40af' }}>School Boards</span></h2>
-          </AnimateOnScroll>
-          <AnimateOnScroll animation="fadeUp" delay={100}>
-            <div style={{ 
-              background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', 
-              padding: '2.5rem 3rem', 
-              borderRadius: '1.25rem', 
-              border: '1px solid #bfdbfe',
-              marginBottom: '3.5rem',
-              boxShadow: '0 4px 16px rgba(30, 64, 175, 0.08)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem' }}>
-                <div style={{
-                  minWidth: '56px',
-                  height: '56px',
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-                  borderRadius: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(30, 64, 175, 0.25)'
-                }}>
-                  <Award size={28} color="#fff" />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ 
-                    color: '#1e40af', 
-                    fontSize: '1.25rem', 
-                    fontWeight: 700, 
-                    marginBottom: '1rem',
-                    letterSpacing: '-0.01em'
-                  }}>
-                    Nationally Recognized Certification
-                  </h3>
-                  <p style={{ 
-                    color: '#334155', 
-                    lineHeight: 1.8, 
-                    fontSize: '1rem',
-                    marginBottom: '1rem'
-                  }}>
-                    Open School certificates are fully equivalent to CBSE/ICSE and are accepted for higher education admissions and government jobs. Ideal for working professionals, dropouts, and students in remote areas.
-                  </p>
-                  <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-                    gap: '1rem',
-                    marginTop: '1.5rem'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <div style={{ 
-                        width: '8px', 
-                        height: '8px', 
-                        background: '#1e40af', 
-                        borderRadius: '50%' 
-                      }} />
-                      <span style={{ color: '#475569', fontSize: '0.95rem', fontWeight: 500 }}>
-                        Study at your own pace
-                      </span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <div style={{ 
-                        width: '8px', 
-                        height: '8px', 
-                        background: '#1e40af', 
-                        borderRadius: '50%' 
-                      }} />
-                      <span style={{ color: '#475569', fontSize: '0.95rem', fontWeight: 500 }}>
-                        Flexible exam schedules
-                      </span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <div style={{ 
-                        width: '8px', 
-                        height: '8px', 
-                        background: '#1e40af', 
-                        borderRadius: '50%' 
-                      }} />
-                      <span style={{ color: '#475569', fontSize: '0.95rem', fontWeight: 500 }}>
-                        UGC approved programs
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {/* ── FILTER BAR ── */}
+      <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '1rem 2rem' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#0f172a' }}>
+            Showing <strong>{filtered.length}</strong> out of <strong>{boards.length}</strong> Boards Available
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.6rem 1.25rem', background: '#4169e1', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}>
+              ⚙ Filter
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.85rem', color: '#64748b' }}>
+              <span>Sort by:</span>
+              <select style={{ border: '1px solid #e2e8f0', borderRadius: 6, padding: '0.4rem 0.75rem', fontSize: '0.85rem', color: '#0f172a', outline: 'none', cursor: 'pointer' }}>
+                <option>Most Popular</option>
+                <option>Name A-Z</option>
+              </select>
             </div>
-          </AnimateOnScroll>
+          </div>
+        </div>
+      </div>
+
+      {/* ── CARDS ── */}
+      <section style={{ padding: '2.5rem 2rem 4rem' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           {loading ? (
-            <p style={{ textAlign: 'center', color: '#6b7280', padding: '3rem' }}>Loading boards...</p>
+            <div style={{ textAlign: 'center', padding: '5rem' }}>
+              <div style={{ display: 'inline-block', width: 40, height: 40, border: `4px solid #e2e8f0`, borderTop: `4px solid ${RB}`, borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+            </div>
+          ) : filtered.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '4rem', background: '#fff', borderRadius: 16 }}>
+              <p style={{ color: '#64748b' }}>No boards found.</p>
+            </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
-              {boards.map((board, i) => (
-                <AnimateOnScroll key={i} animation={i % 2 === 0 ? 'zoomIn' : 'rotateIn'} delay={i * 150}>
-                  <div className="feature-card" style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                      <div style={{
-                        width: '80px',
-                        height: '80px',
-                        background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-                        borderRadius: '16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        margin: '0 auto 1rem',
-                        boxShadow: '0 8px 24px rgba(30, 64, 175, 0.3)'
-                      }}>
-                        <Award size={40} color="#fff" />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+              {filtered.map((board, i) => (
+                <AnimateOnScroll key={i} animation="fadeUp" delay={i * 50} style={{ height: '100%' }}>
+                  <div
+                    style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '1px solid #e2e8f0', transition: 'all 0.25s', display: 'flex', flexDirection: 'column', height: '100%' }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 12px 32px rgba(65,105,225,0.14)'; el.style.borderColor = '#bfdbfe'; }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 2px 10px rgba(0,0,0,0.06)'; el.style.borderColor = '#e2e8f0'; }}
+                  >
+                    {/* Header bar */}
+                    <div style={{ height: 8, background: `linear-gradient(90deg, ${RB}, ${RBD})` }} />
+
+                    {/* Card body */}
+                    <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                      {/* Title row */}
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
+                        <div style={{ width: 48, height: 48, background: RBL, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <BookOpen size={22} color={RB} />
+                        </div>
+                        <div>
+                          <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.3, marginBottom: '0.25rem' }}>{board.name}</h3>
+                          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <span style={{ background: RBL, color: RB, fontSize: '0.65rem', fontWeight: 700, padding: '2px 8px', borderRadius: 50 }}>Govt. Approved</span>
+                            <span style={{ background: '#f0fdf4', color: '#15803d', fontSize: '0.65rem', fontWeight: 700, padding: '2px 8px', borderRadius: 50 }}>{board.programs?.length || 0} Programs</span>
+                          </div>
+                        </div>
                       </div>
-                      <h3 style={{ color: '#1f2937', fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.4rem' }}>{board.name}</h3>
-                      <p style={{ color: '#6b7280', fontSize: '0.85rem' }}>{board.description}</p>
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <h4 style={{ color: '#1e40af', fontWeight: 700, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>Available Programs:</h4>
-                      <div style={{ minHeight: '280px', maxHeight: '280px', overflowY: 'auto' }}>
-                        {board.programs?.map((p, j) => {
-                          const key = `${i}-${j}`;
-                          const isExpanded = expandedPrograms.has(key);
-                          const shouldTruncate = p.subjects.length > 80;
-                          const displayText = isExpanded || !shouldTruncate ? p.subjects : truncateText(p.subjects, 80);
-                          
-                          return (
-                            <div key={j} style={{ background: '#f8fafc', border: '1px solid #e5e7eb', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '0.5rem' }}>
-                              <div style={{ color: '#1f2937', fontWeight: 600, fontSize: '0.85rem', marginBottom: '0.2rem' }}>{p.name}</div>
-                              <div style={{ color: '#9ca3af', fontSize: '0.78rem', marginBottom: shouldTruncate ? '0.5rem' : '0' }}>
-                                {displayText}
-                              </div>
-                              {shouldTruncate && (
-                                <button
-                                  onClick={() => toggleProgram(i, j)}
-                                  style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#1e40af',
-                                    fontSize: '0.75rem',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                    padding: '0',
-                                    textDecoration: 'underline'
-                                  }}
-                                >
-                                  {isExpanded ? 'See less' : 'See more'}
-                                </button>
-                              )}
-                            </div>
-                          );
-                        })}
+
+                      {/* Description */}
+                      {board.description && (
+                        <p style={{ fontSize: '0.82rem', color: '#64748b', lineHeight: 1.65, marginBottom: '1rem' }}>{board.description}</p>
+                      )}
+
+                      {/* Stats row */}
+                      <div style={{ display: 'flex', gap: '1.5rem', padding: '0.875rem 0', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9', marginBottom: '1rem' }}>
+                        {[
+                          { label: 'Type', value: 'Open School' },
+                          { label: 'Mode', value: 'Flexible' },
+                          { label: 'Recognition', value: 'National' },
+                        ].map((s, j) => (
+                          <div key={j}>
+                            <div style={{ fontSize: '0.6rem', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>{s.label}</div>
+                            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>{s.value}</div>
+                          </div>
+                        ))}
                       </div>
+
+                      {/* Program list */}
+                      <div style={{ flex: 1, marginBottom: '1rem' }}>
+                        {board.programs?.slice(0, expanded.has(`board-${i}`) ? undefined : 2).map((p, j) => (
+                          <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.4rem 0', borderBottom: j < (expanded.has(`board-${i}`) ? board.programs.length - 1 : 1) ? '1px solid #f8fafc' : 'none' }}>
+                            <div style={{ width: 5, height: 5, borderRadius: '50%', background: RB, flexShrink: 0 }} />
+                            <span style={{ fontSize: '0.8rem', color: '#374151', fontWeight: 500 }}>{p.name}</span>
+                          </div>
+                        ))}
+                        {(board.programs?.length || 0) > 2 && (
+                          <button onClick={() => toggle(`board-${i}`)} style={{ background: 'none', border: 'none', color: RB, fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', padding: '6px 0 0', display: 'block', fontFamily: 'inherit' }}>
+                            {expanded.has(`board-${i}`) ? 'See Less ↑' : `+${(board.programs?.length || 0) - 2} more programs ↓`}
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Enroll button */}
+                      <button
+                        onClick={() => setModal({ university: board.name, program: 'Open School Programs' })}
+                        style={{ width: '100%', padding: '0.7rem', background: RB, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', transition: 'background 0.2s', fontFamily: 'inherit', marginTop: 'auto' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = RBD; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = RB; }}
+                      >
+                        Enroll Now
+                      </button>
                     </div>
-                    <button onClick={() => setModal({ university: board.name, program: 'Open School Programs' })}
-                      style={{ marginTop: '1.5rem', width: '100%', background: '#1e40af', color: '#fff', padding: '0.875rem', border: 'none', borderRadius: 50, fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem' }}>
-                      Enroll Now
-                    </button>
                   </div>
                 </AnimateOnScroll>
               ))}
@@ -229,9 +173,26 @@ export default function OpenSchoolPage() {
           )}
         </div>
       </section>
+
+      {/* ── CTA ── */}
+      <section style={{ padding: '0 2rem 4rem' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <AnimateOnScroll animation="fadeUp">
+            <div style={{ background: `linear-gradient(135deg, ${RB}, ${RBD})`, borderRadius: 14, padding: '1.75rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', width: 200, height: 200, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', top: '-60px', right: '-60px', pointerEvents: 'none' }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>Talk to Experts</div>
+                <h3 style={{ fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', fontWeight: 800, color: '#fff' }}>Not sure which board to choose?</h3>
+              </div>
+              <Link href="/contact" style={{ padding: '0.75rem 1.75rem', background: '#90caf9', color: RBD, borderRadius: 8, fontWeight: 800, fontSize: '0.9rem', textDecoration: 'none', flexShrink: 0, position: 'relative', zIndex: 1 }}>
+                Consult Now
+              </Link>
+            </div>
+          </AnimateOnScroll>
+        </div>
+      </section>
+
       {modal && <EnrollmentModal university={modal.university} program={modal.program} onClose={() => setModal(null)} />}
     </div>
   );
 }
-
-

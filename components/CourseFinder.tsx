@@ -237,8 +237,8 @@ export default function CourseFinder() {
   return (
     <>
       <style>{CF_STYLES}</style>
-      <button className="cf-floating-btn" onClick={() => setIsOpen(true)} aria-label="Find my course">
-        <IconWand /> <span>Find My Course</span>
+      <button className="cf-floating-btn" onClick={() => setIsOpen(true)} aria-label="Find my course" style={{ display: 'none' }}>
+        <span>Find My Course</span>
       </button>
 
       {isOpen && (

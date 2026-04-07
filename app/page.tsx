@@ -1,18 +1,19 @@
 ﻿'use client';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 import { GraduationCap, Award, Monitor, Building, DollarSign, Phone } from '@/components/Icon';
 import { StatCard } from '@/components/HeroAnimations';
 
-const featuredUniversityCards = [
-  { name: 'Amity University', slug: 'amity', accreditation: 'NAAC A++', initial: 'A', color: '#4361EE' },
-  { name: 'Manipal University Jaipur', slug: 'manipal', accreditation: 'NAAC A+', initial: 'M', color: '#4895ef' },
-  { name: 'GLA University', slug: 'gla', accreditation: 'NAAC A', initial: 'G', color: '#4361EE' },
-  { name: 'Jain University', slug: 'jain', accreditation: 'NAAC A++', initial: 'J', color: '#3a0ca3' },
-  { name: 'Chandigarh University', slug: 'chandigarh', accreditation: 'NAAC A+', initial: 'C', color: '#4895ef' },
-  { name: 'Lovely Professional University', slug: 'lpu', accreditation: 'NAAC A++', initial: 'L', color: '#4361EE' },
-];
+const CARD_COLORS = ['#4361EE', '#4895ef', '#3a0ca3', '#7c3aed', '#0f766e', '#b45309'];
+
+interface UniCard {
+  name: string;
+  slug: string;
+  accreditation: string;
+  initial: string;
+  color: string;
+}
 
 const features = [
   { title: 'UGC Approved Programs', desc: 'All programs are UGC-DEB approved and equivalent to regular degrees, valid for government jobs and higher studies.', img: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&q=80' },
@@ -30,7 +31,95 @@ const advantages = [
   { title: 'Online Exam', desc: 'You can choose your space to write the exam. No worry about centre, travel, or location.' },
 ];
 
-function UniversityHomeCard({ uni }: { uni: typeof featuredUniversityCards[0] }) {
+const PROGRAM_META: Record<string, { color: string; bg: string; icon: React.ReactNode }> = {
+  default: { color: '#4361EE', bg: '#eef2ff', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> },
+  mba:     { color: '#7c3aed', bg: '#f5f3ff', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg> },
+  mca:     { color: '#0f766e', bg: '#f0fdfa', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> },
+  bca:     { color: '#0f766e', bg: '#f0fdfa', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> },
+  bba:     { color: '#b45309', bg: '#fffbeb', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h18v4H3zM3 10h18v4H3zM3 17h18v4H3z"/></svg> },
+  mcom:    { color: '#be185d', bg: '#fdf2f8', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> },
+  bcom:    { color: '#be185d', bg: '#fdf2f8', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> },
+  msc:     { color: '#1d4ed8', bg: '#eff6ff', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg> },
+};
+
+function getProgramMeta(name: string) {
+  const key = name.toLowerCase().replace(/[\s.]/g, '');
+  for (const prefix of Object.keys(PROGRAM_META)) {
+    if (key.startsWith(prefix)) return PROGRAM_META[prefix];
+  }
+  return PROGRAM_META.default;
+}
+
+function FeaturedPrograms() {
+  const [programs, setPrograms] = useState<Array<{ _id: string; name: string; duration: string; university: string }>>([]);
+
+  useEffect(() => {
+    fetch('/api/programs').then(r => r.json()).then(d => {
+      if (d.success && d.data?.length) setPrograms(d.data.slice(0, 6));
+    }).catch(() => {});
+  }, []);
+
+  if (!programs.length) return null;
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.25rem' }}>
+      {programs.map((p, i) => {
+        const { color, bg, icon } = getProgramMeta(p.name);
+        const isUG = ['ba', 'bba', 'bca', 'bcom', 'bsc'].some(x => p.name.toLowerCase().replace(/[\s.]/g, '').startsWith(x));
+        return (
+          <AnimateOnScroll key={p._id} animation="fadeUp" delay={i * 60}>
+            <Link href={`/programs/${p._id}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+              <div style={{ background: '#fff', borderRadius: 16, border: '1.5px solid #f1f5f9', overflow: 'hidden', transition: 'all 0.25s ease', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', height: '100%', display: 'flex', flexDirection: 'column' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = color; el.style.boxShadow = `0 12px 32px ${color}22`; el.style.transform = 'translateY(-5px)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#f1f5f9'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)'; el.style.transform = 'translateY(0)'; }}
+              >
+                {/* Colored top band */}
+                <div style={{ height: 6, background: `linear-gradient(90deg, ${color}, ${color}99)` }} />
+
+                <div style={{ padding: '1.4rem 1.5rem 1.5rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+                  {/* Icon + badge row */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
+                      {icon}
+                    </div>
+                    <span style={{ background: isUG ? '#f0fdf4' : '#eff6ff', color: isUG ? '#15803d' : '#1e40af', fontSize: '0.65rem', fontWeight: 800, padding: '3px 10px', borderRadius: 50, textTransform: 'uppercase', letterSpacing: '0.06em', border: `1px solid ${isUG ? '#bbf7d0' : '#bfdbfe'}` }}>
+                      {isUG ? 'Under Graduate' : 'Post Graduate'}
+                    </span>
+                  </div>
+
+                  {/* Program name */}
+                  <div>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.3, margin: '0 0 0.3rem' }}>{p.name}</h3>
+                    <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.78rem', color: '#64748b' }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        {p.duration}
+                      </span>
+                      {p.university && (
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.78rem', color: '#94a3b8' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                          {p.university}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: 5, color, fontWeight: 600, fontSize: '0.83rem' }}>
+                    View Program
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </AnimateOnScroll>
+        );
+      })}
+    </div>
+  );
+}
+
+function UniversityHomeCard({ uni }: { uni: UniCard }) {
   const [hovered, setHovered] = useState(false);
   return (
     <Link href={`/universities/${uni.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
@@ -56,6 +145,23 @@ function UniversityHomeCard({ uni }: { uni: typeof featuredUniversityCards[0] })
 }
 
 export default function HomePage() {
+  const [featuredUniversityCards, setFeaturedUniversityCards] = useState<UniCard[]>([]);
+
+  useEffect(() => {
+    fetch('/api/universities').then(r => r.json()).then(d => {
+      if (d.success && d.data?.length) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const cards: UniCard[] = d.data.slice(0, 6).map((u: any, i: number) => ({
+          name: u.name,
+          slug: u.slug || u.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+          accreditation: u.naac || u.ranking || u.accreditation || 'UGC Approved',
+          initial: u.name.charAt(0).toUpperCase(),
+          color: CARD_COLORS[i % CARD_COLORS.length],
+        }));
+        setFeaturedUniversityCards(cards);
+      }
+    }).catch(() => {});
+  }, []);
   const iconComponents = [
     <GraduationCap key={0} size={22} color="#4361EE" />,
     <Monitor key={1} size={22} color="#4361EE" />,
@@ -66,7 +172,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div style={{ fontFamily: '"Inter", system-ui, sans-serif' }}>
+    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <style>{`
         @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
         @keyframes float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
@@ -177,7 +283,7 @@ export default function HomePage() {
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
               <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Why CDRC</span>
               <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.15, marginBottom: '0.75rem' }}>The smarter way to earn your degree</h2>
-              <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: 460, margin: '0 auto', lineHeight: 1.75 }}>Everything you need � from expert guidance to UGC-approved degrees � all in one place.</p>
+              <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: 460, margin: '0 auto', lineHeight: 1.75 }}>Everything you need — from expert guidance to UGC-approved degrees — all in one place.</p>
             </div>
           </AnimateOnScroll>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: '1.25rem' }}>
@@ -381,6 +487,25 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* -- FEATURED PROGRAMS -- */}
+      <section style={{ padding: '5.5rem 2rem', background: '#fff' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <AnimateOnScroll animation="fadeUp">
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.875rem' }}>Popular Programs</span>
+                <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.15, margin: 0 }}>Featured Programs</h2>
+              </div>
+              <Link href="/programs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '11px 22px', borderRadius: 10, fontWeight: 600, textDecoration: 'none', fontSize: '0.9rem', flexShrink: 0 }}>
+                View All Programs
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </Link>
+            </div>
+          </AnimateOnScroll>
+          <FeaturedPrograms />
+        </div>
+      </section>
+
       {/* -- CTA -- */}
       <section style={{ padding: '5.5rem 2rem', background: 'linear-gradient(150deg,#2d2d6b 0%,#4361EE 100%)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: 320, height: 320, background: 'radial-gradient(circle,rgba(59,130,246,0.14) 0%,transparent 70%)', borderRadius: '50%' }} />
@@ -388,7 +513,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <AnimateOnScroll animation="fadeUp">
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', borderRadius: 20, padding: '5px 14px', color: '#93c5fd', fontSize: '0.8rem', fontWeight: 600, marginBottom: '1.5rem' }}>
-              ? Start Today
+              Start Today
             </div>
             <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 800, color: '#fff', marginBottom: '1rem', lineHeight: 1.15 }}>
               Ready to transform your career?

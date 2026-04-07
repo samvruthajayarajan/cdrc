@@ -11,9 +11,11 @@ interface Skill {
   courses: Course[]; slug: string;
 }
 
-const levelColor: Record<string, string> = {
+const LEVEL_COLOR: Record<string, string> = {
   Beginner: '#16a34a', Intermediate: '#d97706', Advanced: '#dc2626',
 };
+
+const ACCENT_COLORS = ['#4169e1', '#4169e1', '#4169e1', '#4169e1', '#4169e1', '#4169e1', '#4169e1', '#4169e1'];
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -21,6 +23,7 @@ export default function SkillsPage() {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [enrollModal, setEnrollModal] = useState<{ open: boolean; skill: string; course: string }>({ open: false, skill: '', course: '' });
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetch('/api/skills').then(r => r.json()).then(d => {
@@ -35,112 +38,211 @@ export default function SkillsPage() {
     s.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const toggleExpand = (id: string) => {
+    setExpandedCards(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
   return (
-    <div style={{ minHeight: '100vh', background: '#fff' }}>
-      {/* Hero */}
-      <section style={{ background: 'linear-gradient(135deg, #4361EE 0%, #2d2d6b 100%)', paddingTop: 'calc(68px + 4rem)', paddingBottom: '5rem', paddingLeft: '2rem', paddingRight: '2rem', textAlign: 'center', color: '#fff' }}>
-        <div>
-          <span style={{ display: 'inline-block', background: 'rgba(255,255,255,0.15)', color: '#fff', padding: '4px 14px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1.25rem', border: '1px solid rgba(255,255,255,0.25)' }}>Skill Development</span>
-          <h1 style={{ fontSize: 'clamp(2rem,5vw,3.5rem)', fontWeight: 900, marginBottom: '1rem', lineHeight: 1.15, color: '#fff' }}>Skill Courses by CDRC</h1>
-          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.1rem', maxWidth: 560, margin: '0 auto 2.5rem', lineHeight: 1.75 }}>
-            Industry-relevant skill programs designed to boost your career with practical, hands-on learning.
-          </p>
-          <div style={{ maxWidth: 480, margin: '0 auto', position: 'relative' }}>
-            <svg style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input type="text" placeholder="Search skills..." value={search} onChange={e => setSearch(e.target.value)}
-              style={{ width: '100%', padding: '1rem 1.25rem 1rem 3rem', borderRadius: 50, border: 'none', fontSize: '1rem', outline: 'none', boxSizing: 'border-box', boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }} />
-          </div>
+    <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
+
+      {/* ── HERO ── */}
+      <section style={{
+        position: 'relative', height: 420, overflow: 'hidden',
+        backgroundImage: 'url(https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1600)',
+        backgroundSize: 'cover', backgroundPosition: 'center 30%',
+      }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,15,40,0.65) 0%, rgba(10,15,40,0.82) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 2rem', paddingTop: 80, textAlign: 'center', zIndex: 1 }}>
+          <AnimateOnScroll animation="fadeUp">
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 50, padding: '5px 16px', color: '#fff', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
+              Skill Development
+            </div>
+            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '1rem' }}>
+              Skill Courses by CDRC
+            </h1>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', maxWidth: 500, margin: '0 auto 2rem', lineHeight: 1.7 }}>
+              Industry-relevant programs designed to boost your career with practical, hands-on learning.
+            </p>
+            <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
+              <svg style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', zIndex: 2 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" placeholder="Search skill courses..." value={search} onChange={e => setSearch(e.target.value)}
+                style={{ width: '100%', padding: '0.9rem 1.25rem 0.9rem 2.75rem', borderRadius: 50, border: 'none', fontSize: '0.92rem', outline: 'none', color: '#0f172a', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.3)', boxSizing: 'border-box' }} />
+            </div>
+          </AnimateOnScroll>
         </div>
       </section>
 
-      {/* Category filter */}
-      <section style={{ padding: '2rem 2rem 0', background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', paddingBottom: '1.5rem' }}>
+      {/* ── STATS STRIP ── */}
+      <div style={{ background: '#4169e1', padding: '1rem 2rem' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' }}>
+          {[['100+', 'Skill Courses'], ['Expert', 'Instructors'], ['Certificate', 'On Completion'], ['Online', 'Mode']].map(([val, lbl]) => (
+            <div key={lbl} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>{val}</div>
+              <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>{lbl}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CATEGORY FILTER ── */}
+      <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '0.875rem 2rem', position: 'sticky', top: 56, zIndex: 100 }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', scrollbarWidth: 'none' }}>
           {categories.map(cat => (
-            <button key={cat} onClick={() => setActiveCategory(cat)}
-              style={{ padding: '8px 18px', borderRadius: 50, border: `1.5px solid ${activeCategory === cat ? '#4361EE' : '#e2e8f0'}`, background: activeCategory === cat ? '#4361EE' : '#fff', color: activeCategory === cat ? '#fff' : '#64748b', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'inherit' }}>
+            <button key={cat} onClick={() => setActiveCategory(cat)} style={{
+              padding: '6px 16px', borderRadius: 50, border: 'none', cursor: 'pointer',
+              fontWeight: 600, fontSize: '0.82rem', whiteSpace: 'nowrap', transition: 'all 0.2s', fontFamily: 'inherit',
+              background: activeCategory === cat ? '#4169e1' : '#f1f5f9',
+              color: activeCategory === cat ? '#fff' : '#475569',
+            }}>
               {cat}
             </button>
           ))}
+          <span style={{ marginLeft: 'auto', fontSize: '0.82rem', color: '#94a3b8', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            {filtered.length} courses
+          </span>
+        </div>
+      </div>
+
+      {/* ── GRID ── */}
+      <section style={{ padding: '2.5rem 2rem 5rem', background: '#f8fafc' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '5rem' }}>
+              <div style={{ display: 'inline-block', width: 40, height: 40, border: '4px solid #e2e8f0', borderTop: '4px solid #1e40af', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+            </div>
+          ) : filtered.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '4rem', background: '#fff', borderRadius: 16 }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎯</div>
+              <p style={{ color: '#64748b', marginBottom: '1rem' }}>No skill courses found.</p>
+              <Link href="/contact" style={{ display: 'inline-block', background: '#1e40af', color: '#fff', padding: '10px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600 }}>Contact Us</Link>
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+              {filtered.map((skill, i) => {
+                const isExpanded = expandedCards.has(skill._id);
+                const words = skill.description.split(' ');
+                const isLong = words.length > 20;
+                const preview = isLong && !isExpanded ? words.slice(0, 20).join(' ') + '...' : skill.description;
+                const accent = ACCENT_COLORS[i % ACCENT_COLORS.length];
+                const levelColor = LEVEL_COLOR[skill.level] || '#1e40af';
+
+                return (
+                  <AnimateOnScroll key={skill._id} animation="fadeUp" delay={(i % 6) * 60}>
+                    <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', transition: 'all 0.25s', display: 'flex', flexDirection: 'column' }}
+                      onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(-5px)'; el.style.boxShadow = `0 16px 40px ${accent}18`; el.style.borderColor = `${accent}44`; }}
+                      onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; el.style.borderColor = '#e2e8f0'; }}
+                    >
+                      {/* Image / Banner */}
+                      <div style={{ position: 'relative', height: 180, overflow: 'hidden', background: `linear-gradient(135deg, ${accent} 0%, ${accent}cc 100%)`, flexShrink: 0 }}>
+                        {skill.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={skill.image} alt={skill.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                            onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                          />
+                        ) : (
+                          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ fontSize: '4rem', fontWeight: 900, color: 'rgba(255,255,255,0.2)', letterSpacing: '-0.04em' }}>{skill.name.charAt(0)}</div>
+                          </div>
+                        )}
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 55%)' }} />
+                        <span style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(255,255,255,0.92)', color: '#0f172a', fontSize: '0.65rem', fontWeight: 800, padding: '3px 9px', borderRadius: 6 }}>
+                          {skill.category}
+                        </span>
+                        <span style={{ position: 'absolute', top: 12, right: 12, background: levelColor, color: '#fff', fontSize: '0.65rem', fontWeight: 800, padding: '3px 9px', borderRadius: 6 }}>
+                          {skill.level}
+                        </span>
+                      </div>
+
+                      {/* Body */}
+                      <div style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.5rem' }}>{skill.name}</h3>
+
+                        <div style={{ marginBottom: '0.875rem' }}>
+                          <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.65, margin: 0 }}>{preview}</p>
+                          {isLong && (
+                            <button onClick={() => toggleExpand(skill._id)} style={{ background: 'none', border: 'none', color: accent, fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', padding: '3px 0 0', fontFamily: 'inherit' }}>
+                              {isExpanded ? 'See Less ↑' : 'See More ↓'}
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Expanded: duration, price, courses */}
+                        {isExpanded && (
+                          <>
+                            {(skill.duration || skill.price) && (
+                              <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.875rem', flexWrap: 'wrap' }}>
+                                {skill.duration && <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#64748b', fontSize: '0.8rem' }}>⏱ {skill.duration}</span>}
+                                {skill.price && <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#64748b', fontSize: '0.8rem' }}>₹ {skill.price}</span>}
+                              </div>
+                            )}
+                            {skill.courses?.length > 0 && (
+                              <div style={{ marginBottom: '0.875rem' }}>
+                                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>Courses Included</div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                                  {skill.courses.slice(0, 3).map((c, ci) => (
+                                    <div key={ci} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: '0.82rem', color: '#374151' }}>
+                                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: accent, flexShrink: 0 }} />
+                                      {c.name} {c.duration && <span style={{ color: '#94a3b8', fontSize: '0.73rem' }}>({c.duration})</span>}
+                                    </div>
+                                  ))}
+                                  {skill.courses.length > 3 && <div style={{ fontSize: '0.78rem', color: accent, fontWeight: 600 }}>+{skill.courses.length - 3} more</div>}
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Actions */}
+                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto', paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }}>
+                          <Link href={`/skills/${skill._id}`}
+                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.65rem', border: `1.5px solid ${accent}`, borderRadius: 8, color: accent, fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none', transition: 'background 0.2s', background: '#fff' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = `${accent}10`; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#fff'; }}
+                          >
+                            Details
+                          </Link>
+                          <button onClick={() => setEnrollModal({ open: true, skill: skill.name, course: skill.name })}
+                            style={{ flex: 1, padding: '0.65rem', background: accent, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'opacity 0.2s' }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.88'; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
+                          >
+                            Enroll Now
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </AnimateOnScroll>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Skills grid */}
-      <section style={{ padding: '4rem 2rem', background: '#f8fafc' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          {loading ? (
-            <div style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>Loading skills...</div>
-          ) : filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🔍</div>
-              <p>No skills found. Check back soon or contact us for more information.</p>
-              <Link href="/contact" style={{ display: 'inline-block', marginTop: '1rem', background: '#4361EE', color: '#fff', padding: '10px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600 }}>Contact Us</Link>
+      {/* ── CTA ── */}
+      <section style={{ background: '#fff', borderTop: '1px solid #e2e8f0', padding: '3.5rem 2rem' }}>
+        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
+          <AnimateOnScroll animation="fadeUp">
+            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>
+              Ready to upskill your career?
+            </h2>
+            <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '1.75rem', lineHeight: 1.7 }}>
+              Talk to our counsellors for free guidance on the right skill course for you.
+            </p>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button onClick={() => { const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}
+                style={{ padding: '0.8rem 2rem', background: '#4169e1', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+                Find My Course
+              </button>
+              <Link href="/contact" style={{ padding: '0.8rem 2rem', background: '#fff', color: '#374151', border: '1px solid #e2e8f0', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none' }}>
+                Talk to Counsellor
+              </Link>
             </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.75rem' }}>
-              {filtered.map((skill, i) => (
-                <AnimateOnScroll key={skill._id} animation="fadeUp" delay={i * 60}>
-                  <div style={{ background: '#fff', borderRadius: 18, overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', transition: 'all 0.3s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(67,97,238,0.12)'; e.currentTarget.style.borderColor = '#4361EE'; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.05)'; e.currentTarget.style.borderColor = '#e2e8f0'; }}>
-                    {/* Banner */}
-                    <div style={{
-                      height: 140,
-                      backgroundColor: '#4361EE',
-                      backgroundImage: 'linear-gradient(135deg, #4361EE 0%, #2d2d6b 100%)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
-                      flexShrink: 0,
-                    }}>
-                      {skill.image ? (
-                        <img
-                          src={skill.image}
-                          alt={skill.name}
-                          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                          onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                        />
-                      ) : (
-                        <div style={{ fontSize: '3rem', fontWeight: 900, color: 'rgba(255,255,255,0.3)', letterSpacing: '-0.04em', position: 'relative', zIndex: 1 }}>{skill.name.charAt(0)}</div>
-                      )}
-                      <div style={{ position: 'absolute', top: 12, right: 12, background: levelColor[skill.level] || '#4361EE', color: '#fff', padding: '3px 10px', borderRadius: 20, fontSize: '0.7rem', fontWeight: 700 }}>{skill.level}</div>
-                      <div style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(255,255,255,0.15)', color: '#fff', padding: '3px 10px', borderRadius: 20, fontSize: '0.7rem', fontWeight: 600, backdropFilter: 'blur(8px)' }}>{skill.category}</div>
-                    </div>
-
-                    <div style={{ padding: '1.5rem' }}>
-                      <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem', lineHeight: 1.3 }}>{skill.name}</h3>
-                      <p style={{ color: '#64748b', fontSize: '0.875rem', lineHeight: 1.65, marginBottom: '1rem' }}>{skill.description}</p>
-
-                      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-                        {skill.duration && <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#64748b', fontSize: '0.8rem' }}>⏱ {skill.duration}</span>}
-                        {skill.price && <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#64748b', fontSize: '0.8rem' }}>₹ {skill.price}</span>}
-                      </div>
-
-                      {skill.courses && skill.courses.length > 0 && (
-                        <div style={{ marginBottom: '1.25rem' }}>
-                          <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.5rem' }}>Courses Included</div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                            {skill.courses.slice(0, 3).map((c, ci) => (
-                              <div key={ci} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.85rem', color: '#374151' }}>
-                                <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4361EE', flexShrink: 0 }} />
-                                {c.name} {c.duration && <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>({c.duration})</span>}
-                              </div>
-                            ))}
-                            {skill.courses.length > 3 && <div style={{ fontSize: '0.8rem', color: '#4361EE', fontWeight: 600 }}>+{skill.courses.length - 3} more</div>}
-                          </div>
-                        </div>
-                      )}
-
-                      <button onClick={() => setEnrollModal({ open: true, skill: skill.name, course: skill.name })}
-                        style={{ width: '100%', padding: '0.75rem', background: '#4361EE', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '0.93rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.2s' }}
-                        onMouseEnter={e => { e.currentTarget.style.background = '#2d2d6b'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = '#4361EE'; }}>
-                        Enroll Now
-                      </button>
-                    </div>
-                  </div>
-                </AnimateOnScroll>
-              ))}
-            </div>
-          )}
+          </AnimateOnScroll>
         </div>
       </section>
 
