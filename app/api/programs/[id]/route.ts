@@ -23,7 +23,15 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
   try {
     const params = await context.params;
     const body = await req.json();
-    const { name, duration, university, description } = body;
+    const {
+      name, duration, university, universityId, description,
+      category, level, mode, fee, feePeriod,
+      eligibility, image, brochureUrl, youtubeUrl,
+      syllabus, highlights, careerOptions, specializations,
+      metaTitle, metaDescription, keywords, canonicalUrl, robotsMeta,
+      ogTitle, ogImage, ogDescription,
+      featured, active,
+    } = body;
 
     if (!name || !duration) {
       return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
@@ -34,10 +42,33 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
       { _id: new ObjectId(params.id) },
       {
         $set: {
-          name,
-          duration,
+          name, duration,
           university: university || '',
+          universityId: universityId || '',
           description: description || '',
+          category: category || '',
+          level: level || '',
+          mode: mode || 'Online',
+          fee: fee || null,
+          feePeriod: feePeriod || 'Total',
+          eligibility: eligibility || '',
+          image: image || '',
+          brochureUrl: brochureUrl || '',
+          youtubeUrl: youtubeUrl || '',
+          syllabus: syllabus || [],
+          highlights: highlights || [],
+          careerOptions: careerOptions || [],
+          specializations: specializations || [],
+          metaTitle: metaTitle || '',
+          metaDescription: metaDescription || '',
+          keywords: keywords || '',
+          canonicalUrl: canonicalUrl || '',
+          robotsMeta: robotsMeta || 'Index, Follow',
+          ogTitle: ogTitle || '',
+          ogImage: ogImage || '',
+          ogDescription: ogDescription || '',
+          featured: featured || false,
+          active: active !== undefined ? active : true,
           updatedAt: new Date(),
         }
       }
@@ -47,7 +78,7 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
       return NextResponse.json({ success: false, error: 'Program not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, data: { _id: params.id, name, duration, university, description } });
+    return NextResponse.json({ success: true, data: { _id: params.id, ...body } });
   } catch (error) {
     console.error('Error updating program:', error);
     return NextResponse.json({ success: false, error: 'Failed to update program' }, { status: 500 });

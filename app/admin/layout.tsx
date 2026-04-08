@@ -8,12 +8,13 @@ import { GraduationCap, Users, BookOpen, TrendingUp, Menu, X, Award, Mail, LogOu
 const menuItems = [
   { icon: <TrendingUp size={22} />, label: 'Dashboard', href: '/admin' },
   { icon: <GraduationCap size={22} />, label: 'Universities', href: '/admin/universities' },
-  { icon: <BookOpen size={22} />, label: 'Programs', href: '/admin/programs' },
   { icon: <Award size={22} />, label: 'Open School', href: '/admin/open-school' },
+  { icon: <BookOpen size={22} />, label: 'Programs', href: '/admin/programs' },
   { icon: <Users size={22} />, label: 'Skills', href: '/admin/skills' },
+  { icon: <Search size={22} />, label: 'Course Finder', href: '/admin/course-finder' },
   { icon: <Users size={22} />, label: 'Enrollments', href: '/admin/enrollments' },
   { icon: <Mail size={22} />, label: 'Contact Messages', href: '/admin/contacts' },
-  { icon: <Search size={22} />, label: 'Course Finder', href: '/admin/course-finder' },
+  { icon: <Globe size={22} />, label: 'SEO Settings', href: '/admin/seo' },
 ];
 
 export default function AdminLayout({ children }: { children: any }) {

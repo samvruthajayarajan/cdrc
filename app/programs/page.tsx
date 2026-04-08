@@ -11,6 +11,7 @@ interface Program {
   duration: string;
   university: string;
   description?: string;
+  brochureUrl?: string;
 }
 
 const CATEGORIES = ['All', 'MBA', 'MCA', 'BBA', 'BCA', 'B.Com / M.Com', 'BA / MA', 'Other'];
@@ -185,6 +186,32 @@ export default function ProgramsPage() {
                           >
                             Details
                           </Link>
+                          {p.brochureUrl && p.brochureUrl.trim() ? (
+                            <a
+                              href={`/api/download?url=${encodeURIComponent(p.brochureUrl)}&filename=${encodeURIComponent(p.name.replace(/\s+/g, '_') + '_Brochure.pdf')}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '0.6rem', border: '1.5px solid #e2e8f0', borderRadius: 8, color: '#475569', fontWeight: 600, fontSize: '0.8rem', textDecoration: 'none', transition: 'all 0.2s', background: '#fff', cursor: 'pointer' }}
+                              onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = '#94a3b8'; el.style.background = '#f8fafc'; }}
+                              onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = '#e2e8f0'; el.style.background = '#fff'; }}
+                            >
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                              </svg>
+                              Brochure
+                            </a>
+                          ) : (
+                            <button onClick={() => setModal({ university: p.university || 'CDRC', program: `${p.name} - Brochure Request` })}
+                              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '0.6rem', border: '1.5px solid #e2e8f0', borderRadius: 8, color: '#475569', fontWeight: 600, fontSize: '0.8rem', background: '#fff', cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'inherit' }}
+                              onMouseEnter={e => { const el = e.currentTarget as HTMLButtonElement; el.style.borderColor = '#94a3b8'; el.style.background = '#f8fafc'; }}
+                              onMouseLeave={e => { const el = e.currentTarget as HTMLButtonElement; el.style.borderColor = '#e2e8f0'; el.style.background = '#fff'; }}
+                            >
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                              </svg>
+                              Brochure
+                            </button>
+                          )}
                           <button onClick={() => setModal({ university: p.university || 'CDRC', program: p.name })}
                             style={{ flex: 1, padding: '0.6rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', transition: 'background 0.2s', fontFamily: 'inherit' }}
                             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1e3a8a'; }}

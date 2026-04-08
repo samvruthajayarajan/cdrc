@@ -7,12 +7,31 @@ import { StatCard } from '@/components/HeroAnimations';
 
 const CARD_COLORS = ['#4361EE', '#4895ef', '#3a0ca3', '#7c3aed', '#0f766e', '#b45309'];
 
+const UNI_IMAGES: Record<string, string> = {
+  amity:      'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600&q=80',
+  manipal:    'https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80',
+  gla:        'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80',
+  jain:       'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80',
+  chandigarh: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80',
+  lpu:        'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=600&q=80',
+};
+
+const FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600&q=80',
+  'https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80',
+  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80',
+  'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80',
+  'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80',
+  'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=600&q=80',
+];
+
 interface UniCard {
   name: string;
   slug: string;
   accreditation: string;
   initial: string;
   color: string;
+  image?: string;
 }
 
 const features = [
@@ -67,11 +86,11 @@ function FeaturedPrograms() {
         const { color, bg, icon } = getProgramMeta(p.name);
         const isUG = ['ba', 'bba', 'bca', 'bcom', 'bsc'].some(x => p.name.toLowerCase().replace(/[\s.]/g, '').startsWith(x));
         return (
-          <AnimateOnScroll key={p._id} animation="fadeUp" delay={i * 60}>
+          <AnimateOnScroll key={p._id} animation="slideUpBounce" delay={i * 80}>
             <Link href={`/programs/${p._id}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
-              <div style={{ background: '#fff', borderRadius: 16, border: '1.5px solid #f1f5f9', overflow: 'hidden', transition: 'all 0.25s ease', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', height: '100%', display: 'flex', flexDirection: 'column' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = color; el.style.boxShadow = `0 12px 32px ${color}22`; el.style.transform = 'translateY(-5px)'; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#f1f5f9'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)'; el.style.transform = 'translateY(0)'; }}
+              <div style={{ background: '#fff', borderRadius: 16, border: '1.5px solid #f1f5f9', overflow: 'hidden', transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', height: '100%', display: 'flex', flexDirection: 'column' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = color; el.style.boxShadow = `0 16px 40px ${color}28`; el.style.transform = 'translateY(-6px) scale(1.02)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = '#f1f5f9'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)'; el.style.transform = 'translateY(0) scale(1)'; }}
               >
                 {/* Colored top band */}
                 <div style={{ height: 6, background: `linear-gradient(90deg, ${color}, ${color}99)` }} />
@@ -157,6 +176,7 @@ export default function HomePage() {
           accreditation: u.naac || u.ranking || u.accreditation || 'UGC Approved',
           initial: u.name.charAt(0).toUpperCase(),
           color: CARD_COLORS[i % CARD_COLORS.length],
+          image: UNI_IMAGES[u.slug] || u.image || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
         }));
         setFeaturedUniversityCards(cards);
       }
@@ -199,6 +219,7 @@ export default function HomePage() {
         .benefit-divider { animation: shimmer 0.6s ease forwards; }
         @keyframes countUp { from{opacity:0;transform:translateY(10px)} to{opacity:0.6;transform:translateY(0)} }
         .benefit-num { animation: countUp 0.5s ease both; }
+        @keyframes uniShimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
       `}</style>
 
       {/* -- HERO -- */}
@@ -450,22 +471,22 @@ export default function HomePage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
             {featuredUniversityCards.map((uni, i) => (
-              <AnimateOnScroll key={uni.slug} animation="fadeUp" delay={i * 60}>
+              <AnimateOnScroll key={uni.slug} animation="bounceIn" delay={i * 100}>
                 <Link href={`/universities/${uni.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
-                  <div style={{ background: '#fff', borderRadius: 18, overflow: 'hidden', border: '1px solid #e2e8f0', transition: 'all 0.3s ease', height: '100%', display: 'flex', flexDirection: 'column' }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.boxShadow = `0 20px 48px ${uni.color}30`; e.currentTarget.style.borderColor = uni.color; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#e2e8f0'; }}>
-                    {/* Gradient banner */}
-                    <div style={{ height: 90, background: `linear-gradient(135deg, ${uni.color} 0%, ${uni.color}cc 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                      <div style={{ width: 56, height: 56, background: 'rgba(255,255,255,0.2)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', fontWeight: 900, color: '#fff', border: '2px solid rgba(255,255,255,0.35)' }}>
-                        {uni.initial}
-                      </div>
+                  <div style={{ background: '#fff', borderRadius: 18, overflow: 'hidden', border: '1px solid #e2e8f0', transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)', height: '100%', display: 'flex', flexDirection: 'column' }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)'; e.currentTarget.style.boxShadow = `0 24px 56px ${uni.color}35`; e.currentTarget.style.borderColor = uni.color; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#e2e8f0'; }}>
+                    {/* Image banner */}
+                    <div style={{ height: 130, position: 'relative', overflow: 'hidden' }}>
+                      <img src={uni.image} alt={uni.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+                      <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, ${uni.color}55 0%, ${uni.color}cc 100%)` }} />
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)', backgroundSize: '200% 100%', animation: `uniShimmer ${2.5 + i * 0.4}s ease-in-out infinite` }} />
                     </div>
                     {/* Card body */}
                     <div style={{ padding: '1.25rem 1.5rem 1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
                       <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.3, marginBottom: '0.5rem' }}>{uni.name}</h3>
                       <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '3px 10px', borderRadius: 6, fontSize: '0.72rem', fontWeight: 700, marginBottom: '1rem' }}>{uni.accreditation}</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: uni.color, fontWeight: 600, fontSize: '0.83rem', marginTop: 'auto' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: uni.color, fontWeight: 600, fontSize: '0.83rem', marginTop: 'auto', transition: 'gap 0.2s' }}>
                         View Details
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                       </div>

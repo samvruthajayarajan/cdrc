@@ -1,55 +1,82 @@
 'use client';
-
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Plus, Trash2, Building, Award, MapPin, DollarSign, Search, BookOpen, Globe, Mail, Phone, GraduationCap } from '@/components/Icon';
+import { Building, Award, MapPin, DollarSign, Search, BookOpen, Globe, Phone, GraduationCap, ArrowLeft, Plus, Trash2, Mail } from '@/components/Icon';
 
 interface Program { name: string; duration: string; description: string; }
 
-const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '0.75rem 1rem', border: '1.5px solid #e2e8f0',
-  borderRadius: '8px', fontSize: '0.95rem', outline: 'none',
-  background: '#fff', color: '#1e293b', boxSizing: 'border-box',
-};
-const labelStyle: React.CSSProperties = {
-  display: 'block', marginBottom: '0.4rem', fontWeight: 600,
-  color: '#374151', fontSize: '0.875rem',
-};
-const sectionStyle: React.CSSProperties = {
-  background: '#fff', borderRadius: '12px', padding: '2rem',
-  boxShadow: '0 1px 4px rgba(0,0,0,0.06)', marginBottom: '1.5rem',
-  border: '1px solid #f1f5f9',
-};
-const grid2: React.CSSProperties = {
-  display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem',
+const ACCENT = '#1e40af';
+const ACCENT_LIGHT = '#eff6ff';
+const ACCENT_BORDER = '#bfdbfe';
+
+const S: Record<string, React.CSSProperties> = {
+  wrapper: { minHeight: '100vh', background: '#F8FAFC', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+  main: { padding: '28px 32px' },
+  container: { maxWidth: 900, margin: '0 auto' },
+  pageHeader: { marginBottom: 28 },
+  backLink: { display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', textDecoration: 'none', fontSize: '0.85rem', marginBottom: 12, fontWeight: 500 },
+  pageTitle: { fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: 0 },
+  pageSubtitle: { color: '#64748b', fontSize: '0.9rem', marginTop: 4 },
+  section: { background: '#fff', borderRadius: 16, padding: '24px 28px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 20, border: '1px solid #f1f5f9' },
+  sectionHeader: { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22, paddingBottom: 16, borderBottom: '1px solid #f1f5f9' },
+  sectionIcon: { width: 42, height: 42, borderRadius: 11, background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  sectionTitle: { fontWeight: 700, color: '#0f172a', fontSize: '1rem', margin: 0 },
+  sectionDesc: { color: '#94a3b8', fontSize: '0.78rem', margin: 0 },
+  grid2: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.1rem' },
+  label: { display: 'block', marginBottom: 6, fontWeight: 600, color: '#374151', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.04em' },
+  input: { width: '100%', padding: '11px 14px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: '0.92rem', outline: 'none', background: '#f8fafc', color: '#0f172a', boxSizing: 'border-box', fontFamily: 'inherit', transition: 'border-color 0.2s, box-shadow 0.2s' },
+  hint: { fontSize: '0.73rem', color: '#94a3b8', marginTop: 5 },
+  errorAlert: { background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626', padding: '14px 18px', borderRadius: 12, marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.9rem' },
+  successAlert: { background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', padding: '14px 18px', borderRadius: 12, marginBottom: 20, fontSize: '0.9rem' },
+  actions: { display: 'flex', justifyContent: 'flex-end', gap: 12, flexWrap: 'wrap', paddingTop: 8 },
+  cancelBtn: { padding: '11px 24px', background: '#fff', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: 10, fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit' },
+  submitBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(30,64,175,0.35)' },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function SectionHeader({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle: string }) {
+function SectionHeader({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
-      <div style={{ width: 40, height: 40, borderRadius: 10, background: 'linear-gradient(135deg, #1e40af, #3b82f6)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+    <div style={S.sectionHeader}>
+      <div style={S.sectionIcon}>
         {icon}
       </div>
       <div>
-        <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '1rem' }}>{title}</div>
-        <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{subtitle}</div>
+        <p style={S.sectionTitle}>{title}</p>
+        <p style={S.sectionDesc}>{desc}</p>
       </div>
     </div>
   );
 }
 
-function Field({ label, name, type = 'text', placeholder = '', required = false, hint = '', value, onChange }: {
+function Field({ label, name, type = 'text', placeholder = '', required = false, hint = '', value, onChange, span = false }: {
   label: string; name: string; type?: string; placeholder?: string; required?: boolean; hint?: string;
-  value: string; onChange: (v: string) => void;
+  value: string; onChange: (v: string) => void; span?: boolean;
 }) {
   return (
-    <div>
-      <label style={labelStyle}>{label}{required && <span style={{ color: '#ef4444' }}> *</span>}</label>
+    <div style={span ? { gridColumn: '1 / -1' } : {}}>
+      <label style={S.label}>{label}{required && <span style={{ color: '#ef4444' }}> *</span>}</label>
       <input type={type} name={name} value={value} onChange={e => onChange(e.target.value)}
-        required={required} placeholder={placeholder} style={inputStyle} />
-      {hint && <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>{hint}</p>}
+        required={required} placeholder={placeholder} style={S.input}
+        onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT}18`; e.currentTarget.style.background = '#fff'; }}
+        onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#f8fafc'; }}
+      />
+      {hint && <p style={S.hint}>{hint}</p>}
+    </div>
+  );
+}
+
+function Textarea({ label, value, onChange, rows = 3, placeholder = '', hint = '', span = false }: {
+  label: string; value: string; onChange: (v: string) => void; rows?: number; placeholder?: string; hint?: string; span?: boolean;
+}) {
+  return (
+    <div style={span ? { gridColumn: '1 / -1' } : {}}>
+      <label style={S.label}>{label}</label>
+      <textarea value={value} onChange={e => onChange(e.target.value)} rows={rows} placeholder={placeholder}
+        style={{ ...S.input, resize: 'vertical', minHeight: rows * 28 }}
+        onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT}18`; e.currentTarget.style.background = '#fff'; }}
+        onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#f8fafc'; }}
+      />
+      {hint && <p style={S.hint}>{hint}</p>}
     </div>
   );
 }
@@ -57,6 +84,8 @@ function Field({ label, name, type = 'text', placeholder = '', required = false,
 export default function CreateUniversity() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [form, setForm] = useState({
     name: '', slug: '', type: 'Private', established: '',
     ranking: '', naac: 'A++', ugcApproved: true, aicteApproved: false,
@@ -85,7 +114,9 @@ export default function CreateUniversity() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!form.name.trim()) { setError('University name is required'); return; }
+    if (!form.city.trim()) { setError('City is required'); return; }
+    setLoading(true); setError(''); setSuccess('');
     try {
       const body = {
         name: form.name, slug: form.slug,
@@ -108,279 +139,274 @@ export default function CreateUniversity() {
         highlights: form.highlights.split(',').map(s => s.trim()).filter(Boolean),
       };
       const res = await fetch('/api/universities', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      if (res.ok) { router.push('/admin/universities'); }
-      else { const err = await res.json(); alert(err.error || 'Failed'); }
-    } catch { alert('Error creating university'); }
+      if (res.ok) { setSuccess('University created successfully! Redirecting...'); setTimeout(() => router.push('/admin/universities'), 1500); }
+      else { const err = await res.json(); setError(err.error || 'Failed to create university'); }
+    } catch { setError('Error creating university'); }
     finally { setLoading(false); }
   };
 
-
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
-      <div style={{ background: 'linear-gradient(135deg, #1e40af, #1e3a8a)', padding: '1.5rem 2rem', color: '#fff' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <Link href="/admin/universities" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#fff', textDecoration: 'none', opacity: 0.85, marginBottom: '0.75rem', fontSize: '0.9rem' }}>
-            <ArrowLeft size={18} /> Back to Universities
-          </Link>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 900 }}>Create New University</h1>
-        </div>
-      </div>
-
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 1.5rem' }}>
-        <form onSubmit={handleSubmit}>
-
-          {/* BASIC INFORMATION */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<Building size={20} color="#fff" />} title="Basic Information" subtitle="Enter the basic details of the university" />
-            <div style={grid2}>
-              <div>
-                <label style={labelStyle}>University Name <span style={{ color: '#ef4444' }}>*</span></label>
-                <input style={inputStyle} value={form.name} onChange={e => handleName(e.target.value)} required placeholder="e.g., Amity University" />
-              </div>
-              <div>
-                <label style={labelStyle}>Slug <span style={{ color: '#ef4444' }}>*</span></label>
-                <input style={inputStyle} value={form.slug} onChange={e => set('slug', e.target.value)} required placeholder="amity-university" />
-                {form.slug && <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>Used in URL: /universities/{form.slug}</p>}
-              </div>
-              <div>
-                <label style={labelStyle}>University Type</label>
-                <select value={form.type} onChange={e => set('type', e.target.value)} style={{ ...inputStyle }}>
-                  <option>Private</option><option>Public</option><option>Deemed</option><option>Central</option>
-                </select>
-              </div>
-              <Field label="Established Year" name="established" placeholder="e.g., 2003" value={form.established} onChange={v => set('established', v)} />
-            </div>
+    <div style={S.wrapper}>
+      <main style={S.main}>
+        <div style={S.container}>
+          {/* Header */}
+          <div style={S.pageHeader}>
+            <Link href="/admin/universities" style={S.backLink}>
+              <ArrowLeft size={14} color="#64748b" /> Back to Universities
+            </Link>
+            <h1 style={S.pageTitle}>Create New University</h1>
+            <p style={S.pageSubtitle}>Fill in the details to add a new university to the platform</p>
           </div>
 
-          {/* RATINGS & APPROVALS */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<Award size={20} color="#fff" />} title="Ratings & Approvals" subtitle="Add accreditation and approval details" />
-            <div style={grid2}>
-              <div>
-                <label style={labelStyle}>Rating / Ranking</label>
-                <select value={form.ranking} onChange={e => set('ranking', e.target.value)} style={{ ...inputStyle }}>
-                  <option value="">Select</option>
-                  {['A++', 'A+', 'A', 'B++', 'B+', 'B'].map(v => <option key={v}>{v}</option>)}
-                </select>
-              </div>
-              <div>
-                <label style={labelStyle}>NAAC Grade</label>
-                <select value={form.naac} onChange={e => set('naac', e.target.value)} style={{ ...inputStyle }}>
-                  {['A++', 'A+', 'A', 'B++', 'B+', 'B', 'C'].map(v => <option key={v}>{v}</option>)}
-                </select>
-              </div>
+          {error && (
+            <div style={S.errorAlert}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                {error}
+              </span>
+              <button onClick={() => setError('')} style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontSize: '1rem' }}>✕</button>
             </div>
-            <div style={{ display: 'flex', gap: '1.5rem', marginTop: '1.25rem' }}>
-              {[['ugcApproved', 'UGC Approved'], ['aicteApproved', 'AICTE Approved']].map(([k, lbl]) => (
-                <label key={k} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 500, color: '#374151', fontSize: '0.9rem' }}>
-                  <input type="checkbox" checked={(form as unknown as Record<string, boolean>)[k]}
-                    onChange={e => set(k, e.target.checked)} style={{ width: 16, height: 16, accentColor: '#1e40af' }} />
-                  {lbl}
-                </label>
-              ))}
-            </div>
-          </div>
+          )}
+          {success && <div style={S.successAlert}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ display: 'inline', marginRight: 8 }}><polyline points="20 6 9 17 4 12"/></svg>
+            {success}
+          </div>}
 
-          {/* LOCATION */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<MapPin size={20} color="#fff" />} title="Location" subtitle="Specify the university location" />
-            <div style={grid2}>
-              <Field label="City" name="city" placeholder="Noida" required value={form.city} onChange={v => set('city', v)} />
-              <Field label="State" name="state" placeholder="Uttar Pradesh" value={form.state} onChange={v => set('state', v)} />
-            </div>
-            <div style={{ marginTop: '1.25rem' }}>
-              <label style={labelStyle}>Full Location / Address</label>
-              <input style={inputStyle} value={form.location} onChange={e => set('location', e.target.value)} placeholder="Sector 125, Noida, Uttar Pradesh" />
-            </div>
-          </div>
+          <form onSubmit={handleSubmit}>
 
-          {/* FEE STRUCTURE */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<DollarSign size={20} color="#fff" />} title="Fee Structure" subtitle="Set the fee range for programs" />
-            <div style={grid2}>
-              <div>
-                <label style={labelStyle}>Minimum Fee (₹)</label>
-                <div style={{ position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '0.9rem' }}>₹</span>
-                  <input style={{ ...inputStyle, paddingLeft: '1.75rem' }} type="number" value={form.minFee} onChange={e => set('minFee', e.target.value)} placeholder="50000" />
-                </div>
-                {form.minFee && <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>₹{Number(form.minFee).toLocaleString('en-IN')}</p>}
-              </div>
-              <div>
-                <label style={labelStyle}>Maximum Fee (₹)</label>
-                <div style={{ position: 'relative' }}>
-                  <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '0.9rem' }}>₹</span>
-                  <input style={{ ...inputStyle, paddingLeft: '1.75rem' }} type="number" value={form.maxFee} onChange={e => set('maxFee', e.target.value)} placeholder="499999" />
-                </div>
-                {form.maxFee && <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>₹{Number(form.maxFee).toLocaleString('en-IN')}</p>}
-              </div>
-            </div>
-          </div>
-
-          {/* SEO */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<Search size={20} color="#fff" />} title="SEO & Social Sharing" subtitle="Optimize for search engines and social media" />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label style={labelStyle}>Meta Title</label>
-                <input style={inputStyle} value={form.metaTitle} onChange={e => set('metaTitle', e.target.value)} placeholder="Best Private University" maxLength={60} />
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>{form.metaTitle.length}/60 characters</p>
-              </div>
-              <div>
-                <label style={labelStyle}>Meta Description</label>
-                <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={3} value={form.metaDescription} onChange={e => set('metaDescription', e.target.value)} placeholder="Brief description for search results..." maxLength={160} />
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>{form.metaDescription.length}/160 characters</p>
-              </div>
-              <Field label="Keywords" name="keywords" placeholder="university,admission,courses" hint="Comma separated keywords" value={form.keywords} onChange={v => set('keywords', v)} />
-              <div style={grid2}>
-                <Field label="Canonical URL" name="canonicalUrl" placeholder="https://example.com/university/slug" value={form.canonicalUrl} onChange={v => set('canonicalUrl', v)} />
+            {/* Basic Info */}
+            <div style={S.section}>
+              <SectionHeader icon={<Building size={18} color="#fff" />} title="Basic Information" desc="Enter the basic details of the university" />
+              <div style={S.grid2}>
                 <div>
-                  <label style={labelStyle}>Robots Meta</label>
-                  <select value={form.robotsMeta} onChange={e => set('robotsMeta', e.target.value)} style={{ ...inputStyle }}>
-                    <option>Index, Follow</option><option>NoIndex, Follow</option><option>Index, NoFollow</option><option>NoIndex, NoFollow</option>
+                  <label style={S.label}>University Name <span style={{ color: '#ef4444' }}>*</span></label>
+                  <input style={S.input} value={form.name} onChange={e => handleName(e.target.value)} required placeholder="e.g., Amity University"
+                    onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT}18`; e.currentTarget.style.background = '#fff'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#f8fafc'; }} />
+                </div>
+                <div>
+                  <label style={S.label}>Slug <span style={{ color: '#ef4444' }}>*</span></label>
+                  <input style={S.input} value={form.slug} onChange={e => set('slug', e.target.value)} required placeholder="amity-university"
+                    onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.boxShadow = `0 0 0 3px ${ACCENT}18`; e.currentTarget.style.background = '#fff'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#f8fafc'; }} />
+                  {form.slug && <p style={S.hint}>URL: /universities/{form.slug}</p>}
+                </div>
+                <div>
+                  <label style={S.label}>University Type</label>
+                  <select value={form.type} onChange={e => set('type', e.target.value)} style={S.input}>
+                    {['Private', 'Public', 'Deemed', 'Central', 'State', 'Autonomous'].map(v => <option key={v}>{v}</option>)}
+                  </select>
+                </div>
+                <Field label="Established Year" name="established" placeholder="e.g., 2003" value={form.established} onChange={v => set('established', v)} />
+              </div>
+            </div>
+
+            {/* Ratings */}
+            <div style={S.section}>
+              <SectionHeader icon={<Award size={18} color="#fff" />} title="Ratings & Approvals" desc="Add accreditation and approval details" />
+              <div style={S.grid2}>
+                <div>
+                  <label style={S.label}>Rating / Ranking</label>
+                  <select value={form.ranking} onChange={e => set('ranking', e.target.value)} style={S.input}>
+                    <option value="">Select</option>
+                    {['A++', 'A+', 'A', 'B++', 'B+', 'B', 'C', 'Not Rated'].map(v => <option key={v}>{v}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label style={S.label}>NAAC Grade</label>
+                  <select value={form.naac} onChange={e => set('naac', e.target.value)} style={S.input}>
+                    {['A++', 'A+', 'A', 'B++', 'B+', 'B', 'C'].map(v => <option key={v}>{v}</option>)}
                   </select>
                 </div>
               </div>
-              <div style={{ background: '#f8fafc', borderRadius: 8, padding: '1.25rem', border: '1px solid #e2e8f0' }}>
-                <div style={{ fontWeight: 600, color: '#374151', marginBottom: '1rem', fontSize: '0.9rem' }}>Open Graph (Social Sharing)</div>
-                <div style={grid2}>
-                  <Field label="OG Title" name="ogTitle" placeholder="Title for Facebook/Twitter" value={form.ogTitle} onChange={v => set('ogTitle', v)} />
-                  <Field label="OG Image URL" name="ogImageUrl" placeholder="Image URL for social preview" value={form.ogImageUrl} onChange={v => set('ogImageUrl', v)} />
-                </div>
-                <div style={{ marginTop: '1rem' }}>
-                  <label style={labelStyle}>OG Description</label>
-                  <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={2} value={form.ogDescription} onChange={e => set('ogDescription', e.target.value)} placeholder="Description for social sharing..." />
-                </div>
+              <div style={{ display: 'flex', gap: 24, marginTop: 18 }}>
+                {[['ugcApproved', 'UGC Approved'], ['aicteApproved', 'AICTE Approved']].map(([k, lbl]) => (
+                  <label key={k} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontWeight: 500, color: '#374151', fontSize: '0.9rem' }}>
+                    <input type="checkbox" checked={(form as unknown as Record<string, boolean>)[k]}
+                      onChange={e => set(k, e.target.checked)} style={{ width: 16, height: 16, accentColor: ACCENT }} />
+                    {lbl}
+                  </label>
+                ))}
               </div>
             </div>
-          </div>
 
-          {/* DESCRIPTION */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<BookOpen size={20} color="#fff" />} title="Description" subtitle="Provide detailed information about the university" />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label style={labelStyle}>About University</label>
-                <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={5} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Write a detailed description about the university, its history, achievements, and what makes it unique..." maxLength={1000} />
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>{form.description.length}/1000 characters</p>
-              </div>
-              <div>
-                <label style={labelStyle}>Highlights (comma separated)</label>
-                <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={3} value={form.highlights} onChange={e => set('highlights', e.target.value)} placeholder="100% Placement Assistance, Industry Partnerships, Flexible Learning, Expert Faculty" />
-              </div>
-              <div>
-                <label style={labelStyle}>Facilities (comma separated)</label>
-                <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={3} value={form.facilities} onChange={e => set('facilities', e.target.value)} placeholder="Digital Library, Online Labs, Student Portal, Career Services, Alumni Network" />
+            {/* Location */}
+            <div style={S.section}>
+              <SectionHeader icon={<MapPin size={18} color="#fff" />} title="Location" desc="Specify the university location" />
+              <div style={S.grid2}>
+                <Field label="City" name="city" placeholder="Noida" required value={form.city} onChange={v => set('city', v)} />
+                <Field label="State" name="state" placeholder="Uttar Pradesh" value={form.state} onChange={v => set('state', v)} />
+                <Field label="Full Location / Address" name="location" placeholder="Sector 125, Noida, Uttar Pradesh" value={form.location} onChange={v => set('location', v)} span />
               </div>
             </div>
-          </div>
 
-          {/* MEDIA */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<Globe size={20} color="#fff" />} title="Media" subtitle="Add logo and banner image URLs" />
-            <div style={grid2}>
-              <div>
-                <label style={labelStyle}>Logo Image URL</label>
-                <input style={inputStyle} value={form.logoUrl} onChange={e => set('logoUrl', e.target.value)} placeholder="https://example.com/logo.png" />
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>Recommended: Square image (200x200px)</p>
-              </div>
-              <div>
-                <label style={labelStyle}>Banner Image URL</label>
-                <input style={inputStyle} value={form.bannerUrl} onChange={e => set('bannerUrl', e.target.value)} placeholder="https://example.com/banner.jpg" />
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.3rem' }}>Recommended: Wide image (1200x400px)</p>
-              </div>
-            </div>
-          </div>
-
-          {/* CONTACT */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<Phone size={20} color="#fff" />} title="Contact Information" subtitle="Add contact details for the university" />
-            <div style={grid2}>
-              <div>
-                <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <Globe size={14} color="#64748b" /> Website
-                </label>
-                <input style={inputStyle} value={form.website} onChange={e => set('website', e.target.value)} placeholder="https://www.university.edu" />
-              </div>
-              <div>
-                <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <Mail size={14} color="#64748b" /> Email
-                </label>
-                <input style={inputStyle} type="email" value={form.email} onChange={e => set('email', e.target.value)} placeholder="admissions@university.edu" />
-              </div>
-            </div>
-            <div style={{ marginTop: '1.25rem', maxWidth: 320 }}>
-              <label style={{ ...labelStyle, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Phone size={14} color="#64748b" /> Phone
-              </label>
-              <input style={inputStyle} value={form.phone} onChange={e => set('phone', e.target.value)} placeholder="+91 73560 04410" />
-            </div>
-          </div>
-
-          {/* SETTINGS */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<Award size={20} color="#fff" />} title="Settings" subtitle="Configure visibility and featured status" />
-            <div style={grid2}>
-              {[['featured', 'Featured University', 'Display on homepage and featured sections'], ['active', 'Active', 'University is visible to students']].map(([k, lbl, desc]) => (
-                <label key={k} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', borderRadius: 10, border: `2px solid ${(form as unknown as Record<string, boolean>)[k] ? '#bfdbfe' : '#e2e8f0'}`, background: (form as unknown as Record<string, boolean>)[k] ? '#eff6ff' : '#f8fafc', cursor: 'pointer', transition: 'all 0.2s' }}>
-                  <input type="checkbox" checked={(form as unknown as Record<string, boolean>)[k]} onChange={e => set(k, e.target.checked)} style={{ width: 18, height: 18, accentColor: '#1e40af' }} />
-                  <div>
-                    <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.9rem' }}>{lbl}</div>
-                    <div style={{ color: '#64748b', fontSize: '0.8rem' }}>{desc}</div>
+            {/* Fee */}
+            <div style={S.section}>
+              <SectionHeader icon={<DollarSign size={18} color="#fff" />} title="Fee Structure" desc="Set the fee range for programs" />
+              <div style={S.grid2}>
+                <div>
+                  <label style={S.label}>Minimum Fee (₹)</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '0.9rem' }}>₹</span>
+                    <input style={{ ...S.input, paddingLeft: 28 }} type="number" value={form.minFee} onChange={e => set('minFee', e.target.value)} placeholder="50000"
+                      onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
                   </div>
-                </label>
+                  {form.minFee && <p style={S.hint}>₹{Number(form.minFee).toLocaleString('en-IN')}</p>}
+                </div>
+                <div>
+                  <label style={S.label}>Maximum Fee (₹)</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', fontSize: '0.9rem' }}>₹</span>
+                    <input style={{ ...S.input, paddingLeft: 28 }} type="number" value={form.maxFee} onChange={e => set('maxFee', e.target.value)} placeholder="499999"
+                      onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
+                  </div>
+                  {form.maxFee && <p style={S.hint}>₹{Number(form.maxFee).toLocaleString('en-IN')}</p>}
+                </div>
+              </div>
+            </div>
+
+            {/* SEO */}
+            <div style={S.section}>
+              <SectionHeader icon={<Search size={18} color="#fff" />} title="SEO & Social Sharing" desc="Optimize for search engines and social media" />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div>
+                  <label style={S.label}>Meta Title</label>
+                  <input style={S.input} value={form.metaTitle} onChange={e => set('metaTitle', e.target.value)} placeholder="Best Private University in India..." maxLength={60}
+                    onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
+                  <p style={S.hint}>{form.metaTitle.length}/60 characters</p>
+                </div>
+                <Textarea label="Meta Description" value={form.metaDescription} onChange={v => set('metaDescription', v)} rows={2} placeholder="Brief summary for search results..." hint={`${form.metaDescription.length}/160 characters`} />
+                <Field label="Keywords" name="keywords" placeholder="university, admission, courses" hint="Comma separated keywords" value={form.keywords} onChange={v => set('keywords', v)} />
+                <div style={S.grid2}>
+                  <Field label="Canonical URL" name="canonicalUrl" placeholder="https://example.com/university/slug" value={form.canonicalUrl} onChange={v => set('canonicalUrl', v)} />
+                  <div>
+                    <label style={S.label}>Robots Meta</label>
+                    <select value={form.robotsMeta} onChange={e => set('robotsMeta', e.target.value)} style={S.input}>
+                      <option>Index, Follow</option><option>NoIndex, Follow</option><option>Index, NoFollow</option><option>NoIndex, NoFollow</option>
+                    </select>
+                  </div>
+                </div>
+                <div style={{ background: ACCENT_LIGHT, borderRadius: 12, padding: '18px 20px', border: `1px solid ${ACCENT_BORDER}` }}>
+                  <p style={{ fontWeight: 700, color: ACCENT, marginBottom: 14, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <Globe size={14} color={ACCENT} /> Open Graph (Social Sharing)
+                  </p>
+                  <div style={S.grid2}>
+                    <Field label="OG Title" name="ogTitle" placeholder="Title for Facebook/Twitter" value={form.ogTitle} onChange={v => set('ogTitle', v)} />
+                    <Field label="OG Image URL" name="ogImageUrl" placeholder="Image URL for social preview" value={form.ogImageUrl} onChange={v => set('ogImageUrl', v)} />
+                  </div>
+                  <div style={{ marginTop: 14 }}>
+                    <Textarea label="OG Description" value={form.ogDescription} onChange={v => set('ogDescription', v)} rows={2} placeholder="Description for social sharing..." />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div style={S.section}>
+              <SectionHeader icon={<BookOpen size={18} color="#fff" />} title="Description" desc="Provide detailed information about the university" />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <Textarea label="About University" value={form.description} onChange={v => set('description', v)} rows={5} placeholder="Write a detailed description about the university..." hint={`${form.description.length}/1000 characters`} />
+                <Textarea label="Highlights (comma separated)" value={form.highlights} onChange={v => set('highlights', v)} rows={2} placeholder="100% Placement Assistance, Industry Partnerships, Flexible Learning" />
+                <Textarea label="Facilities (comma separated)" value={form.facilities} onChange={v => set('facilities', v)} rows={2} placeholder="Digital Library, Online Labs, Student Portal, Career Services" />
+              </div>
+            </div>
+
+            {/* Media */}
+            <div style={S.section}>
+              <SectionHeader icon={<Globe size={18} color="#fff" />} title="Media" desc="Add logo and banner image URLs" />
+              <div style={S.grid2}>
+                <div>
+                  <Field label="Logo Image URL" name="logoUrl" placeholder="https://example.com/logo.png" hint="Recommended: Square image (200×200px)" value={form.logoUrl} onChange={v => set('logoUrl', v)} />
+                  {form.logoUrl && <img src={form.logoUrl} alt="logo" style={{ marginTop: 10, width: 80, height: 80, objectFit: 'contain', borderRadius: 10, border: `1.5px solid ${ACCENT_BORDER}`, padding: 6, background: '#fff' }} onError={e => (e.currentTarget.style.display = 'none')} />}
+                </div>
+                <div>
+                  <Field label="Banner Image URL" name="bannerUrl" placeholder="https://example.com/banner.jpg" hint="Recommended: Wide image (1200×400px)" value={form.bannerUrl} onChange={v => set('bannerUrl', v)} />
+                  {form.bannerUrl && <img src={form.bannerUrl} alt="banner" style={{ marginTop: 10, width: '100%', height: 80, objectFit: 'cover', borderRadius: 10, border: `1.5px solid ${ACCENT_BORDER}` }} onError={e => (e.currentTarget.style.display = 'none')} />}
+                </div>
+              </div>
+            </div>
+
+            {/* Contact */}
+            <div style={S.section}>
+              <SectionHeader icon={<Phone size={18} color="#fff" />} title="Contact Information" desc="Add contact details for the university" />
+              <div style={S.grid2}>
+                <Field label="Website" name="website" placeholder="https://www.university.edu" value={form.website} onChange={v => set('website', v)} />
+                <Field label="Email" name="email" type="email" placeholder="admissions@university.edu" value={form.email} onChange={v => set('email', v)} />
+                <Field label="Phone" name="phone" placeholder="+91 73560 04410" value={form.phone} onChange={v => set('phone', v)} />
+              </div>
+            </div>
+
+            {/* Settings */}
+            <div style={S.section}>
+              <SectionHeader icon={<Award size={18} color="#fff" />} title="Settings" desc="Configure visibility and featured status" />
+              <div style={S.grid2}>
+                {[['featured', 'Featured University', 'Display on homepage and featured sections'], ['active', 'Active', 'University is visible to students']].map(([k, lbl, desc]) => (
+                  <label key={k} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px', borderRadius: 12, border: `2px solid ${(form as unknown as Record<string, boolean>)[k] ? ACCENT_BORDER : '#e2e8f0'}`, background: (form as unknown as Record<string, boolean>)[k] ? ACCENT_LIGHT : '#f8fafc', cursor: 'pointer', transition: 'all 0.2s' }}>
+                    <input type="checkbox" checked={(form as unknown as Record<string, boolean>)[k]} onChange={e => set(k, e.target.checked)} style={{ width: 18, height: 18, accentColor: ACCENT }} />
+                    <div>
+                      <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.88rem' }}>{lbl}</div>
+                      <div style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 2 }}>{desc}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Programs */}
+            <div style={S.section}>
+              <SectionHeader icon={<GraduationCap size={18} color="#fff" />} title="Programs Offered" desc="Add the programs offered by this university" />
+              {programs.map((prog, i) => (
+                <div key={i} style={{ background: '#f8fafc', borderRadius: 12, padding: '18px 20px', marginBottom: 14, border: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                    <span style={{ fontWeight: 700, color: '#374151', fontSize: '0.88rem' }}>Program {i + 1}</span>
+                    {programs.length > 1 && (
+                      <button type="button" onClick={() => setPrograms(programs.filter((_, j) => j !== i))} style={{ padding: '5px 10px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}>
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <div style={S.grid2}>
+                    <div>
+                      <label style={S.label}>Program Name <span style={{ color: '#ef4444' }}>*</span></label>
+                      <input style={S.input} value={prog.name} onChange={e => handleProgramChange(i, 'name', e.target.value)} required placeholder="e.g., MBA"
+                        onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
+                        onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
+                    </div>
+                    <div>
+                      <label style={S.label}>Duration <span style={{ color: '#ef4444' }}>*</span></label>
+                      <input style={S.input} value={prog.duration} onChange={e => handleProgramChange(i, 'duration', e.target.value)} required placeholder="e.g., 2 Years"
+                        onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
+                        onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 12 }}>
+                    <label style={S.label}>Description</label>
+                    <textarea style={{ ...S.input, resize: 'vertical' }} rows={2} value={prog.description} onChange={e => handleProgramChange(i, 'description', e.target.value)} placeholder="Brief description..."
+                      onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
+                  </div>
+                </div>
               ))}
+              <button type="button" onClick={() => setPrograms([...programs, { name: '', duration: '', description: '' }])}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 20px', background: ACCENT_LIGHT, color: ACCENT, border: `1.5px solid ${ACCENT_BORDER}`, borderRadius: 9, fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'inherit' }}>
+                <Plus size={14} color={ACCENT} /> Add Program
+              </button>
             </div>
-          </div>
 
-          {/* PROGRAMS */}
-          <div style={sectionStyle}>
-            <SectionHeader icon={<GraduationCap size={20} color="#fff" />} title="Programs Offered" subtitle="Add the programs offered by this university" />
-            {programs.map((prog, i) => (
-              <div key={i} style={{ background: '#f8fafc', borderRadius: 10, padding: '1.25rem', marginBottom: '1rem', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontWeight: 600, color: '#374151', fontSize: '0.9rem' }}>Program {i + 1}</span>
-                  {programs.length > 1 && (
-                    <button type="button" onClick={() => setPrograms(programs.filter((_, j) => j !== i))} style={{ padding: '0.4rem', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 6, cursor: 'pointer', display: 'flex' }}>
-                      <Trash2 size={16} />
-                    </button>
-                  )}
-                </div>
-                <div style={grid2}>
-                  <div>
-                    <label style={labelStyle}>Program Name <span style={{ color: '#ef4444' }}>*</span></label>
-                    <input style={inputStyle} value={prog.name} onChange={e => handleProgramChange(i, 'name', e.target.value)} required placeholder="e.g., MBA" />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Duration <span style={{ color: '#ef4444' }}>*</span></label>
-                    <input style={inputStyle} value={prog.duration} onChange={e => handleProgramChange(i, 'duration', e.target.value)} required placeholder="e.g., 2 Years" />
-                  </div>
-                </div>
-                <div style={{ marginTop: '1rem' }}>
-                  <label style={labelStyle}>Description</label>
-                  <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={2} value={prog.description} onChange={e => handleProgramChange(i, 'description', e.target.value)} placeholder="Brief description..." />
-                </div>
-              </div>
-            ))}
-            <button type="button" onClick={() => setPrograms([...programs, { name: '', duration: '', description: '' }])} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0.6rem 1.25rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontSize: '0.875rem' }}>
-              <Plus size={16} /> Add Program
-            </button>
-          </div>
+            {/* Actions */}
+            <div style={S.actions}>
+              <button type="button" onClick={() => router.push('/admin/universities')} style={S.cancelBtn}>Cancel</button>
+              <button type="submit" disabled={loading} style={{ ...S.submitBtn, opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
+                {loading ? '⏳ Creating...' : <><Plus size={15} color="#fff" /> Create University</>}
+              </button>
+            </div>
 
-          {/* ACTIONS */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
-            <button type="button" onClick={() => setForm(f => ({ ...f, name: '', slug: '', description: '', highlights: '', facilities: '' }))} style={{ padding: '0.75rem 1.5rem', background: '#f1f5f9', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem' }}>
-              Clear Form
-            </button>
-            <Link href="/admin/universities" style={{ padding: '0.75rem 1.5rem', background: '#fff', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: 8, fontWeight: 600, textDecoration: 'none', fontSize: '0.9rem' }}>
-              Cancel
-            </Link>
-            <button type="submit" disabled={loading} style={{ padding: '0.75rem 1.75rem', background: loading ? '#94a3b8' : '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              <Plus size={16} /> {loading ? 'Creating...' : 'Create University'}
-            </button>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </main>
     </div>
   );
 }
