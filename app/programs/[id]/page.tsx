@@ -90,6 +90,15 @@ export default function ProgramDetailPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .prog-grid { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; align-items: start; }
+        .prog-sidebar { position: sticky; top: 80px; }
+        @media (max-width: 768px) {
+          .prog-grid { grid-template-columns: 1fr !important; }
+          .prog-sidebar { position: static !important; }
+        }
+      `}</style>
 
       {/* ── HERO ── */}
       <section style={{
@@ -143,7 +152,7 @@ export default function ProgramDetailPage() {
       </section>
 
       {/* ── CONTENT ── */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 5rem', display: 'grid', gridTemplateColumns: '1fr 300px', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="prog-grid" style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem 5rem' }}>
 
         {/* Left */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -223,7 +232,7 @@ export default function ProgramDetailPage() {
         </div>
 
         {/* Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', position: 'sticky', top: '80px' }}>
+        <div className="prog-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <AnimateOnScroll animation="fadeUp" delay={80}>
             <div style={{ background: '#fff', borderRadius: 14, padding: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.07)' }}>
               <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>Program Details</div>

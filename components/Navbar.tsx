@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 const links = [
-  { href: '/', label: 'Home' },
+  { href: '/home', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/universities', label: 'Universities' },
   { href: '/open-school', label: 'Open School' },
@@ -141,7 +141,7 @@ export default function Navbar() {
           <div style={{ maxWidth: 1320, margin: '0 auto', width: '100%', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
 
             {/* Logo */}
-            <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9, flexShrink: 0, marginRight: '0.5rem' }}>
+            <Link href="/home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9, flexShrink: 0, marginRight: '0.5rem' }}>
               <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="100" height="100" rx="22" fill="#4169e1"/>
                 <path d="M28 35 L50 62 L72 35 L58 35 L50 48 L42 35 Z" fill="white"/>

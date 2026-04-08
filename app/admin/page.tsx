@@ -21,21 +21,23 @@ export default function AdminDashboard() {
   const fetchStats = async () => {
     try {
       // Fetch real data from APIs
-      const [universitiesRes, enrollmentsRes, contactsRes] = await Promise.all([
+      const [universitiesRes, enrollmentsRes, contactsRes, programsRes] = await Promise.all([
         fetch('/api/universities'),
         fetch('/api/enrollments'),
-        fetch('/api/contact')
+        fetch('/api/contact'),
+        fetch('/api/programs'),
       ]);
 
       const universitiesData = await universitiesRes.json();
       const enrollmentsData = await enrollmentsRes.json();
       const contactsData = await contactsRes.json();
+      const programsData = await programsRes.json();
 
       setStats({
         totalUniversities: universitiesData.success ? universitiesData.data.length : 0,
-        totalPrograms: 0, // Will be calculated from universities data
+        totalPrograms: programsData.success ? programsData.data.length : 0,
         totalEnrollments: enrollmentsData.success ? enrollmentsData.data.length : 0,
-        totalContacts: contactsData.success ? contactsData.data.length : 0
+        totalContacts: contactsData.success ? contactsData.data.length : 0,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);

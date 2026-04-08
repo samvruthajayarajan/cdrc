@@ -15,6 +15,7 @@ const menuItems = [
   { icon: <Users size={22} />, label: 'Enrollments', href: '/admin/enrollments' },
   { icon: <Mail size={22} />, label: 'Contact Messages', href: '/admin/contacts' },
   { icon: <Globe size={22} />, label: 'SEO Settings', href: '/admin/seo' },
+  { icon: <Users size={22} />, label: 'Leads', href: '/admin/leads' },
 ];
 
 export default function AdminLayout({ children }: { children: any }) {

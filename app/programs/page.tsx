@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 import EnrollmentModal from '@/components/EnrollmentModal';
+import BrochureLeadModal from '@/components/BrochureLeadModal';
 import { BookOpen, Clock, Search, GraduationCap } from '@/components/Icon';
 
 interface Program {
@@ -42,6 +43,7 @@ export default function ProgramsPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<{ university: string; program: string } | null>(null);
+  const [brochureModal, setBrochureModal] = useState<{ programName: string; brochureUrl: string } | null>(null);
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -62,7 +64,7 @@ export default function ProgramsPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section style={{
         position: 'relative', height: 420, overflow: 'hidden',
         backgroundImage: 'url(https://images.pexels.com/photos/1205651/pexels-photo-1205651.jpeg?auto=compress&cs=tinysrgb&w=1600)',
@@ -94,7 +96,7 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      {/* ── STATS STRIP ── */}
+      {/* STATS STRIP */}
       <div style={{ background: '#1e40af', padding: '1rem 2rem' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' }}>
           {[['500+', 'Programs'], ['14+', 'Universities'], ['UGC-DEB', 'Approved'], ['Online', 'Mode']].map(([val, lbl]) => (
@@ -106,7 +108,7 @@ export default function ProgramsPage() {
         </div>
       </div>
 
-      {/* ── CATEGORY FILTER ── */}
+      {/* CATEGORY FILTER */}
       <div style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '0.875rem 2rem', position: 'sticky', top: 56, zIndex: 100 }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: '0.5rem', overflowX: 'auto', scrollbarWidth: 'none' }}>
           {CATEGORIES.map(cat => (
@@ -125,17 +127,18 @@ export default function ProgramsPage() {
         </div>
       </div>
 
-      {/* ── GRID ── */}
+      {/* GRID */}
       <section style={{ padding: '2rem 2rem 5rem' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           {loading ? (
             <div style={{ textAlign: 'center', padding: '5rem' }}>
               <div style={{ display: 'inline-block', width: 40, height: 40, border: '4px solid #e2e8f0', borderTop: '4px solid #1e40af', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+              <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
             </div>
           ) : filtered.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '4rem' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
-              <p style={{ color: '#64748b' }}>No programs found.</p>
+              <GraduationCap size={48} color="#e2e8f0" />
+              <p style={{ color: '#64748b', marginTop: '1rem' }}>No programs found.</p>
             </div>
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.25rem' }}>
@@ -150,7 +153,7 @@ export default function ProgramsPage() {
                       onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; el.style.borderColor = '#e2e8f0'; }}
                     >
                       {/* Gradient header */}
-                      <div style={{ height: 80, background: `linear-gradient(135deg, ${c1}, ${c2})`, display: 'flex', alignItems: 'center', padding: '0 1.25rem', gap: '0.875rem', position: 'relative' }}>
+                      <div style={{ height: 80, background: `linear-gradient(135deg, ${c1}, ${c2})`, display: 'flex', alignItems: 'center', padding: '0 1.25rem', gap: '0.875rem' }}>
                         <div style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.2)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                           <BookOpen size={20} color="#fff" />
                         </div>
@@ -178,6 +181,7 @@ export default function ProgramsPage() {
                           </div>
                         )}
 
+                        {/* Action buttons */}
                         <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto', paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }}>
                           <Link href={`/programs/${cardId}`}
                             style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.6rem', border: '1.5px solid #1e40af', borderRadius: 8, color: '#1e40af', fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none', transition: 'all 0.2s', background: '#fff' }}
@@ -186,32 +190,20 @@ export default function ProgramsPage() {
                           >
                             Details
                           </Link>
-                          {p.brochureUrl && p.brochureUrl.trim() ? (
-                            <a
-                              href={`/api/download?url=${encodeURIComponent(p.brochureUrl)}&filename=${encodeURIComponent(p.name.replace(/\s+/g, '_') + '_Brochure.pdf')}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '0.6rem', border: '1.5px solid #e2e8f0', borderRadius: 8, color: '#475569', fontWeight: 600, fontSize: '0.8rem', textDecoration: 'none', transition: 'all 0.2s', background: '#fff', cursor: 'pointer' }}
-                              onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = '#94a3b8'; el.style.background = '#f8fafc'; }}
-                              onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = '#e2e8f0'; el.style.background = '#fff'; }}
-                            >
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-                              </svg>
-                              Brochure
-                            </a>
-                          ) : (
-                            <button onClick={() => setModal({ university: p.university || 'CDRC', program: `${p.name} - Brochure Request` })}
-                              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '0.6rem', border: '1.5px solid #e2e8f0', borderRadius: 8, color: '#475569', fontWeight: 600, fontSize: '0.8rem', background: '#fff', cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'inherit' }}
-                              onMouseEnter={e => { const el = e.currentTarget as HTMLButtonElement; el.style.borderColor = '#94a3b8'; el.style.background = '#f8fafc'; }}
-                              onMouseLeave={e => { const el = e.currentTarget as HTMLButtonElement; el.style.borderColor = '#e2e8f0'; el.style.background = '#fff'; }}
-                            >
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-                              </svg>
-                              Brochure
-                            </button>
-                          )}
+
+                          {/* Brochure button — always shows, opens lead form first */}
+                          <button
+                            onClick={() => setBrochureModal({ programName: p.name, brochureUrl: p.brochureUrl || '' })}
+                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '0.6rem', border: '1.5px solid #e2e8f0', borderRadius: 8, color: '#475569', fontWeight: 600, fontSize: '0.8rem', background: '#fff', cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'inherit' }}
+                            onMouseEnter={e => { const el = e.currentTarget as HTMLButtonElement; el.style.borderColor = '#94a3b8'; el.style.background = '#f8fafc'; }}
+                            onMouseLeave={e => { const el = e.currentTarget as HTMLButtonElement; el.style.borderColor = '#e2e8f0'; el.style.background = '#fff'; }}
+                          >
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Brochure
+                          </button>
+
                           <button onClick={() => setModal({ university: p.university || 'CDRC', program: p.name })}
                             style={{ flex: 1, padding: '0.6rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', transition: 'background 0.2s', fontFamily: 'inherit' }}
                             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1e3a8a'; }}
@@ -230,7 +222,7 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {/* CTA */}
       <section style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '3.5rem 2rem' }}>
         <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
@@ -254,6 +246,13 @@ export default function ProgramsPage() {
       </section>
 
       {modal && <EnrollmentModal university={modal.university} program={modal.program} onClose={() => setModal(null)} />}
+      {brochureModal && (
+        <BrochureLeadModal
+          programName={brochureModal.programName}
+          brochureUrl={brochureModal.brochureUrl}
+          onClose={() => setBrochureModal(null)}
+        />
+      )}
     </div>
   );
 }
