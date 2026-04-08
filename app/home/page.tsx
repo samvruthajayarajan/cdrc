@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
@@ -165,6 +165,14 @@ function UniversityHomeCard({ uni }: { uni: UniCard }) {
 }
 
 export default function HomePage() {
+  return (
+    <Suspense fallback={null}>
+      <HomePageContent />
+    </Suspense>
+  );
+}
+
+function HomePageContent() {
   const searchParams = useSearchParams();
   const [featuredUniversityCards, setFeaturedUniversityCards] = useState<UniCard[]>([]);
 
@@ -573,5 +581,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-
