@@ -25,6 +25,7 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [sourceFilter, setSourceFilter] = useState('All');
 
   useEffect(() => {
     fetch('/api/leads').then(r => r.json()).then(d => {
@@ -54,7 +55,9 @@ export default function LeadsPage() {
       l.phone.includes(search) ||
       l.course?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'All' || l.status === statusFilter;
-    return matchSearch && matchStatus;
+    const matchSource = sourceFilter === 'All' ||
+      (sourceFilter === 'Course Finder' ? l.source === 'Course Finder' : l.source !== 'Course Finder');
+    return matchSearch && matchStatus && matchSource;
   });
 
   const counts: Record<string, number> = {
@@ -81,9 +84,40 @@ export default function LeadsPage() {
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
         {/* Header */}
-        <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.6rem)', fontWeight: 800, color: '#0f172a', margin: 0 }}>Brochure Leads</h1>
-          <p style={{ color: '#64748b', fontSize: '0.88rem', marginTop: 4 }}>Users who requested brochures — track and follow up</p>
+        <div style={{ marginBottom: 24, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <h1 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.6rem)', fontWeight: 800, color: '#0f172a', margin: 0 }}>Leads</h1>
+            <p style={{ color: '#64748b', fontSize: '0.88rem', marginTop: 4 }}>Track and follow up on all incoming leads</p>
+          </div>
+          <button
+            onClick={async () => {
+              if (!confirm('This will re-classify existing leads by source. Continue?')) return;
+              const r = await fetch('/api/leads/migrate', { method: 'POST' });
+              const d = await r.json();
+              if (d.success) {
+                alert(`Fixed: ${d.courseFinderFixed} Course Finder + ${d.brochureFixed} Brochure leads`);
+                window.location.reload();
+              }
+            }}
+            style={{ padding: '8px 16px', background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 9, fontSize: '.78rem', fontWeight: 700, color: '#64748b', cursor: 'pointer', fontFamily: 'inherit' }}
+          >
+            🔧 Fix Lead Sources
+          </button>
+        </div>
+
+        {/* Source filter tabs */}
+        <div style={{ display: 'flex', gap: '.5rem', marginBottom: 16, flexWrap: 'wrap' }}>
+          {[
+            { key: 'All', label: '📋 All Leads', count: leads.length },
+            { key: 'Brochure Download', label: '📄 Brochure Download', count: leads.filter(l => l.source !== 'Course Finder').length },
+            { key: 'Course Finder', label: '🔍 Course Finder', count: leads.filter(l => l.source === 'Course Finder').length },
+          ].map(({ key, label, count }) => (
+            <button key={key} onClick={() => setSourceFilter(key)}
+              style={{ padding: '7px 16px', borderRadius: 50, border: `2px solid ${sourceFilter === key ? '#4361EE' : '#e2e8f0'}`, background: sourceFilter === key ? '#4361EE' : '#fff', color: sourceFilter === key ? '#fff' : '#64748b', fontWeight: 700, fontSize: '.78rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .15s', display: 'flex', alignItems: 'center', gap: 6 }}>
+              {label}
+              <span style={{ background: sourceFilter === key ? 'rgba(255,255,255,0.25)' : '#f1f5f9', color: sourceFilter === key ? '#fff' : '#64748b', borderRadius: 50, padding: '1px 7px', fontSize: '.72rem', fontWeight: 800 }}>{count}</span>
+            </button>
+          ))}
         </div>
 
         {/* Stats */}

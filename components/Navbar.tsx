@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import SuggestUniversity from '@/components/SuggestUniversity';
 
 const links = [
   { href: '/home', label: 'Home' },
@@ -17,6 +18,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [suggestOpen, setSuggestOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -179,6 +181,14 @@ export default function Navbar() {
               >
                 Find My Course
               </button>
+              <button
+                onClick={() => setSuggestOpen(true)}
+                style={{ padding: '7px 16px', borderRadius: '50px', fontWeight: 700, fontSize: '.83rem', border: scrolled ? '1.5px solid #4361EE' : '1.5px solid rgba(255,255,255,0.35)', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .2s', background: 'transparent', color: scrolled ? '#4361EE' : '#fff', whiteSpace: 'nowrap' }}
+                onMouseEnter={e => { e.currentTarget.style.background = scrolled ? '#eef2ff' : 'rgba(255,255,255,0.12)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+              >
+                🏛️ Suggest University
+              </button>
               <Link
                 href="/login"
                 className={`btn-login ${scrolled ? 'btn-login-dark' : 'btn-login-light'}${pathname === '/login' ? ' active' : ''}`}
@@ -233,6 +243,10 @@ export default function Navbar() {
                 onClick={() => { setOpen(false); const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}>
                 Find My Course
               </button>
+              <button onClick={() => { setOpen(false); setSuggestOpen(true); }}
+                style={{ flex: 1, padding: '7px 12px', borderRadius: '50px', fontWeight: 700, fontSize: '.83rem', border: '1.5px solid #4361EE', cursor: 'pointer', fontFamily: 'inherit', background: 'transparent', color: '#4361EE' }}>
+                🏛️ Suggest Uni
+              </button>
               <Link href="/login" onClick={() => setOpen(false)} className="btn-login btn-login-dark" style={{ flex: 1, textAlign: 'center' }}>
                 Login
               </Link>
@@ -240,6 +254,7 @@ export default function Navbar() {
           </div>
         )}
       </div>
+      {suggestOpen && <SuggestUniversity onClose={() => setSuggestOpen(false)} />}
     </>
   );
 }

@@ -507,10 +507,34 @@ const CF_STYLES = `
   .cf-floating-btn span { display: none; }
   .cf-floating-btn { padding: 16px; border-radius: 50%; width: 56px; height: 56px; justify-content: center; bottom: 1.5rem; right: 5rem; }
   .cf-overlay { align-items: flex-end; padding: 0; }
-  .cf-modal { border-radius: 24px 24px 0 0; max-height: 90vh; }
-  .cf-options-grid { grid-template-columns: 1fr; }
-  .cf-gate { padding: 30px 20px; }
-  .cf-results-actions { flex-direction: column; }
+  .cf-modal { border-radius: 24px 24px 0 0; max-height: 92vh; width: 100%; }
+  .cf-options-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cf-option-btn { padding: 12px 8px; font-size: 0.82rem; }
+  .cf-gate { padding: 24px 16px 20px; }
+  .cf-gate-title { font-size: 1.4rem; }
+  .cf-gate-sub { font-size: 0.9rem; }
+  .cf-header { padding: 24px 16px 18px; }
+  .cf-title { font-size: 1.2rem; }
+  .cf-progress-container { padding: 14px 16px; }
+  .cf-question-container { padding: 20px 16px; }
+  .cf-question { font-size: 1rem; margin-bottom: 16px; }
+  .cf-navigation { padding: 0 16px 20px; gap: 10px; }
+  .cf-results-header { padding: 24px 16px 18px; }
+  .cf-results-title { font-size: 1.2rem; }
+  .cf-results-list { padding: 12px; max-height: 45vh; }
+  .cf-result-card { padding: 12px; }
+  .cf-result-name { font-size: 0.9rem; }
+  .cf-result-price { margin-left: 8px; }
+  .cf-results-actions { flex-direction: column; padding: 14px 16px 20px; }
   .cf-restart-btn, .cf-view-all-btn { justify-content: center; width: 100%; text-align: center; }
+  .cf-loading-screen { padding: 40px 20px; }
+}
+@media (max-width: 400px) {
+  .cf-options-grid { grid-template-columns: 1fr; }
+  .cf-gate-title { font-size: 1.2rem; }
+  .cf-modal { max-height: 95vh; }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .cf-modal { max-width: 520px; }
 }
 `;

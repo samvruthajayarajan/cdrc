@@ -26,7 +26,7 @@ export default function LandingPage() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(leadForm) });
+      await fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...leadForm, source: 'Course Finder' }) });
     } catch {}
     setSubmitting(false);
     sessionStorage.setItem('cdrc_lead_submitted', '1');
