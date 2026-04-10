@@ -114,7 +114,7 @@ export default function CourseFinderPage() {
       <div style={{ background: '#fff', borderRadius: '16px', padding: '25px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', marginBottom: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '15px' }}>
           <div>
-            <h1 style={{ margin: '0 0 6px', fontSize: '1.3rem', fontWeight: 700, color: '#0F172A' }}>Course Finder Questions</h1>
+            <h1 style={{ margin: '0 0 6px', fontSize: '1.3rem', fontWeight: 500, color: '#0F172A' }}>Course Finder Questions</h1>
             <p style={{ margin: 0, color: '#64748B', fontSize: '0.9rem' }}>Manage the quiz questions shown in the "Find My Course" widget.</p>
           </div>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -142,7 +142,7 @@ export default function CourseFinderPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '15px', flexWrap: 'wrap' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
-                    <span style={{ background: '#EFF6FF', color: '#1e40af', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 700 }}>Q{idx + 1}</span>
+                    <span style={{ background: '#EFF6FF', color: '#1e40af', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 500 }}>Q{idx + 1}</span>
                     <span style={{ background: '#F1F5F9', color: '#64748B', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>field: {q.field}</span>
                     <span style={{ background: '#F1F5F9', color: '#64748B', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>order: {q.order}</span>
                     <span style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600, background: q.isActive ? '#DCFCE7' : '#FEE2E2', color: q.isActive ? '#16A34A' : '#DC2626' }}>{q.isActive ? 'Active' : 'Inactive'}</span>
@@ -169,7 +169,7 @@ export default function CourseFinderPage() {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
           <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '700px', maxHeight: '90vh', overflow: 'auto', padding: '35px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
-              <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 700, color: '#0F172A' }}>{modal.mode === 'add' ? 'Add New Question' : 'Edit Question'}</h2>
+              <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 500, color: '#0F172A' }}>{modal.mode === 'add' ? 'Add New Question' : 'Edit Question'}</h2>
               <button onClick={() => setModal(null)} style={{ background: '#F1F5F9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', fontSize: '1rem', color: '#64748B' }}>✕</button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>

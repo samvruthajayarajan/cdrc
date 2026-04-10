@@ -28,39 +28,15 @@ const DEFAULT_QUESTIONS = [
     ],
   },
   {
-    question: 'What is your annual fee budget?',
-    field: 'budget',
-    order: 3,
-    isActive: true,
-    options: [
-      { value: 'low', label: 'Under ₹30,000', icon: 'fa-coins', max: 30000 },
-      { value: 'medium', label: '₹30,000 – ₹60,000', icon: 'fa-money-bill', min: 30000, max: 60000 },
-      { value: 'high', label: '₹60,000 – ₹1,00,000', icon: 'fa-wallet', min: 60000, max: 100000 },
-      { value: 'premium', label: 'Above ₹1,00,000', icon: 'fa-gem', min: 100000 },
-    ],
-  },
-  {
     question: 'What is your primary career goal?',
     field: 'goal',
-    order: 4,
+    order: 3,
     isActive: true,
     options: [
       { value: 'job', label: 'Get a Better Job', icon: 'fa-building' },
       { value: 'promotion', label: 'Career Promotion', icon: 'fa-arrow-trend-up' },
       { value: 'business', label: 'Start a Business', icon: 'fa-store' },
       { value: 'higher_studies', label: 'Higher Studies', icon: 'fa-book-open' },
-    ],
-  },
-  {
-    question: 'How much time can you dedicate to studies per week?',
-    field: 'time',
-    order: 5,
-    isActive: true,
-    options: [
-      { value: 'minimal', label: '1–5 hours', icon: 'fa-clock' },
-      { value: 'moderate', label: '5–10 hours', icon: 'fa-hourglass-half' },
-      { value: 'dedicated', label: '10–20 hours', icon: 'fa-calendar-check' },
-      { value: 'fulltime', label: '20+ hours', icon: 'fa-fire' },
     ],
   },
 ];

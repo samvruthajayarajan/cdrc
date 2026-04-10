@@ -45,7 +45,7 @@ function ProgramCard({ program, onEnroll }: {
           <BookOpen size={18} color={RB} />
         </div>
         <div style={{ flex: 1 }}>
-          <h3 style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.2rem' }}>{program.name}</h3>
+          <h3 style={{ fontSize: '0.88rem', fontWeight: 500, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.2rem' }}>{program.name}</h3>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <Clock size={11} color="#94a3b8" />
             <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>{program.duration}</span>
@@ -56,14 +56,14 @@ function ProgramCard({ program, onEnroll }: {
         <div style={{ flex: 1, marginBottom: '0.75rem' }}>
           <p style={{ fontSize: '0.8rem', color: '#64748b', lineHeight: 1.65, margin: 0 }}>{preview}</p>
           {isLong && (
-            <button onClick={() => setExpanded(!expanded)} style={{ background: 'none', border: 'none', color: RB, fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', padding: '3px 0 0', display: 'block' }}>
+            <button onClick={() => setExpanded(!expanded)} style={{ background: 'none', border: 'none', color: RB, fontSize: '0.75rem', fontWeight: 500, cursor: 'pointer', padding: '3px 0 0', display: 'block' }}>
               {expanded ? 'See Less ↑' : 'See More ↓'}
             </button>
           )}
         </div>
       )}
       <button onClick={() => onEnroll(program.name)}
-        style={{ width: '100%', padding: '0.6rem', background: RB, color: '#fff', border: 'none', borderRadius: '0.5rem', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer', marginTop: 'auto', transition: 'background 0.2s' }}
+        style={{ width: '100%', padding: '0.6rem', background: RB, color: '#fff', border: 'none', borderRadius: '0.5rem', fontWeight: 500, fontSize: '0.82rem', cursor: 'pointer', marginTop: 'auto', transition: 'background 0.2s' }}
         onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = RBD; }}
         onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = RB; }}
       >Enroll Now</button>
@@ -111,7 +111,7 @@ export default function UniversityDetailPage() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center', padding: '2rem' }}>
         <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🎓</div>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem' }}>University Not Found</h1>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 500, color: '#0f172a', marginBottom: '0.5rem' }}>University Not Found</h1>
         <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
           {error === 'error' ? 'Something went wrong. Please try again.' : `No university found for "${slug}".`}
         </p>
@@ -127,42 +127,51 @@ export default function UniversityDetailPage() {
 
   return (
     <div className="page-enter" style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* ── HERO ── */}
+      <section style={{ position: 'relative', minHeight: 480, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+        {/* Background image */}
+        <img
+          src={hasImage ? university.image : "https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80"}
+          alt={university.name}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+        />
+        {/* Transparent overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.75) 0%, rgba(67,97,238,0.55) 100%)' }} />
+        
+        {/* Dot grid pattern */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
 
-      {/* ── HERO — full-width image, light overlay ── */}
-      <section className="uni-banner" style={{
-        position: 'relative', height: 420, overflow: 'hidden',
-        background: hasImage
-          ? `url(${university.image}) center/cover`
-          : `linear-gradient(135deg, ${RB} 0%, ${RBD} 100%)`,
-      }}>
-        {/* light overlay — just enough for text readability */}
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.38)' }} />
-
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'calc(80px + 1rem) 2rem 2.5rem', maxWidth: 1200, margin: '0 auto', width: '100%', left: 0, right: 0 }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <Link href="/universities" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.85)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, marginBottom: '1rem' }}>
-              <ArrowLeft size={15} /> Back to Universities
-            </Link>
-          </AnimateOnScroll>
-          <AnimateOnScroll animation="fadeUp" delay={80}>
-            <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: '1rem', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
-              {university.name}
-            </h1>
-          </AnimateOnScroll>
-          <AnimateOnScroll animation="fadeUp" delay={160}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-              {[
-                { icon: <MapPin size={13} color="#fff" />, text: university.location },
-                { icon: <Award size={13} color="#fff" />, text: university.naac },
-                { icon: <GraduationCap size={13} color="#fff" />, text: `${university.programs.length}+ Programs` },
-              ].map((b, i) => (
-                <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 50, padding: '5px 12px', color: '#fff', fontSize: '0.78rem', fontWeight: 600 }}>
-                  {b.icon} {b.text}
-                </span>
-              ))}
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem', fontWeight: 600 }}>
+              <Link href="/universities" style={{ color: 'inherit', textDecoration: 'none' }}>Universities</Link>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              <span style={{ color: '#93c5fd' }}>Details</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
+                {university.name}
+              </h1>
+              
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
+                {[
+                  { icon: <MapPin size={14} color="#90e0ef" />, text: university.location },
+                  { icon: <Award size={14} color="#90e0ef" />, text: university.naac },
+                  { icon: <GraduationCap size={14} color="#90e0ef" />, text: `${university.programs.length}+ Programs` },
+                ].map((b, i) => (
+                  <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 50, padding: '7px 16px', color: '#fff', fontSize: '0.8rem', fontWeight: 500 }}>
+                    {b.icon} {b.text}
+                  </span>
+                ))}
+              </div>
             </div>
           </AnimateOnScroll>
         </div>
+
+        {/* Bottom fade into page bg */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, transparent, #f8fafc)', pointerEvents: 'none' }} />
       </section>
 
       {/* ── CONTENT ── */}
@@ -171,7 +180,7 @@ export default function UniversityDetailPage() {
         {/* About */}
         <AnimateOnScroll animation="fadeUp">
           <div style={{ background: '#fff', borderRadius: '1.25rem', padding: '2rem', marginBottom: '1.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
-            <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <h2 style={{ fontSize: '1.15rem', fontWeight: 500, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ width: 28, height: 28, background: RBL, borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Award size={15} color={RB} />
               </span>
@@ -179,7 +188,7 @@ export default function UniversityDetailPage() {
             </h2>
             <p style={{ fontSize: '0.92rem', lineHeight: 1.85, color: '#475569' }}>{university.description}</p>
             {university.ranking && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: '1rem', padding: '5px 12px', background: RBL, borderRadius: 50, color: RB, fontWeight: 700, fontSize: '0.78rem' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: '1rem', padding: '5px 12px', background: RBL, borderRadius: 50, color: RB, fontWeight: 500, fontSize: '0.78rem' }}>
                 <Award size={13} color={RB} /> {university.ranking}
               </span>
             )}
@@ -190,7 +199,7 @@ export default function UniversityDetailPage() {
         {university.facilities?.length > 0 && (
           <AnimateOnScroll animation="fadeUp" delay={80}>
             <div style={{ background: '#fff', borderRadius: '1.25rem', padding: '2rem', marginBottom: '1.5rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 500, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 28, height: 28, background: RBL, borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                   <CheckCircle size={15} color={RB} />
                 </span>
@@ -213,13 +222,13 @@ export default function UniversityDetailPage() {
           <AnimateOnScroll animation="fadeUp" delay={160}>
             <div style={{ background: '#fff', borderRadius: '1.25rem', padding: '2rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h2 style={{ fontSize: '1.15rem', fontWeight: 500, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ width: 28, height: 28, background: RBL, borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                     <GraduationCap size={15} color={RB} />
                   </span>
                   Programs Offered
                 </h2>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: RB, background: RBL, borderRadius: 50, padding: '3px 12px' }}>{university.programs.length} Programs</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 500, color: RB, background: RBL, borderRadius: 50, padding: '3px 12px' }}>{university.programs.length} Programs</span>
               </div>
               <div className="programs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
                 {university.programs.map((program, index) => (
@@ -232,12 +241,12 @@ export default function UniversityDetailPage() {
 
         {/* CTA */}
         <AnimateOnScroll animation="fadeUp" delay={200}>
-          <div style={{ marginTop: '1.5rem', background: `linear-gradient(135deg, ${RB}, ${RBD})`, borderRadius: '1.25rem', padding: '2rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ marginTop: '1.5rem', background: `linear-gradient(135deg, ${RB}, ${RBD})`, borderRadius: '1.25rem', padding: '1.5rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
-              <h3 style={{ color: '#fff', fontWeight: 800, fontSize: '1.1rem', marginBottom: '0.3rem' }}>Need help choosing a program?</h3>
+              <h3 style={{ color: '#fff', fontWeight: 500, fontSize: '1.1rem', marginBottom: '0.3rem' }}>Need help choosing a program?</h3>
               <p style={{ color: 'rgba(255,255,255,0.72)', fontSize: '0.85rem' }}>Our counsellors are here to guide you.</p>
             </div>
-            <Link href="/contact" style={{ padding: '0.8rem 1.75rem', background: '#fff', color: RB, borderRadius: 8, fontWeight: 800, fontSize: '0.9rem', textDecoration: 'none', flexShrink: 0 }}>
+            <Link href="/contact" style={{ padding: '0.8rem 1.75rem', background: '#fff', color: RB, borderRadius: 8, fontWeight: 500, fontSize: '0.9rem', textDecoration: 'none', flexShrink: 0 }}>
               Talk to Counsellor →
             </Link>
           </div>
@@ -247,6 +256,14 @@ export default function UniversityDetailPage() {
       {isEnrollmentOpen && (
         <EnrollmentModal onClose={() => setIsEnrollmentOpen(false)} university={university.name} program={selectedProgram} />
       )}
+      <style>{`
+        @media (max-width: 640px) {
+          .uni-banner { height: 260px !important; }
+          .programs-grid { grid-template-columns: 1fr !important; }
+          .facilities-grid { grid-template-columns: 1fr !important; }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 }

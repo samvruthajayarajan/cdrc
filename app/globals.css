@@ -3,7 +3,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: #fff;
   color: #1f2937;
   overflow-x: hidden;
@@ -11,7 +11,7 @@ body {
 
 /* Serif display font for headings */
 h1, h2 {
-  font-family: 'DM Serif Display', Georgia, serif;
+  font-family: 'Poppins', Georgia, serif;
 }
 
 /* Marquee */
@@ -45,7 +45,7 @@ h1, h2 {
 .section-heading {
   text-align: center;
   font-size: clamp(1.6rem, 3vw, 2.4rem);
-  font-weight: 800;
+  font-weight: 500;
   color: #1f2937;
   margin-bottom: 3rem;
   position: relative;
@@ -299,6 +299,14 @@ nav a {
   background-clip: text;
 }
 
+/* ============================================
+   GLOBAL RESPONSIVE FIXES
+   ============================================ */
+
+/* Prevent horizontal overflow everywhere */
+html, body { overflow-x: hidden; }
+img { max-width: 100%; }
+
 /* Hero responsive styles */
 @media (max-width: 768px) {
   .hero-content { 
@@ -353,17 +361,141 @@ nav a {
 
 /* University detail page responsive */
 @media (max-width: 768px) {
-  /* Banner height reduction on mobile */
-  .uni-banner {
-    height: 280px !important;
+  .uni-banner { height: 280px !important; }
+  .programs-grid { grid-template-columns: 1fr !important; }
+  .facilities-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── HOME PAGE ── */
+@media (max-width: 900px) {
+  /* Hero grid → single column */
+  .hg { grid-template-columns: 1fr !important; }
+  /* Hide hero image column */
+  .hr { display: none !important; }
+  /* About 3-col grid → single column */
+  .ag { grid-template-columns: 1fr !important; }
+  .about-grid-3 { grid-template-columns: 1fr !important; min-height: auto !important; }
+  .about-img-col { flex-direction: row !important; }
+  .about-img-col > div { min-height: 140px !important; }
+}
+
+@media (max-width: 640px) {
+  /* Stats bar → 2 columns */
+  .sg { grid-template-columns: 1fr 1fr !important; }
+  /* Hero padding */
+  section[style*="minHeight: '100vh'"] { padding-left: 1rem !important; padding-right: 1rem !important; }
+}
+
+/* ── CONTACT PAGE ── */
+@media (max-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+  .info-cards-grid { grid-template-columns: 1fr 1fr !important; }
+  .contact-hero-grid { grid-template-columns: 1fr !important; }
+  .contact-hero-stats { display: none !important; }
+}
+@media (max-width: 480px) {
+  .info-cards-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── FOOTER ── */
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── GENERAL SECTION PADDING on mobile ── */
+@media (max-width: 640px) {
+  section { padding-left: 1rem !important; padding-right: 1rem !important; }
+  /* Reduce vertical padding on small screens */
+  section[style*="5.5rem"] { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+}
+
+/* ── ENROLLMENT MODAL ── */
+@media (max-width: 480px) {
+  .enrollment-grid-2 { grid-template-columns: 1fr !important; }
+}
+
+/* ── PROGRAMS PAGE ── */
+@media (max-width: 640px) {
+  .programs-action-btns { flex-direction: column !important; }
+  .programs-action-btns a,
+  .programs-action-btns button { width: 100% !important; text-align: center !important; justify-content: center !important; }
+}
+
+/* ── UNIVERSITIES PAGE ── */
+@media (max-width: 768px) {
+  /* Prevent cards from stretching massively when they break to a single column */
+  .grid-card-container > div, .grid-card-container > a {
+    max-width: 380px;
+    margin: 0 auto;
+    width: 100%;
   }
-  /* Programs grid single column */
-  .programs-grid {
-    grid-template-columns: 1fr !important;
+}
+@media (max-width: 480px) {
+  /* Uni cards full width on very small screens, but capped */
+  div[style*="minmax(350px"], div[style*="minmax(320px"] { grid-template-columns: 1fr !important; justify-items: center; }
+  .grid-card-container > div, .grid-card-container > a {
+    max-width: 340px;
   }
-  /* Facilities grid single column */
-  .facilities-grid {
-    grid-template-columns: 1fr !important;
+  /* Reduce image header size on mobile */
+  .uni-img-header { height: 160px !important; }
+}
+
+/* ── OPEN SCHOOL PAGE ── */
+@media (max-width: 640px) {
+  .open-school-cta { flex-direction: column !important; text-align: center !important; }
+  .open-school-cta a { align-self: center !important; }
+}
+
+/* ── ABOUT PAGE ── */
+@media (max-width: 768px) {
+  .about-mission-grid { grid-template-columns: 1fr !important; }
+  .about-mission-grid img { min-height: 220px !important; order: -1; }
+}
+
+/* ── NAVBAR ── */
+@media (max-width: 1024px) {
+  #nav-links { display: none !important; }
+  #nav-actions { display: none !important; }
+  #hamburger { display: flex !important; }
+}
+
+/* Navbar padding on small screens */
+@media (max-width: 480px) {
+  header { padding: 0 1rem !important; }
+}
+
+/* ── STATS STRIP ── */
+@media (max-width: 480px) {
+  div[style*="gap: '3rem'"] { gap: 1.5rem !important; }
+}
+
+/* ── POPUP / MODAL ── */
+@media (max-width: 480px) {
+  /* Course finder popup */
+  div[style*="maxWidth: 380"] { width: 95% !important; }
+  div[style*="maxWidth: 460"] { width: 95% !important; }
+}
+
+/* ── CATEGORY FILTER BAR ── */
+@media (max-width: 640px) {
+  div[style*="overflowX: 'auto'"] { padding: 0.75rem 1rem !important; }
+}
+
+/* ── UNIVERSITY SLUG PAGE ── */
+@media (max-width: 640px) {
+  div[style*="padding: '2.5rem 2rem 4rem'"] { padding: 1.5rem 1rem 3rem !important; }
+}
+
+/* ── CHATBOT ── */
+@media (max-width: 480px) {
+  .chatbot-window { 
+    width: calc(100vw - 2rem) !important; 
+    right: 1rem !important; 
+    bottom: 5rem !important;
+    max-height: 70vh !important;
   }
 }
 

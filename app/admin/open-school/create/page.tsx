@@ -90,7 +90,7 @@ function CreateOpenSchoolPage() {
             <ArrowLeft size={20} />
             Back to Open School
           </Link>
-          <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 900, lineHeight: 1.2 }}>
+          <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 600, lineHeight: 1.2 }}>
             Create New Board
           </h1>
         </div>
@@ -108,7 +108,7 @@ function CreateOpenSchoolPage() {
               <label style={{
                 display: 'block',
                 fontSize: 'clamp(0.8rem, 2vw, 0.875rem)',
-                fontWeight: 700,
+                fontWeight: 500,
                 color: '#1f2937',
                 marginBottom: '0.5rem'
               }}>
@@ -135,7 +135,7 @@ function CreateOpenSchoolPage() {
               <label style={{
                 display: 'block',
                 fontSize: 'clamp(0.8rem, 2vw, 0.875rem)',
-                fontWeight: 700,
+                fontWeight: 500,
                 color: '#1f2937',
                 marginBottom: '0.5rem'
               }}>
@@ -167,7 +167,7 @@ function CreateOpenSchoolPage() {
               borderRadius: '0.75rem',
               border: '2px dashed #cbd5e1'
             }}>
-              <h3 style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1rem)', fontWeight: 700, color: '#1f2937', marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
+              <h3 style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1rem)', fontWeight: 500, color: '#1f2937', marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                 Programs
               </h3>
 
@@ -303,7 +303,7 @@ function CreateOpenSchoolPage() {
                   border: '2px solid #e5e7eb',
                   background: '#fff',
                   color: '#6b7280',
-                  fontWeight: 700,
+                  fontWeight: 500,
                   fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                   textAlign: 'center',
                   textDecoration: 'none',
@@ -323,7 +323,7 @@ function CreateOpenSchoolPage() {
                   background: loading ? '#93c5fd' : 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
                   color: '#fff',
                   border: 'none',
-                  fontWeight: 700,
+                  fontWeight: 500,
                   fontSize: 'clamp(0.875rem, 2vw, 1rem)',
                   cursor: loading ? 'not-allowed' : 'pointer',
                   boxShadow: '0 4px 12px rgba(30, 64, 175, 0.3)'

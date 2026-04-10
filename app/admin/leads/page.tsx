@@ -69,7 +69,7 @@ export default function LeadsPage() {
   };
 
   return (
-    <div style={{ padding: '1.5rem', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", minHeight: '100vh', background: '#f8fafc' }}>
+    <div style={{ padding: '1.5rem', fontFamily: "'Poppins', system-ui, sans-serif", minHeight: '100vh', background: '#f8fafc' }}>
       <style>{`
         @media (max-width: 768px) {
           .leads-table { display: none !important; }
@@ -86,7 +86,7 @@ export default function LeadsPage() {
         {/* Header */}
         <div style={{ marginBottom: 24, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.6rem)', fontWeight: 800, color: '#0f172a', margin: 0 }}>Leads</h1>
+            <h1 style={{ fontSize: 'clamp(1.3rem, 4vw, 1.6rem)', fontWeight: 500, color: '#0f172a', margin: 0 }}>Leads</h1>
             <p style={{ color: '#64748b', fontSize: '0.88rem', marginTop: 4 }}>Track and follow up on all incoming leads</p>
           </div>
           <button
@@ -99,7 +99,7 @@ export default function LeadsPage() {
                 window.location.reload();
               }
             }}
-            style={{ padding: '8px 16px', background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 9, fontSize: '.78rem', fontWeight: 700, color: '#64748b', cursor: 'pointer', fontFamily: 'inherit' }}
+            style={{ padding: '8px 16px', background: '#f8fafc', border: '1.5px solid #e2e8f0', borderRadius: 9, fontSize: '.78rem', fontWeight: 500, color: '#64748b', cursor: 'pointer', fontFamily: 'inherit' }}
           >
             🔧 Fix Lead Sources
           </button>
@@ -113,9 +113,9 @@ export default function LeadsPage() {
             { key: 'Course Finder', label: '🔍 Course Finder', count: leads.filter(l => l.source === 'Course Finder').length },
           ].map(({ key, label, count }) => (
             <button key={key} onClick={() => setSourceFilter(key)}
-              style={{ padding: '7px 16px', borderRadius: 50, border: `2px solid ${sourceFilter === key ? '#4361EE' : '#e2e8f0'}`, background: sourceFilter === key ? '#4361EE' : '#fff', color: sourceFilter === key ? '#fff' : '#64748b', fontWeight: 700, fontSize: '.78rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .15s', display: 'flex', alignItems: 'center', gap: 6 }}>
+              style={{ padding: '7px 16px', borderRadius: 50, border: `2px solid ${sourceFilter === key ? '#4361EE' : '#e2e8f0'}`, background: sourceFilter === key ? '#4361EE' : '#fff', color: sourceFilter === key ? '#fff' : '#64748b', fontWeight: 500, fontSize: '.78rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .15s', display: 'flex', alignItems: 'center', gap: 6 }}>
               {label}
-              <span style={{ background: sourceFilter === key ? 'rgba(255,255,255,0.25)' : '#f1f5f9', color: sourceFilter === key ? '#fff' : '#64748b', borderRadius: 50, padding: '1px 7px', fontSize: '.72rem', fontWeight: 800 }}>{count}</span>
+              <span style={{ background: sourceFilter === key ? 'rgba(255,255,255,0.25)' : '#f1f5f9', color: sourceFilter === key ? '#fff' : '#64748b', borderRadius: 50, padding: '1px 7px', fontSize: '.72rem', fontWeight: 500 }}>{count}</span>
             </button>
           ))}
         </div>
@@ -126,7 +126,7 @@ export default function LeadsPage() {
             <div key={status}
               style={{ background: '#fff', borderRadius: 12, padding: '0.875rem 1rem', border: `1.5px solid ${statusFilter === status ? '#1e40af' : '#f1f5f9'}`, boxShadow: '0 1px 4px rgba(0,0,0,0.05)', cursor: 'pointer', transition: 'border-color 0.2s' }}
               onClick={() => setStatusFilter(status)}>
-              <div style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 900, color: status === 'All' ? '#1e40af' : STATUS_COLORS[status]?.color || '#1e40af', lineHeight: 1 }}>{count}</div>
+              <div style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 600, color: status === 'All' ? '#1e40af' : STATUS_COLORS[status]?.color || '#1e40af', lineHeight: 1 }}>{count}</div>
               <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 600, marginTop: 3 }}>{status}</div>
             </div>
           ))}
@@ -161,7 +161,7 @@ export default function LeadsPage() {
                   <thead>
                     <tr style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
                       {['Name', 'Contact', 'Course', 'Source', 'Status', 'Date', 'Actions'].map(h => (
-                        <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
+                        <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '0.7rem', fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -171,7 +171,7 @@ export default function LeadsPage() {
                         onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
                         onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                         <td style={{ padding: '13px 16px' }}>
-                          <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.87rem' }}>{lead.name}</div>
+                          <div style={{ fontWeight: 500, color: '#0f172a', fontSize: '0.87rem' }}>{lead.name}</div>
                         </td>
                         <td style={{ padding: '13px 16px' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -187,13 +187,13 @@ export default function LeadsPage() {
                           <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{lead.course || '—'}</div>
                         </td>
                         <td style={{ padding: '13px 16px' }}>
-                          <span style={{ background: '#eef2ff', color: '#4361EE', fontSize: '0.7rem', fontWeight: 700, padding: '3px 10px', borderRadius: 50 }}>
+                          <span style={{ background: '#eef2ff', color: '#4361EE', fontSize: '0.7rem', fontWeight: 500, padding: '3px 10px', borderRadius: 50 }}>
                             {lead.source || 'Brochure'}
                           </span>
                         </td>
                         <td style={{ padding: '13px 16px' }}>
                           <select value={lead.status} onChange={e => updateStatus(lead._id, e.target.value)}
-                            style={{ padding: '4px 10px', borderRadius: 50, border: 'none', fontWeight: 700, fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'inherit', outline: 'none', background: STATUS_COLORS[lead.status]?.bg || '#f1f5f9', color: STATUS_COLORS[lead.status]?.color || '#374151' }}>
+                            style={{ padding: '4px 10px', borderRadius: 50, border: 'none', fontWeight: 500, fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'inherit', outline: 'none', background: STATUS_COLORS[lead.status]?.bg || '#f1f5f9', color: STATUS_COLORS[lead.status]?.color || '#374151' }}>
                             {['New', 'Contacted', 'Converted', 'Lost'].map(s => <option key={s}>{s}</option>)}
                           </select>
                         </td>
@@ -219,13 +219,13 @@ export default function LeadsPage() {
                 <div key={lead._id} style={{ background: '#fff', borderRadius: 14, padding: '1.1rem', border: '1px solid #f1f5f9', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
                     <div>
-                      <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.95rem' }}>{lead.name}</div>
+                      <div style={{ fontWeight: 500, color: '#0f172a', fontSize: '0.95rem' }}>{lead.name}</div>
                       <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: 2 }}>
                         {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}
                       </div>
                     </div>
                     <select value={lead.status} onChange={e => updateStatus(lead._id, e.target.value)}
-                      style={{ padding: '4px 10px', borderRadius: 50, border: 'none', fontWeight: 700, fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'inherit', outline: 'none', background: STATUS_COLORS[lead.status]?.bg || '#f1f5f9', color: STATUS_COLORS[lead.status]?.color || '#374151' }}>
+                      style={{ padding: '4px 10px', borderRadius: 50, border: 'none', fontWeight: 500, fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'inherit', outline: 'none', background: STATUS_COLORS[lead.status]?.bg || '#f1f5f9', color: STATUS_COLORS[lead.status]?.color || '#374151' }}>
                       {['New', 'Contacted', 'Converted', 'Lost'].map(s => <option key={s}>{s}</option>)}
                     </select>
                   </div>
@@ -246,7 +246,7 @@ export default function LeadsPage() {
                   )}
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ background: '#eef2ff', color: '#4361EE', fontSize: '0.68rem', fontWeight: 700, padding: '3px 10px', borderRadius: 50 }}>
+                    <span style={{ background: '#eef2ff', color: '#4361EE', fontSize: '0.68rem', fontWeight: 500, padding: '3px 10px', borderRadius: 50 }}>
                       {lead.source || 'Brochure'}
                     </span>
                     <button onClick={() => deleteLead(lead._id)}

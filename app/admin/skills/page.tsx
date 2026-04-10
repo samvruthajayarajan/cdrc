@@ -23,10 +23,10 @@ export default function AdminSkillsPage() {
     <div style={{ padding: '2rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>Skill Programs</h1>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 500, color: '#0f172a', margin: 0 }}>Skill Programs</h1>
           <p style={{ color: '#64748b', marginTop: 4, fontSize: '0.9rem' }}>{skills.length} skill programs</p>
         </div>
-        <Link href="/admin/skills/create" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '10px 20px', borderRadius: 10, fontWeight: 700, textDecoration: 'none', fontSize: '0.9rem' }}>
+        <Link href="/admin/skills/create" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '10px 20px', borderRadius: 10, fontWeight: 500, textDecoration: 'none', fontSize: '0.9rem' }}>
           <Plus size={16} /> Add Skill
         </Link>
       </div>
@@ -44,7 +44,7 @@ export default function AdminSkillsPage() {
             <thead>
               <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                 {['Skill Name', 'Category', 'Level', 'Duration', 'Courses', 'Actions'].map(h => (
-                  <th key={h} style={{ padding: '1rem 1.25rem', textAlign: 'left', fontSize: '0.8rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+                  <th key={h} style={{ padding: '1rem 1.25rem', textAlign: 'left', fontSize: '0.8rem', fontWeight: 500, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                 ))}
               </tr>
             </thead>

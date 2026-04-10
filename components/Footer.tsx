@@ -70,7 +70,7 @@ export default function Footer() {
           <div>
             <h4 style={{ 
               color: '#fff', 
-              fontWeight: 700, 
+              fontWeight: 500, 
               marginBottom: '1rem', 
               fontSize: '1.1rem',
               textShadow: '0 2px 10px rgba(0,0,0,0.3)'
@@ -120,7 +120,7 @@ export default function Footer() {
           <div>
             <h4 style={{ 
               color: '#fff', 
-              fontWeight: 700, 
+              fontWeight: 500, 
               marginBottom: '1rem', 
               fontSize: '1.1rem',
               textShadow: '0 2px 10px rgba(0,0,0,0.3)'
@@ -158,7 +158,7 @@ export default function Footer() {
           <div>
             <h4 style={{ 
               color: '#fff', 
-              fontWeight: 700, 
+              fontWeight: 500, 
               marginBottom: '1rem', 
               fontSize: '1.1rem',
               textShadow: '0 2px 10px rgba(0,0,0,0.3)'
@@ -208,7 +208,7 @@ export default function Footer() {
           <div>
             <h4 style={{ 
               color: '#fff', 
-              fontWeight: 700, 
+              fontWeight: 500, 
               marginBottom: '1rem', 
               fontSize: '1.1rem',
               textShadow: '0 2px 10px rgba(0,0,0,0.3)'

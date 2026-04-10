@@ -8,7 +8,9 @@ export async function GET() {
       .find({ isActive: true })
       .sort({ order: 1 })
       .toArray();
-    return NextResponse.json(questions.map(q => ({ ...q, _id: q._id.toString() })));
+    const res = NextResponse.json(questions.map(q => ({ ...q, _id: q._id.toString() })));
+    res.headers.set('Cache-Control', 'no-store');
+    return res;
   } catch {
     return NextResponse.json([], { status: 500 });
   }

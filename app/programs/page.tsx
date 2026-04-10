@@ -64,36 +64,53 @@ export default function ProgramsPage() {
   return (
     <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
-      {/* HERO */}
-      <section style={{
-        position: 'relative', height: 420, overflow: 'hidden',
-        backgroundImage: 'url(https://images.pexels.com/photos/1205651/pexels-photo-1205651.jpeg?auto=compress&cs=tinysrgb&w=1600)',
-        backgroundSize: 'cover', backgroundPosition: 'center 40%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,15,40,0.65) 0%, rgba(10,15,40,0.8) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 2rem', paddingTop: 80, textAlign: 'center', zIndex: 1 }}>
+      {/* ── HERO ── */}
+      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+        {/* Background image */}
+        <img
+          src="https://images.pexels.com/photos/1205651/pexels-photo-1205651.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          alt="Online Programs"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }}
+        />
+        {/* Transparent overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.7) 0%, rgba(67,97,238,0.5) 100%)' }} />
+        
+        {/* Dot grid pattern */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
+
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 50, padding: '5px 16px', color: '#fff', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
-              500+ Programs Available
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
+              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+              <span style={{ color: '#93c5fd' }}>Programs</span>
             </div>
-            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '1rem' }}>
-              Explore Online Programs
-            </h1>
-            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', maxWidth: 500, margin: '0 auto 2rem', lineHeight: 1.7 }}>
-              UGC-DEB approved degrees from India&apos;s top universities. Study at your own pace.
-            </p>
-            <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
-              <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none', zIndex: 2 }} />
-              <input
-                type="text"
-                placeholder="Search programs or universities..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                style={{ width: '100%', padding: '0.9rem 1.25rem 0.9rem 2.75rem', borderRadius: 50, border: 'none', fontSize: '0.92rem', outline: 'none', color: '#0f172a', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.3)', boxSizing: 'border-box' }}
-              />
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.2rem)', fontWeight: 600, color: '#fff', lineHeight: 1.05, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
+                Explore <span style={{ color: '#90e0ef' }}>Online Degree</span> <br/> Programs
+              </h1>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 600, marginBottom: '2.5rem', lineHeight: 1.6 }}>
+                UGC-DEB approved degrees from India&apos;s top universities. Study at your own pace with certified results.
+              </p>
+              
+              <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
+                <Search size={16} style={{ position: 'absolute', left: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none', zIndex: 2 }} />
+                <input
+                  type="text"
+                  placeholder="Search programs or universities..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  style={{ width: '100%', padding: '1.1rem 1.25rem 1.1rem 3.2rem', borderRadius: 50, border: 'none', fontSize: '0.95rem', outline: 'none', color: '#0f172a', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.15)', boxSizing: 'border-box' }}
+                />
+              </div>
             </div>
           </AnimateOnScroll>
         </div>
+
+        {/* Bottom fade into page bg */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, transparent, #fff)', pointerEvents: 'none' }} />
       </section>
 
       {/* STATS STRIP */}
@@ -101,7 +118,7 @@ export default function ProgramsPage() {
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' }}>
           {[['500+', 'Programs'], ['14+', 'Universities'], ['UGC-DEB', 'Approved'], ['Online', 'Mode']].map(([val, lbl]) => (
             <div key={lbl} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>{val}</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', lineHeight: 1 }}>{val}</div>
               <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>{lbl}</div>
             </div>
           ))}
@@ -157,14 +174,14 @@ export default function ProgramsPage() {
                         <div style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.2)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                           <BookOpen size={20} color="#fff" />
                         </div>
-                        <span style={{ background: isUG ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.2)', color: '#fff', fontSize: '0.62rem', fontWeight: 800, padding: '3px 9px', borderRadius: 50, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                        <span style={{ background: isUG ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.2)', color: '#fff', fontSize: '0.62rem', fontWeight: 500, padding: '3px 9px', borderRadius: 50, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                           {isUG ? 'UG' : 'PG'}
                         </span>
                       </div>
 
                       {/* Body */}
                       <div style={{ padding: '1.1rem 1.25rem 1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.5rem', flex: 1 }}>{p.name}</h3>
+                        <h3 style={{ fontSize: '0.95rem', fontWeight: 500, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.5rem', flex: 1 }}>{p.name}</h3>
 
                         <div style={{ display: 'flex', gap: '0.875rem', marginBottom: '0.875rem' }}>
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: '0.75rem', color: '#64748b' }}>
@@ -182,9 +199,9 @@ export default function ProgramsPage() {
                         )}
 
                         {/* Action buttons */}
-                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto', paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto', paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }} className="programs-action-btns">
                           <Link href={`/programs/${cardId}`}
-                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.6rem', border: '1.5px solid #1e40af', borderRadius: 8, color: '#1e40af', fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none', transition: 'all 0.2s', background: '#fff' }}
+                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.6rem', border: '1.5px solid #1e40af', borderRadius: 8, color: '#1e40af', fontWeight: 500, fontSize: '0.8rem', textDecoration: 'none', transition: 'all 0.2s', background: '#fff' }}
                             onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#eff6ff'; }}
                             onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#fff'; }}
                           >
@@ -205,7 +222,7 @@ export default function ProgramsPage() {
                           </button>
 
                           <button onClick={() => setModal({ university: p.university || 'CDRC', program: p.name })}
-                            style={{ flex: 1, padding: '0.6rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', transition: 'background 0.2s', fontFamily: 'inherit' }}
+                            style={{ flex: 1, padding: '0.6rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 500, fontSize: '0.8rem', cursor: 'pointer', transition: 'background 0.2s', fontFamily: 'inherit' }}
                             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1e3a8a'; }}
                             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1e40af'; }}
                           >
@@ -226,7 +243,7 @@ export default function ProgramsPage() {
       <section style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '3.5rem 2rem' }}>
         <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 500, color: '#0f172a', marginBottom: '0.75rem' }}>
               Not sure which program to choose?
             </h2>
             <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '1.75rem', lineHeight: 1.7 }}>
@@ -234,7 +251,7 @@ export default function ProgramsPage() {
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button onClick={() => { const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}
-                style={{ padding: '0.8rem 2rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ padding: '0.8rem 2rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 500, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
                 Find My Course
               </button>
               <Link href="/contact" style={{ padding: '0.8rem 2rem', background: '#fff', color: '#374151', border: '1px solid #e2e8f0', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none' }}>
@@ -253,6 +270,13 @@ export default function ProgramsPage() {
           onClose={() => setBrochureModal(null)}
         />
       )}
+      <style>{`
+        @media (max-width: 480px) {
+          .programs-action-btns { flex-wrap: wrap !important; }
+          .programs-action-btns > * { flex: 1 1 calc(50% - 0.25rem) !important; min-width: 0 !important; }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 }

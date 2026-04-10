@@ -7,21 +7,21 @@ const ACCENT_LIGHT = '#eff6ff';
 const ACCENT_BORDER = '#bfdbfe';
 
 const S: Record<string, React.CSSProperties> = {
-  page: { padding: '2rem', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", minHeight: '100vh', background: '#f8fafc' },
+  page: { padding: '2rem', fontFamily: "'Poppins', system-ui, sans-serif", minHeight: '100vh', background: '#f8fafc' },
   pageHeader: { marginBottom: 28 },
-  pageTitle: { fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: 0 },
+  pageTitle: { fontSize: '1.6rem', fontWeight: 500, color: '#0f172a', margin: 0 },
   pageSubtitle: { color: '#64748b', fontSize: '0.9rem', marginTop: 4 },
   card: { background: '#fff', borderRadius: 16, padding: '24px 28px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 20, border: '1px solid #f1f5f9' },
   cardHeader: { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22, paddingBottom: 16, borderBottom: '1px solid #f1f5f9' },
   cardIcon: { width: 42, height: 42, borderRadius: 11, background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  cardTitle: { fontWeight: 700, color: '#0f172a', fontSize: '1rem', margin: 0 },
+  cardTitle: { fontWeight: 500, color: '#0f172a', fontSize: '1rem', margin: 0 },
   cardDesc: { color: '#94a3b8', fontSize: '0.78rem', margin: 0 },
   grid2: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.1rem' },
   label: { display: 'block', marginBottom: 6, fontWeight: 600, color: '#374151', fontSize: '0.82rem', textTransform: 'uppercase' as const, letterSpacing: '0.04em' },
   input: { width: '100%', padding: '11px 14px', border: '1.5px solid #e2e8f0', borderRadius: 10, fontSize: '0.92rem', outline: 'none', background: '#f8fafc', color: '#0f172a', boxSizing: 'border-box' as const, fontFamily: 'inherit', transition: 'border-color 0.2s, box-shadow 0.2s' },
   hint: { fontSize: '0.73rem', color: '#94a3b8', marginTop: 5 },
   successAlert: { background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', padding: '14px 18px', borderRadius: 12, marginBottom: 20, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 8 },
-  saveBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(30,64,175,0.35)', transition: 'all 0.2s' },
+  saveBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 500, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(30,64,175,0.35)', transition: 'all 0.2s' },
 };
 
 const focus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {

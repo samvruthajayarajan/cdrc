@@ -74,7 +74,7 @@ export default function ProgramDetailPage() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
       <div style={{ textAlign: 'center', padding: '2rem' }}>
         <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📚</div>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.5rem' }}>Program Not Found</h1>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 500, color: '#0f172a', marginBottom: '0.5rem' }}>Program Not Found</h1>
         <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>This program doesn&apos;t exist or has been removed.</p>
         <Link href="/programs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0.75rem 1.5rem', background: '#1e40af', color: '#fff', borderRadius: 8, textDecoration: 'none', fontWeight: 600 }}>
           <ArrowLeft size={16} /> Back to Programs
@@ -101,54 +101,63 @@ export default function ProgramDetailPage() {
       `}</style>
 
       {/* ── HERO ── */}
-      <section style={{
-        position: 'relative', height: 340, overflow: 'hidden',
-        backgroundImage: 'url(https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1600)',
-        backgroundSize: 'cover', backgroundPosition: 'center 30%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,15,40,0.7) 0%, rgba(10,15,40,0.85) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'calc(80px + 1rem) 2rem 2.5rem', maxWidth: 1100, margin: '0 auto', width: '100%', left: 0, right: 0, zIndex: 1 }}>
+      <section style={{ position: 'relative', minHeight: 480, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+        {/* Background image */}
+        <img
+          src="https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          alt={program.name}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+        />
+        {/* Transparent overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.75) 0%, rgba(67,97,238,0.55) 100%)' }} />
+        
+        {/* Dot grid pattern */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
+
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <Link href="/programs" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.7)', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, marginBottom: '1rem', transition: 'color 0.2s' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.7)'; }}
-            >
-              <ArrowLeft size={14} /> All Programs
-            </Link>
-          </AnimateOnScroll>
-          <AnimateOnScroll animation="fadeUp" delay={60}>
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-              <span style={{ background: isUG ? 'rgba(34,197,94,0.25)' : 'rgba(59,130,246,0.25)', border: `1px solid ${isUG ? 'rgba(34,197,94,0.5)' : 'rgba(59,130,246,0.5)'}`, borderRadius: 50, padding: '3px 12px', color: isUG ? '#86efac' : '#93c5fd', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                {isUG ? 'Undergraduate' : 'Postgraduate'}
-              </span>
-              <span style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 50, padding: '3px 12px', color: 'rgba(255,255,255,0.85)', fontSize: '0.72rem', fontWeight: 700 }}>
-                UGC Approved
-              </span>
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem', fontWeight: 600 }}>
+              <Link href="/programs" style={{ color: 'inherit', textDecoration: 'none' }}>Programs</Link>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              <span style={{ color: '#93c5fd' }}>Program Details</span>
             </div>
-          </AnimateOnScroll>
-          <AnimateOnScroll animation="fadeUp" delay={100}>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: '1rem' }}>
-              {program.name}
-            </h1>
-          </AnimateOnScroll>
-          <AnimateOnScroll animation="fadeUp" delay={140}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem' }}>
-              {[
-                { icon: <Clock size={13} color="rgba(255,255,255,0.7)" />, label: 'Duration', value: program.duration },
-                { icon: <BookOpen size={13} color="rgba(255,255,255,0.7)" />, label: 'Mode', value: 'Online' },
-                { icon: <GraduationCap size={13} color="rgba(255,255,255,0.7)" />, label: 'University', value: program.university || 'Multiple' },
-              ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  {item.icon}
-                  <div>
-                    <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.45)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{item.label}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#fff', fontWeight: 700 }}>{item.value}</div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', justifyContent: 'center' }}>
+                <span style={{ background: isUG ? 'rgba(34,197,94,0.15)' : 'rgba(59,130,246,0.15)', border: `1px solid ${isUG ? 'rgba(34,197,94,0.3)' : 'rgba(59,130,246,0.3)'}`, borderRadius: 50, padding: '4px 14px', color: isUG ? '#86efac' : '#93c5fd', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  {isUG ? 'Undergraduate' : 'Postgraduate'}
+                </span>
+                <span style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 50, padding: '4px 14px', color: 'rgba(255,255,255,0.85)', fontSize: '0.72rem', fontWeight: 600 }}>
+                  UGC Approved
+                </span>
+              </div>
+              
+              <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.1, marginBottom: '2rem', letterSpacing: '-0.02em', maxWidth: 800 }}>
+                {program.name}
+              </h1>
+              
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2rem' }}>
+                {[
+                  { icon: <Clock size={15} color="#90e0ef" />, label: 'Duration', value: program.duration },
+                  { icon: <BookOpen size={15} color="#90e0ef" />, label: 'Mode', value: 'Online' },
+                  { icon: <GraduationCap size={15} color="#90e0ef" />, label: 'University', value: program.university || 'Multiple' },
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</div>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{item.label}</div>
+                      <div style={{ fontSize: '0.9rem', color: '#fff', fontWeight: 500 }}>{item.value}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </AnimateOnScroll>
         </div>
+
+        {/* Bottom fade into page bg */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, transparent, #fff)', pointerEvents: 'none' }} />
       </section>
 
       {/* ── CONTENT ── */}
@@ -160,7 +169,7 @@ export default function ProgramDetailPage() {
           {/* About */}
           <AnimateOnScroll animation="fadeUp">
             <div style={{ background: '#fff', borderRadius: 14, padding: '1.75rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 28, height: 28, background: '#eff6ff', borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                   <BookOpen size={14} color="#1e40af" />
                 </span>
@@ -175,7 +184,7 @@ export default function ProgramDetailPage() {
           {/* What you'll learn */}
           <AnimateOnScroll animation="fadeUp" delay={60}>
             <div style={{ background: '#fff', borderRadius: 14, padding: '1.75rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 28, height: 28, background: '#eff6ff', borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                   <CheckCircle size={14} color="#1e40af" />
                 </span>
@@ -195,7 +204,7 @@ export default function ProgramDetailPage() {
           {/* Career Opportunities */}
           <AnimateOnScroll animation="fadeUp" delay={100}>
             <div style={{ background: '#fff', borderRadius: 14, padding: '1.75rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 28, height: 28, background: '#eff6ff', borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Users size={14} color="#1e40af" />
                 </span>
@@ -212,7 +221,7 @@ export default function ProgramDetailPage() {
           {/* Admission Process */}
           <AnimateOnScroll animation="fadeUp" delay={140}>
             <div style={{ background: '#fff', borderRadius: 14, padding: '1.75rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ width: 28, height: 28, background: '#eff6ff', borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Award size={14} color="#1e40af" />
                 </span>
@@ -221,8 +230,8 @@ export default function ProgramDetailPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: '1rem' }}>
                 {STEPS.map((s, i) => (
                   <div key={i} style={{ padding: '1.25rem', background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                    <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#e2e8f0', lineHeight: 1, marginBottom: '0.5rem' }}>{s.num}</div>
-                    <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.3rem' }}>{s.title}</div>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 600, color: '#e2e8f0', lineHeight: 1, marginBottom: '0.5rem' }}>{s.num}</div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 500, color: '#0f172a', marginBottom: '0.3rem' }}>{s.title}</div>
                     <div style={{ fontSize: '0.78rem', color: '#64748b', lineHeight: 1.5 }}>{s.desc}</div>
                   </div>
                 ))}
@@ -235,7 +244,7 @@ export default function ProgramDetailPage() {
         <div className="prog-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <AnimateOnScroll animation="fadeUp" delay={80}>
             <div style={{ background: '#fff', borderRadius: 14, padding: '1.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(0,0,0,0.07)' }}>
-              <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>Program Details</div>
+              <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>Program Details</div>
               {[
                 { label: 'Duration', value: program.duration },
                 { label: 'Mode', value: 'Online' },
@@ -245,11 +254,11 @@ export default function ProgramDetailPage() {
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0', borderBottom: '1px solid #f1f5f9' }}>
                   <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{item.label}</span>
-                  <span style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 700, textAlign: 'right', maxWidth: '55%' }}>{item.value}</span>
+                  <span style={{ fontSize: '0.82rem', color: '#0f172a', fontWeight: 500, textAlign: 'right', maxWidth: '55%' }}>{item.value}</span>
                 </div>
               ))}
               <button onClick={() => setEnrollOpen(true)}
-                style={{ width: '100%', padding: '0.85rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', marginTop: '1.25rem', marginBottom: '0.625rem', transition: 'background 0.2s', fontFamily: 'inherit' }}
+                style={{ width: '100%', padding: '0.85rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 500, fontSize: '0.9rem', cursor: 'pointer', marginTop: '1.25rem', marginBottom: '0.625rem', transition: 'background 0.2s', fontFamily: 'inherit' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1e3a8a'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#1e40af'; }}
               >
@@ -266,7 +275,7 @@ export default function ProgramDetailPage() {
 
           <AnimateOnScroll animation="fadeUp" delay={120}>
             <div style={{ background: '#0f172a', borderRadius: 14, padding: '1.5rem' }}>
-              <h3 style={{ color: '#fff', fontWeight: 800, fontSize: '0.95rem', marginBottom: '1rem' }}>Why Choose CDRC?</h3>
+              <h3 style={{ color: '#fff', fontWeight: 500, fontSize: '0.95rem', marginBottom: '1rem' }}>Why Choose CDRC?</h3>
               {['UGC-DEB Approved Programs', 'Free Expert Counselling', 'Flexible Online Learning', 'EMI Payment Options', 'Placement Assistance'].map((item, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.6rem' }}>
                   <CheckCircle size={13} color="#60a5fa" />
@@ -279,9 +288,9 @@ export default function ProgramDetailPage() {
           <AnimateOnScroll animation="fadeUp" delay={160}>
             <div style={{ background: '#fff', borderRadius: 14, padding: '1.25rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>
               <div style={{ fontSize: '1.5rem', marginBottom: '0.4rem' }}>📞</div>
-              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.2rem' }}>Need Help?</div>
+              <div style={{ fontSize: '0.82rem', fontWeight: 500, color: '#0f172a', marginBottom: '0.2rem' }}>Need Help?</div>
               <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.75rem' }}>Mon–Sat, 9AM–6PM</div>
-              <a href="tel:+919846446055" style={{ display: 'block', padding: '0.6rem', background: '#f0fdf4', color: '#15803d', borderRadius: 8, fontWeight: 700, fontSize: '0.85rem', textDecoration: 'none' }}>
+              <a href="tel:+919846446055" style={{ display: 'block', padding: '0.6rem', background: '#f0fdf4', color: '#15803d', borderRadius: 8, fontWeight: 500, fontSize: '0.85rem', textDecoration: 'none' }}>
                 +91 9846446055
               </a>
             </div>

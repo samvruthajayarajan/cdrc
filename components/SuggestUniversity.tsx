@@ -76,7 +76,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
     setSubmitting(true);
     const payload = {
       name: form.name, email: form.email, phone: form.phone,
-      message: `Suggested University: ${form.university}\nCourses: ${form.courses.join(', ')}\nStudy Hours/Day: ${form.studyHours}\n\n${form.message}`,
+      message: `Suggested University: ${form.university}\nCourses: ${form.courses.join(', ')}\n\n${form.message}`,
       source: 'suggest-university',
     };
     try {
@@ -88,7 +88,6 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
 
   const canNext1 = !!form.university;
   const canNext2 = form.courses.length > 0;
-  const canNext3 = !!form.studyHours;
 
   return (
     <>
@@ -100,21 +99,19 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
         <div style={{ background: `linear-gradient(135deg, #1a1a3e 0%, ${ACCENT} 100%)`, padding: '1.5rem 1.75rem', position: 'relative', flexShrink: 0 }}>
           <div style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, background: 'radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 70%)', borderRadius: '50%' }} />
           <div style={{ display: 'flex', gap: 6, marginBottom: '1rem' }}>
-            {[1, 2, 3, 4].map(s => (
+            {[1, 2, 3].map(s => (
               <div key={s} style={{ height: 4, flex: 1, borderRadius: 2, background: step > s ? '#4ade80' : step === s ? '#fff' : 'rgba(255,255,255,0.25)', transition: 'background .3s' }} />
             ))}
           </div>
-          <h2 style={{ color: '#fff', fontSize: '1.15rem', fontWeight: 800, margin: '0 0 .25rem', letterSpacing: '-0.02em' }}>
+          <h2 style={{ color: '#fff', fontSize: '1.15rem', fontWeight: 500, margin: '0 0 .25rem', letterSpacing: '-0.02em' }}>
             {step === 1 && '🏛️ Suggest a University'}
             {step === 2 && '📚 Courses Offered'}
-            {step === 3 && '⏱️ Study Hours'}
             {step === 4 && '📋 Your Details'}
             {step === 5 && '✅ Thank You!'}
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '.8rem', margin: 0 }}>
             {step === 1 && 'Select a university from the list'}
             {step === 2 && `Which courses does ${form.university || 'this university'} offer?`}
-            {step === 3 && 'How many hours per day can you study?'}
             {step === 4 && 'Fill in your contact details'}
             {step === 5 && 'We received your suggestion!'}
           </p>
@@ -145,7 +142,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                 </div>
               )}
               <button onClick={() => setStep(2)} disabled={!canNext1}
-                style={{ width: '100%', padding: '12px', background: canNext1 ? ACCENT : '#e2e8f0', color: canNext1 ? '#fff' : '#94a3b8', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.9rem', cursor: canNext1 ? 'pointer' : 'not-allowed', fontFamily: 'inherit' }}>
+                style={{ width: '100%', padding: '12px', background: canNext1 ? ACCENT : '#e2e8f0', color: canNext1 ? '#fff' : '#94a3b8', border: 'none', borderRadius: 10, fontWeight: 500, fontSize: '.9rem', cursor: canNext1 ? 'pointer' : 'not-allowed', fontFamily: 'inherit' }}>
                 Next →
               </button>
             </div>
@@ -170,44 +167,8 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
               )}
               <div style={{ display: 'flex', gap: '.75rem' }}>
                 <button onClick={() => setStep(1)} style={{ padding: '12px 20px', background: '#f8fafc', color: '#64748b', border: '1.5px solid #e2e8f0', borderRadius: 10, fontWeight: 600, fontSize: '.88rem', cursor: 'pointer', fontFamily: 'inherit' }}>← Back</button>
-                <button onClick={() => setStep(3)} disabled={!canNext2}
-                  style={{ flex: 1, padding: '12px', background: canNext2 ? ACCENT : '#e2e8f0', color: canNext2 ? '#fff' : '#94a3b8', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.9rem', cursor: canNext2 ? 'pointer' : 'not-allowed', fontFamily: 'inherit' }}>
-                  Next →
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3 — Study Hours */}
-          {step === 3 && (
-            <div>
-              <p style={{ fontSize: '.85rem', color: '#64748b', marginBottom: '1.25rem', lineHeight: 1.6 }}>
-                How many hours per day can you dedicate to studying?
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem', marginBottom: '1.25rem' }}>
-                {[
-                  { value: '1-2 hours', label: '1 – 2 hours', desc: 'Light study, great for working professionals' },
-                  { value: '3-4 hours', label: '3 – 4 hours', desc: 'Moderate pace, balanced with daily life' },
-                  { value: '5-6 hours', label: '5 – 6 hours', desc: 'Dedicated learner, focused schedule' },
-                  { value: '7+ hours', label: '7+ hours', desc: 'Full-time student commitment' },
-                ].map(({ value, label, desc }) => (
-                  <button key={value} type="button"
-                    onClick={() => setForm(f => ({ ...f, studyHours: value }))}
-                    style={{ padding: '12px 16px', borderRadius: 12, border: `2px solid ${form.studyHours === value ? ACCENT : '#e2e8f0'}`, background: form.studyHours === value ? '#eef2ff' : '#f8fafc', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left', transition: 'all .15s', display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${form.studyHours === value ? ACCENT : '#cbd5e1'}`, background: form.studyHours === value ? ACCENT : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all .15s' }}>
-                      {form.studyHours === value && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '.9rem', fontWeight: 700, color: form.studyHours === value ? ACCENT : DARK }}>{label}</div>
-                      <div style={{ fontSize: '.75rem', color: '#64748b', marginTop: 2 }}>{desc}</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-              <div style={{ display: 'flex', gap: '.75rem' }}>
-                <button onClick={() => setStep(2)} style={{ padding: '12px 20px', background: '#f8fafc', color: '#64748b', border: '1.5px solid #e2e8f0', borderRadius: 10, fontWeight: 600, fontSize: '.88rem', cursor: 'pointer', fontFamily: 'inherit' }}>← Back</button>
-                <button onClick={() => setStep(4)} disabled={!canNext3}
-                  style={{ flex: 1, padding: '12px', background: canNext3 ? ACCENT : '#e2e8f0', color: canNext3 ? '#fff' : '#94a3b8', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.9rem', cursor: canNext3 ? 'pointer' : 'not-allowed', fontFamily: 'inherit' }}>
+                <button onClick={() => setStep(4)} disabled={!canNext2}
+                  style={{ flex: 1, padding: '12px', background: canNext2 ? ACCENT : '#e2e8f0', color: canNext2 ? '#fff' : '#94a3b8', border: 'none', borderRadius: 10, fontWeight: 500, fontSize: '.9rem', cursor: canNext2 ? 'pointer' : 'not-allowed', fontFamily: 'inherit' }}>
                   Next →
                 </button>
               </div>
@@ -244,9 +205,9 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                 />
               </div>
               <div style={{ display: 'flex', gap: '.75rem' }}>
-                <button type="button" onClick={() => setStep(3)} style={{ padding: '12px 20px', background: '#f8fafc', color: '#64748b', border: '1.5px solid #e2e8f0', borderRadius: 10, fontWeight: 600, fontSize: '.88rem', cursor: 'pointer', fontFamily: 'inherit' }}>← Back</button>
+                <button type="button" onClick={() => setStep(2)} style={{ padding: '12px 20px', background: '#f8fafc', color: '#64748b', border: '1.5px solid #e2e8f0', borderRadius: 10, fontWeight: 600, fontSize: '.88rem', cursor: 'pointer', fontFamily: 'inherit' }}>← Back</button>
                 <button type="submit" disabled={submitting}
-                  style={{ flex: 1, padding: '12px', background: submitting ? '#94a3b8' : ACCENT, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.9rem', cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit', boxShadow: submitting ? 'none' : `0 4px 14px ${ACCENT}40` }}>
+                  style={{ flex: 1, padding: '12px', background: submitting ? '#94a3b8' : ACCENT, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 500, fontSize: '.9rem', cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit', boxShadow: submitting ? 'none' : `0 4px 14px ${ACCENT}40` }}>
                   {submitting ? 'Submitting...' : 'Submit Suggestion'}
                 </button>
               </div>
@@ -259,11 +220,11 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
               <div style={{ width: 64, height: 64, background: '#f0fdf4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: DARK, marginBottom: '.5rem' }}>Suggestion Received!</h3>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: DARK, marginBottom: '.5rem' }}>Suggestion Received!</h3>
               <p style={{ color: '#64748b', fontSize: '.88rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
                 Thanks for suggesting <strong style={{ color: DARK }}>{form.university}</strong>. Our team will review it and get back to you soon.
               </p>
-              <button onClick={onClose} style={{ padding: '11px 28px', background: ACCENT, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+              <button onClick={onClose} style={{ padding: '11px 28px', background: ACCENT, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 500, fontSize: '.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
                 Done
               </button>
             </div>

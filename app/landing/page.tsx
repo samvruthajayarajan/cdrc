@@ -46,7 +46,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: DARK, overflowX: 'hidden' }}>
+    <div style={{ fontFamily: "'Poppins', system-ui, sans-serif", color: DARK, overflowX: 'hidden' }}>
       <style>{`
         @keyframes fadeUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
@@ -94,14 +94,14 @@ export default function LandingPage() {
           <div style={{ width: 36, height: 36, background: ACCENT, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="20" height="20" viewBox="0 0 100 100" fill="none"><path d="M28 35L50 62L72 35L58 35L50 48L42 35Z" fill="white"/><path d="M38 62L50 78L62 62Z" fill="white" opacity=".85"/></svg>
           </div>
-          <span style={{ fontWeight: 800, fontSize: '1.2rem', letterSpacing: '-0.03em', color: scrolled ? ACCENT : '#fff' }}>CDRC</span>
+          <span style={{ fontWeight: 500, fontSize: '1.2rem', letterSpacing: '-0.03em', color: scrolled ? ACCENT : '#fff' }}>CDRC</span>
         </div>
         <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
           {[['#features', 'Features'], ['#universities', 'Universities'], ['#how', 'How it Works']].map(([href, label]) => (
             <a key={href} href={href} className={scrolled ? 'nav-link-dark' : 'nav-link'}>{label}</a>
           ))}
         </div>
-        <Link href="/" style={{ padding: '8px 20px', background: scrolled ? ACCENT : 'rgba(255,255,255,0.15)', color: '#fff', borderRadius: 8, fontWeight: 700, fontSize: '.85rem', textDecoration: 'none', border: scrolled ? 'none' : '1px solid rgba(255,255,255,0.3)', transition: 'all .2s' }}>
+        <Link href="/" style={{ padding: '8px 20px', background: scrolled ? ACCENT : 'rgba(255,255,255,0.15)', color: '#fff', borderRadius: 8, fontWeight: 500, fontSize: '.85rem', textDecoration: 'none', border: scrolled ? 'none' : '1px solid rgba(255,255,255,0.3)', transition: 'all .2s' }}>
           Explore Site
         </Link>
       </nav>
@@ -121,7 +121,7 @@ export default function LandingPage() {
                 <span style={{ width: 7, height: 7, background: '#4ade80', borderRadius: '50%', display: 'inline-block' }} />
                 India&apos;s Trusted Online Education Partner
               </div>
-              <h1 className="hero-h1" style={{ fontSize: 'clamp(2.6rem, 5.5vw, 4.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.08, marginBottom: '1.25rem', letterSpacing: '-0.03em' }}>
+              <h1 className="hero-h1" style={{ fontSize: 'clamp(2.6rem, 5.5vw, 4.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.08, marginBottom: '1.25rem', letterSpacing: '-0.03em' }}>
                 Your Dream Degree,<br />
                 <span style={{ color: '#90e0ef' }}>{typedPhrase}<span style={{ borderRight: '2px solid #90e0ef', marginLeft: 2, animation: 'blink 1s step-end infinite' }} /></span>
               </h1>
@@ -129,7 +129,7 @@ export default function LandingPage() {
                 CDRC connects you with UGC-approved online degrees from India&apos;s top NAAC-accredited universities. Study at your own pace, from anywhere.
               </p>
               <div className="hero-btns cta-btns" style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap' }}>
-                <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', color: ACCENT, padding: '13px 28px', borderRadius: 10, fontWeight: 800, fontSize: '.95rem', textDecoration: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+                <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', color: ACCENT, padding: '13px 28px', borderRadius: 10, fontWeight: 500, fontSize: '.95rem', textDecoration: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
                   Explore Programs
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </Link>
@@ -161,7 +161,7 @@ export default function LandingPage() {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={ACCENT} strokeWidth="2"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 1.657 2.686 3 6 3s6-1.343 6-3v-5"/></svg>
                   </div>
                   <div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 900, color: ACCENT, lineHeight: 1 }}>15,000+</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 600, color: ACCENT, lineHeight: 1 }}>15,000+</div>
                     <div style={{ fontSize: '.72rem', color: '#64748b', fontWeight: 500 }}>Active Students</div>
                   </div>
                 </div>
@@ -172,7 +172,7 @@ export default function LandingPage() {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
                   </div>
                   <div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#15803d', lineHeight: 1 }}>95%</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 600, color: '#15803d', lineHeight: 1 }}>95%</div>
                     <div style={{ fontSize: '.72rem', color: '#64748b', fontWeight: 500 }}>Placement Rate</div>
                   </div>
                 </div>
@@ -199,8 +199,8 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-              <span style={{ display: 'inline-block', background: '#eef2ff', color: ACCENT, padding: '4px 14px', borderRadius: 20, fontSize: '.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Why CDRC</span>
-              <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 800, color: DARK, lineHeight: 1.15, marginBottom: '.75rem' }}>Everything you need to succeed</h2>
+              <span style={{ display: 'inline-block', background: '#eef2ff', color: ACCENT, padding: '4px 14px', borderRadius: 20, fontSize: '.75rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Why CDRC</span>
+              <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 500, color: DARK, lineHeight: 1.15, marginBottom: '.75rem' }}>Everything you need to succeed</h2>
               <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: 460, margin: '0 auto', lineHeight: 1.75 }}>From expert guidance to UGC-approved degrees — all in one place.</p>
             </div>
           </AnimateOnScroll>
@@ -222,7 +222,7 @@ export default function LandingPage() {
                     <div style={{ width: 44, height: 44, background: '#eef2ff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                       {f.icon}
                     </div>
-                    <h3 style={{ fontSize: '1rem', fontWeight: 700, color: DARK, marginBottom: '.5rem' }}>{f.title}</h3>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 500, color: DARK, marginBottom: '.5rem' }}>{f.title}</h3>
                     <p style={{ color: '#64748b', fontSize: '.875rem', lineHeight: 1.75, margin: 0 }}>{f.desc}</p>
                   </div>
                 </div>
@@ -237,8 +237,8 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-              <span style={{ display: 'inline-block', background: '#eef2ff', color: ACCENT, padding: '4px 14px', borderRadius: 20, fontSize: '.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Partner Institutions</span>
-              <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 800, color: DARK, lineHeight: 1.15 }}>Top Universities We Work With</h2>
+              <span style={{ display: 'inline-block', background: '#eef2ff', color: ACCENT, padding: '4px 14px', borderRadius: 20, fontSize: '.75rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Partner Institutions</span>
+              <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 500, color: DARK, lineHeight: 1.15 }}>Top Universities We Work With</h2>
             </div>
           </AnimateOnScroll>
           <div className="unis-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
@@ -256,18 +256,18 @@ export default function LandingPage() {
                   onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; e.currentTarget.style.borderColor = '#e2e8f0'; }}>
                   <div style={{ height: 5, background: u.color }} />
                   <div style={{ padding: '1.25rem 1.5rem' }}>
-                    <div style={{ width: 44, height: 44, background: u.color, borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', fontWeight: 900, color: '#fff', marginBottom: '.875rem' }}>
+                    <div style={{ width: 44, height: 44, background: u.color, borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', fontWeight: 600, color: '#fff', marginBottom: '.875rem' }}>
                       {u.name[0]}
                     </div>
-                    <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: DARK, marginBottom: '.4rem' }}>{u.name}</h3>
-                    <span style={{ display: 'inline-block', background: '#eef2ff', color: ACCENT, padding: '2px 10px', borderRadius: 6, fontSize: '.7rem', fontWeight: 700 }}>{u.grade}</span>
+                    <h3 style={{ fontSize: '.95rem', fontWeight: 500, color: DARK, marginBottom: '.4rem' }}>{u.name}</h3>
+                    <span style={{ display: 'inline-block', background: '#eef2ff', color: ACCENT, padding: '2px 10px', borderRadius: 6, fontSize: '.7rem', fontWeight: 500 }}>{u.grade}</span>
                   </div>
                 </div>
               </AnimateOnScroll>
             ))}
           </div>
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <Link href="/universities" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: ACCENT, color: '#fff', padding: '12px 28px', borderRadius: 10, fontWeight: 700, textDecoration: 'none', fontSize: '.9rem', boxShadow: `0 4px 16px ${ACCENT}40` }}>
+            <Link href="/universities" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: ACCENT, color: '#fff', padding: '12px 28px', borderRadius: 10, fontWeight: 500, textDecoration: 'none', fontSize: '.9rem', boxShadow: `0 4px 16px ${ACCENT}40` }}>
               View All Universities
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </Link>
@@ -280,8 +280,8 @@ export default function LandingPage() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-              <span style={{ display: 'inline-block', background: '#eef2ff', color: ACCENT, padding: '4px 14px', borderRadius: 20, fontSize: '.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Process</span>
-              <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 800, color: DARK, lineHeight: 1.15 }}>Get started in 4 simple steps</h2>
+              <span style={{ display: 'inline-block', background: '#eef2ff', color: ACCENT, padding: '4px 14px', borderRadius: 20, fontSize: '.75rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Process</span>
+              <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 500, color: DARK, lineHeight: 1.15 }}>Get started in 4 simple steps</h2>
             </div>
           </AnimateOnScroll>
           <div style={{ position: 'relative' }}>
@@ -295,10 +295,10 @@ export default function LandingPage() {
               ].map((s, i) => (
                 <AnimateOnScroll key={i} animation="fadeUp" delay={i * 100}>
                   <div style={{ textAlign: 'center', padding: '1.5rem 1rem' }}>
-                    <div style={{ width: 56, height: 56, background: `${ACCENT}14`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', fontSize: '1.1rem', fontWeight: 900, color: ACCENT }}>
+                    <div style={{ width: 56, height: 56, background: `${ACCENT}14`, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', fontSize: '1.1rem', fontWeight: 600, color: ACCENT }}>
                       {s.step}
                     </div>
-                    <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: DARK, marginBottom: '.5rem' }}>{s.title}</h3>
+                    <h3 style={{ fontSize: '.95rem', fontWeight: 500, color: DARK, marginBottom: '.5rem' }}>{s.title}</h3>
                     <p style={{ color: '#64748b', fontSize: '.82rem', lineHeight: 1.75, margin: 0 }}>{s.desc}</p>
                   </div>
                 </AnimateOnScroll>
@@ -314,14 +314,14 @@ export default function LandingPage() {
         <div style={{ position: 'absolute', bottom: '-80px', left: '-80px', width: 320, height: 320, background: 'radial-gradient(circle,rgba(139,92,246,.12) 0%,transparent 70%)', borderRadius: '50%' }} />
         <AnimateOnScroll animation="fadeUp">
           <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-            <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 900, color: '#fff', lineHeight: 1.15, marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 600, color: '#fff', lineHeight: 1.15, marginBottom: '1rem' }}>
               Ready to advance your career?
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.72)', fontSize: '1rem', lineHeight: 1.8, marginBottom: '2.5rem', maxWidth: 500, margin: '0 auto 2.5rem' }}>
               Join 15,000+ students who are already learning with CDRC. Get started today — free counseling, no commitment.
             </p>
             <div className="cta-btns" style={{ display: 'flex', gap: '.875rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', color: ACCENT, padding: '14px 32px', borderRadius: 10, fontWeight: 800, fontSize: '.95rem', textDecoration: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+              <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff', color: ACCENT, padding: '14px 32px', borderRadius: 10, fontWeight: 500, fontSize: '.95rem', textDecoration: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
                 Get Started Free
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </Link>
@@ -339,7 +339,7 @@ export default function LandingPage() {
           <div style={{ width: 32, height: 32, background: ACCENT, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="18" height="18" viewBox="0 0 100 100" fill="none"><path d="M28 35L50 62L72 35L58 35L50 48L42 35Z" fill="white"/><path d="M38 62L50 78L62 62Z" fill="white" opacity=".85"/></svg>
           </div>
-          <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#fff' }}>CDRC</span>
+          <span style={{ fontWeight: 500, fontSize: '1.1rem', color: '#fff' }}>CDRC</span>
         </div>
         <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '.82rem' }}>© 2025 CDRC. India&apos;s Trusted Online Education Partner.</p>
         <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginTop: '1rem' }}>
@@ -397,8 +397,8 @@ export default function LandingPage() {
 
                 {/* Title */}
                 <div style={{ position: 'relative', zIndex: 1 }}>
-                  <div style={{ fontSize: '.7rem', fontWeight: 800, letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: '.4rem' }}>Smart Matching</div>
-                  <h2 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#fff', lineHeight: 1.15, margin: '0 0 .5rem', letterSpacing: '-0.02em', textShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>
+                  <div style={{ fontSize: '.7rem', fontWeight: 500, letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: '.4rem' }}>Smart Matching</div>
+                  <h2 style={{ fontSize: '1.6rem', fontWeight: 600, color: '#fff', lineHeight: 1.15, margin: '0 0 .5rem', letterSpacing: '-0.02em', textShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>
                     Find Your<br />Perfect Course
                   </h2>
                 </div>
@@ -415,7 +415,7 @@ export default function LandingPage() {
                   ].map(({ icon, label }) => (
                     <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '5px 12px' }}>
                       <span style={{ fontSize: '.85rem' }}>{icon}</span>
-                      <span style={{ fontSize: '.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.75)', letterSpacing: '.04em' }}>{label}</span>
+                      <span style={{ fontSize: '.72rem', fontWeight: 500, color: 'rgba(255,255,255,0.75)', letterSpacing: '.04em' }}>{label}</span>
                     </div>
                   ))}
                 </div>
@@ -427,7 +427,7 @@ export default function LandingPage() {
                 {/* CTA button — shimmer effect */}
                 <button
                   onClick={() => setPopupStep('form')}
-                  style={{ width: '100%', padding: '14px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 800, fontSize: '1rem', color: '#fff', background: `linear-gradient(90deg, #6c3de8, ${ACCENT}, #6c3de8)`, backgroundSize: '200% auto', animation: 'shimmerSlide 3s linear infinite', boxShadow: `0 6px 24px ${ACCENT}60`, letterSpacing: '.02em' }}
+                  style={{ width: '100%', padding: '14px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 500, fontSize: '1rem', color: '#fff', background: `linear-gradient(90deg, #6c3de8, ${ACCENT}, #6c3de8)`, backgroundSize: '200% auto', animation: 'shimmerSlide 3s linear infinite', boxShadow: `0 6px 24px ${ACCENT}60`, letterSpacing: '.02em' }}
                 >
                   Start Course Finder →
                 </button>
@@ -446,7 +446,7 @@ export default function LandingPage() {
                 <div style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.15)', borderRadius: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '.875rem', border: '1px solid rgba(255,255,255,0.2)' }}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
                 </div>
-                <h2 style={{ color: '#fff', fontSize: '1.25rem', fontWeight: 800, lineHeight: 1.2, margin: '0 0 .4rem', letterSpacing: '-0.02em' }}>
+                <h2 style={{ color: '#fff', fontSize: '1.25rem', fontWeight: 500, lineHeight: 1.2, margin: '0 0 .4rem', letterSpacing: '-0.02em' }}>
                   {popupStep === 'form' ? 'Tell us about yourself' : "You're all set!"}
                 </h2>
                 <p style={{ color: 'rgba(255,255,255,0.72)', fontSize: '.83rem', lineHeight: 1.5, margin: 0 }}>
@@ -491,7 +491,7 @@ export default function LandingPage() {
                         {['MBA / Management', 'BBA / Business', 'MCA / BCA (Tech)', 'B.Com / M.Com', 'Arts & Humanities', 'Science', 'Other'].map(o => <option key={o} value={o}>{o}</option>)}
                       </select>
                     </div>
-                    <button type="submit" disabled={submitting} style={{ marginTop: '.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: submitting ? '#94a3b8' : ACCENT, color: '#fff', padding: '13px', borderRadius: 10, fontWeight: 700, fontSize: '.92rem', border: 'none', cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit', boxShadow: submitting ? 'none' : `0 4px 16px ${ACCENT}40`, transition: 'background .2s' }}>
+                    <button type="submit" disabled={submitting} style={{ marginTop: '.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: submitting ? '#94a3b8' : ACCENT, color: '#fff', padding: '13px', borderRadius: 10, fontWeight: 500, fontSize: '.92rem', border: 'none', cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit', boxShadow: submitting ? 'none' : `0 4px 16px ${ACCENT}40`, transition: 'background .2s' }}>
                       {submitting ? 'Submitting...' : 'Submit & Explore'}
                       {!submitting && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>}
                     </button>
@@ -502,12 +502,12 @@ export default function LandingPage() {
                     <div style={{ width: 60, height: 60, background: '#f0fdf4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
                       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#15803d" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: DARK, marginBottom: '.5rem' }}>Thanks, {leadForm.name.split(' ')[0] || 'there'}!</h3>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: DARK, marginBottom: '.5rem' }}>Thanks, {leadForm.name.split(' ')[0] || 'there'}!</h3>
                     <p style={{ color: '#64748b', fontSize: '.88rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
                       We&apos;ve got your details. Now let our <strong style={{ color: DARK }}>Course Finder</strong> recommend the best universities and programs for you.
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-                      <button onClick={handleOpenCourseFinder} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: ACCENT, color: '#fff', padding: '13px', borderRadius: 10, fontWeight: 700, fontSize: '.92rem', border: 'none', cursor: 'pointer', fontFamily: 'inherit', boxShadow: `0 4px 16px ${ACCENT}40` }}>
+                      <button onClick={handleOpenCourseFinder} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: ACCENT, color: '#fff', padding: '13px', borderRadius: 10, fontWeight: 500, fontSize: '.92rem', border: 'none', cursor: 'pointer', fontFamily: 'inherit', boxShadow: `0 4px 16px ${ACCENT}40` }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
                         Find My Course Now
                       </button>

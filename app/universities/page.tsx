@@ -54,38 +54,52 @@ export default function UniversitiesPage() {
     <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ── HERO ── */}
-      <section style={{
-        position: 'relative',
-        height: 420,
-        overflow: 'hidden',
-        backgroundImage: 'url(https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=1600)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 30%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,15,40,0.6) 0%, rgba(10,15,40,0.75) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 2rem', paddingTop: 80, textAlign: 'center', zIndex: 1 }}>
+      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+        {/* Background image */}
+        <img
+          src="https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80"
+          alt="Universities"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+        />
+        {/* Overlay matches contact page but is more transparent */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.6) 0%, rgba(67,97,238,0.4) 100%)' }} />
+        
+        {/* Dot grid pattern */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
+
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 50, padding: '5px 16px', color: '#fff', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
-              14+ Partner Universities
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
+              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+              <span style={{ color: '#93c5fd' }}>Universities</span>
             </div>
-            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '1rem' }}>
-              Find Your Dream University
-            </h1>
-            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', maxWidth: 500, margin: '0 auto 2rem', lineHeight: 1.7 }}>
-              UGC-approved online degrees from India&apos;s top NAAC-accredited institutions.
-            </p>
-            <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
-              <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none', zIndex: 2 }} />
-              <input
-                type="text"
-                placeholder="Search universities or locations..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                style={{ width: '100%', padding: '0.9rem 1.25rem 0.9rem 2.75rem', borderRadius: 50, border: 'none', fontSize: '0.92rem', outline: 'none', color: '#0f172a', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.3)', boxSizing: 'border-box' }}
-              />
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.05, marginBottom: '1rem', letterSpacing: '-0.02em' }}>
+                Find Your Dream <span style={{ color: '#90e0ef' }}>University</span>
+              </h1>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', maxWidth: 500, marginBottom: '2rem', lineHeight: 1.5 }}>
+                UGC-approved online degrees from India&apos;s top NAAC-accredited institutions.
+              </p>
+              
+              <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
+                <Search size={16} style={{ position: 'absolute', left: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none', zIndex: 2 }} />
+                <input
+                  type="text"
+                  placeholder="Search universities or locations..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  style={{ width: '100%', padding: '1rem 1.25rem 1rem 3.2rem', borderRadius: 50, border: 'none', fontSize: '0.95rem', outline: 'none', color: '#0f172a', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.15)', boxSizing: 'border-box' }}
+                />
+              </div>
             </div>
           </AnimateOnScroll>
         </div>
+
+        {/* Bottom fade into page bg */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, background: 'linear-gradient(to bottom, transparent, #1e40af)', pointerEvents: 'none' }} />
       </section>
 
       {/* ── STATS STRIP ── */}
@@ -93,7 +107,7 @@ export default function UniversitiesPage() {
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' }}>
           {[['14+', 'Universities'], ['500+', 'Programs'], ['UGC-DEB', 'Approved'], ['NAAC', 'Accredited']].map(([val, lbl]) => (
             <div key={lbl} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>{val}</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', lineHeight: 1 }}>{val}</div>
               <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>{lbl}</div>
             </div>
           ))}
@@ -123,32 +137,64 @@ export default function UniversitiesPage() {
               <p style={{ color: '#64748b' }}>No universities found.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
+            <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
               {filtered.map((uni, i) => {
-                const imgSrc = uni.image || UNI_IMAGES[i % UNI_IMAGES.length];
+                const actualImgSrc = (uni.image && uni.image.startsWith('http')) ? uni.image : UNI_IMAGES[i % UNI_IMAGES.length];
+                let brandColor = '#4361EE';
+                if (uni.image?.includes('blue')) brandColor = '#2563eb';
+                else if (uni.image?.includes('green')) brandColor = '#16a34a';
+                else if (uni.image?.includes('red')) brandColor = '#dc2626';
+                else if (uni.image?.includes('purple')) brandColor = '#9333ea';
+                else if (uni.image?.includes('orange')) brandColor = '#ea580c';
+                else if (uni.image?.includes('yellow')) brandColor = '#ca8a04';
+                else {
+                  const fallbackColors = ['#4361EE', '#10b981', '#f43f5e', '#8b5cf6', '#f59e0b'];
+                  brandColor = fallbackColors[i % fallbackColors.length];
+                }
+
                 return (
                   <AnimateOnScroll key={i} animation="fadeUp" delay={(i % 6) * 60}>
                     <Link href={`/universities/${uni.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
                       <div style={{ borderRadius: 16, overflow: 'hidden', border: '1px solid #e2e8f0', background: '#fff', transition: 'all 0.25s', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
-                        onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = '0 20px 48px rgba(30,64,175,0.15)'; el.style.borderColor = '#93c5fd'; }}
-                        onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; el.style.borderColor = '#e2e8f0'; }}
+                        onMouseEnter={e => { 
+                          const el = e.currentTarget as HTMLDivElement; 
+                          el.style.transform = 'translateY(-6px)'; 
+                          el.style.boxShadow = `0 20px 48px ${brandColor}40`; 
+                          el.style.borderColor = brandColor; 
+                          const img = el.querySelector('.uni-img') as HTMLImageElement;
+                          if (img) img.style.transform = 'scale(1.06)';
+                          const overlay = el.querySelector('.uni-color-overlay') as HTMLDivElement;
+                          if (overlay) overlay.style.opacity = '0.7';
+                        }}
+                        onMouseLeave={e => { 
+                          const el = e.currentTarget as HTMLDivElement; 
+                          el.style.transform = 'translateY(0)'; 
+                          el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; 
+                          el.style.borderColor = '#e2e8f0'; 
+                          const img = el.querySelector('.uni-img') as HTMLImageElement;
+                          if (img) img.style.transform = 'scale(1)';
+                          const overlay = el.querySelector('.uni-color-overlay') as HTMLDivElement;
+                          if (overlay) overlay.style.opacity = '0';
+                        }}
                       >
                         {/* Image */}
                         <div style={{ position: 'relative', height: 200, overflow: 'hidden' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={imgSrc} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }}
-                            onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.06)'; }}
-                            onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'; }}
+                          <img className="uni-img" src={actualImgSrc} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }}
                             onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                           />
-                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 55%)' }} />
+                          {/* Color overlay that fades in on hover */}
+                          <div className="uni-color-overlay" style={{ position: 'absolute', inset: 0, background: brandColor, opacity: 0, transition: 'opacity 0.3s ease', mixBlendMode: 'multiply' }} />
+                          {/* Permanent dark gradient for text legibility */}
+                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)' }} />
+                          
                           {uni.naac && (
-                            <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(255,255,255,0.95)', color: '#1e40af', fontSize: '0.65rem', fontWeight: 800, padding: '4px 10px', borderRadius: 6, letterSpacing: '0.04em' }}>
+                            <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(255,255,255,0.95)', color: brandColor, fontSize: '0.65rem', fontWeight: 600, padding: '4px 10px', borderRadius: 6, letterSpacing: '0.04em' }}>
                               {uni.naac}
                             </div>
                           )}
                           <div style={{ position: 'absolute', bottom: 12, left: 14, right: 14 }}>
-                            <div style={{ display: 'inline-block', background: '#1e40af', color: '#fff', fontSize: '0.6rem', fontWeight: 800, padding: '3px 9px', borderRadius: 4, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 4 }}>
+                            <div style={{ display: 'inline-block', background: brandColor, color: '#fff', fontSize: '0.6rem', fontWeight: 600, padding: '4px 10px', borderRadius: 4, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 4 }}>
                               UGC Approved
                             </div>
                           </div>
@@ -156,7 +202,7 @@ export default function UniversitiesPage() {
 
                         {/* Body */}
                         <div style={{ padding: '1.25rem' }}>
-                          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.4rem' }}>{uni.name}</h3>
+                          <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.4rem' }}>{uni.name}</h3>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: '1rem' }}>
                             <MapPin size={12} color="#94a3b8" />
                             <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{uni.location}</span>
@@ -164,15 +210,15 @@ export default function UniversitiesPage() {
 
                           <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.1rem', flexWrap: 'wrap' }}>
                             {[`${uni.programs.length}+ Programs`, 'Online Mode', 'UG & PG'].map((tag, j) => (
-                              <span key={j} style={{ padding: '3px 10px', background: '#f1f5f9', color: '#475569', borderRadius: 50, fontSize: '0.72rem', fontWeight: 600 }}>{tag}</span>
+                              <span key={j} style={{ padding: '3px 10px', background: `${brandColor}15`, color: brandColor, borderRadius: 50, fontSize: '0.72rem', fontWeight: 600 }}>{tag}</span>
                             ))}
                           </div>
 
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }}>
-                            <span style={{ fontSize: '0.8rem', color: '#1e40af', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
-                              <GraduationCap size={14} color="#1e40af" /> Explore Programs
+                            <span style={{ fontSize: '0.8rem', color: brandColor, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <GraduationCap size={14} color={brandColor} /> Explore Programs
                             </span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e40af" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={brandColor} strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                           </div>
                         </div>
                       </div>
@@ -189,7 +235,7 @@ export default function UniversitiesPage() {
       <section style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '3.5rem 2rem' }}>
         <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 500, color: '#0f172a', marginBottom: '0.75rem' }}>
               Not sure which university to pick?
             </h2>
             <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '1.75rem', lineHeight: 1.7 }}>
@@ -197,7 +243,7 @@ export default function UniversitiesPage() {
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button onClick={() => { const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}
-                style={{ padding: '0.8rem 2rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ padding: '0.8rem 2rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 500, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
                 Find My Course
               </button>
               <Link href="/contact" style={{ padding: '0.8rem 2rem', background: '#fff', color: '#374151', border: '1px solid #e2e8f0', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none' }}>

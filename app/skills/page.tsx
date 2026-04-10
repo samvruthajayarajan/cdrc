@@ -50,30 +50,52 @@ export default function SkillsPage() {
     <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ── HERO ── */}
-      <section style={{
-        position: 'relative', height: 420, overflow: 'hidden',
-        backgroundImage: 'url(https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1600)',
-        backgroundSize: 'cover', backgroundPosition: 'center 30%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(10,15,40,0.65) 0%, rgba(10,15,40,0.82) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 2rem', paddingTop: 80, textAlign: 'center', zIndex: 1 }}>
+      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+        {/* Background image */}
+        <img
+          src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          alt="Skill Development"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+        />
+        {/* Transparent overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.7) 0%, rgba(67,97,238,0.5) 100%)' }} />
+        
+        {/* Dot grid pattern */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
+
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 50, padding: '5px 16px', color: '#fff', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
-              Skill Development
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
+              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+              <span style={{ color: '#93c5fd' }}>Skill Courses</span>
             </div>
-            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '1rem' }}>
-              Skill Courses by CDRC
-            </h1>
-            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', maxWidth: 500, margin: '0 auto 2rem', lineHeight: 1.7 }}>
-              Industry-relevant programs designed to boost your career with practical, hands-on learning.
-            </p>
-            <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
-              <svg style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', zIndex: 2 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              <input type="text" placeholder="Search skill courses..." value={search} onChange={e => setSearch(e.target.value)}
-                style={{ width: '100%', padding: '0.9rem 1.25rem 0.9rem 2.75rem', borderRadius: 50, border: 'none', fontSize: '0.92rem', outline: 'none', color: '#0f172a', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.3)', boxSizing: 'border-box' }} />
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.2rem)', fontWeight: 600, color: '#fff', lineHeight: 1.05, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
+                Upskill Your <span style={{ color: '#90e0ef' }}>Career Path</span> <br/> with CDRC
+              </h1>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 600, marginBottom: '2.5rem', lineHeight: 1.6 }}>
+                Industry-relevant programs designed to boost your career with practical, hands-on learning from experts.
+              </p>
+              
+              <div style={{ position: 'relative', maxWidth: 480, width: '100%', margin: '0 auto' }}>
+                <svg style={{ position: 'absolute', left: '1.2rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', zIndex: 2 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input
+                  type="text"
+                  placeholder="Search skill courses..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  style={{ width: '100%', padding: '1.1rem 1.25rem 1.1rem 3.2rem', borderRadius: 50, border: 'none', fontSize: '0.95rem', outline: 'none', color: '#0f172a', background: '#fff', boxShadow: '0 8px 32px rgba(0,0,0,0.15)', boxSizing: 'border-box' }}
+                />
+              </div>
             </div>
           </AnimateOnScroll>
         </div>
+
+        {/* Bottom fade into page bg */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, transparent, #fff)', pointerEvents: 'none' }} />
       </section>
 
       {/* ── STATS STRIP ── */}
@@ -81,7 +103,7 @@ export default function SkillsPage() {
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' }}>
           {[['100+', 'Skill Courses'], ['Expert', 'Instructors'], ['Certificate', 'On Completion'], ['Online', 'Mode']].map(([val, lbl]) => (
             <div key={lbl} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>{val}</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', lineHeight: 1 }}>{val}</div>
               <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>{lbl}</div>
             </div>
           ))}
@@ -145,26 +167,26 @@ export default function SkillsPage() {
                           />
                         ) : (
                           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <div style={{ fontSize: '4rem', fontWeight: 900, color: 'rgba(255,255,255,0.2)', letterSpacing: '-0.04em' }}>{skill.name.charAt(0)}</div>
+                            <div style={{ fontSize: '4rem', fontWeight: 600, color: 'rgba(255,255,255,0.2)', letterSpacing: '-0.04em' }}>{skill.name.charAt(0)}</div>
                           </div>
                         )}
                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 55%)' }} />
-                        <span style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(255,255,255,0.92)', color: '#0f172a', fontSize: '0.65rem', fontWeight: 800, padding: '3px 9px', borderRadius: 6 }}>
+                        <span style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(255,255,255,0.92)', color: '#0f172a', fontSize: '0.65rem', fontWeight: 500, padding: '3px 9px', borderRadius: 6 }}>
                           {skill.category}
                         </span>
-                        <span style={{ position: 'absolute', top: 12, right: 12, background: levelColor, color: '#fff', fontSize: '0.65rem', fontWeight: 800, padding: '3px 9px', borderRadius: 6 }}>
+                        <span style={{ position: 'absolute', top: 12, right: 12, background: levelColor, color: '#fff', fontSize: '0.65rem', fontWeight: 500, padding: '3px 9px', borderRadius: 6 }}>
                           {skill.level}
                         </span>
                       </div>
 
                       {/* Body */}
                       <div style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.5rem' }}>{skill.name}</h3>
+                        <h3 style={{ fontSize: '1rem', fontWeight: 500, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.5rem' }}>{skill.name}</h3>
 
                         <div style={{ marginBottom: '0.875rem' }}>
                           <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.65, margin: 0 }}>{preview}</p>
                           {isLong && (
-                            <button onClick={() => toggleExpand(skill._id)} style={{ background: 'none', border: 'none', color: accent, fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', padding: '3px 0 0', fontFamily: 'inherit' }}>
+                            <button onClick={() => toggleExpand(skill._id)} style={{ background: 'none', border: 'none', color: accent, fontSize: '0.78rem', fontWeight: 500, cursor: 'pointer', padding: '3px 0 0', fontFamily: 'inherit' }}>
                               {isExpanded ? 'See Less ↑' : 'See More ↓'}
                             </button>
                           )}
@@ -181,7 +203,7 @@ export default function SkillsPage() {
                             )}
                             {skill.courses?.length > 0 && (
                               <div style={{ marginBottom: '0.875rem' }}>
-                                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>Courses Included</div>
+                                <div style={{ fontSize: '0.72rem', fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>Courses Included</div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                                   {skill.courses.slice(0, 3).map((c, ci) => (
                                     <div key={ci} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: '0.82rem', color: '#374151' }}>
@@ -199,14 +221,14 @@ export default function SkillsPage() {
                         {/* Actions */}
                         <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto', paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }}>
                           <Link href={`/skills/${skill._id}`}
-                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.65rem', border: `1.5px solid ${accent}`, borderRadius: 8, color: accent, fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none', transition: 'background 0.2s', background: '#fff' }}
+                            style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.65rem', border: `1.5px solid ${accent}`, borderRadius: 8, color: accent, fontWeight: 500, fontSize: '0.8rem', textDecoration: 'none', transition: 'background 0.2s', background: '#fff' }}
                             onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = `${accent}10`; }}
                             onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#fff'; }}
                           >
                             Details
                           </Link>
                           <button onClick={() => setEnrollModal({ open: true, skill: skill.name, course: skill.name })}
-                            style={{ flex: 1, padding: '0.65rem', background: accent, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'opacity 0.2s' }}
+                            style={{ flex: 1, padding: '0.65rem', background: accent, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 500, fontSize: '0.8rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'opacity 0.2s' }}
                             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.88'; }}
                             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '1'; }}
                           >
@@ -227,7 +249,7 @@ export default function SkillsPage() {
       <section style={{ background: '#fff', borderTop: '1px solid #e2e8f0', padding: '3.5rem 2rem' }}>
         <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
-            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 500, color: '#0f172a', marginBottom: '0.75rem' }}>
               Ready to upskill your career?
             </h2>
             <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '1.75rem', lineHeight: 1.7 }}>
@@ -235,7 +257,7 @@ export default function SkillsPage() {
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button onClick={() => { const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}
-                style={{ padding: '0.8rem 2rem', background: '#4169e1', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ padding: '0.8rem 2rem', background: '#4169e1', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 500, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
                 Find My Course
               </button>
               <Link href="/contact" style={{ padding: '0.8rem 2rem', background: '#fff', color: '#374151', border: '1px solid #e2e8f0', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none' }}>

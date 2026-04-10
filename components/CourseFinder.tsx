@@ -89,18 +89,14 @@ function EnquiryGate({ onSuccess }: { onSuccess: (name: string) => void }) {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch('/api/public/enquiry', {
+      await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source: 'Course Finder' }),
+        body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, source: 'Course Finder' }),
       });
-      if (!res.ok) {
-        const d = await res.json();
-        throw new Error(d.message || 'Submission failed');
-      }
       onSuccess(form.name);
-    } catch (err: any) {
-      setError(err.message);
+    } catch {
+      setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -172,6 +168,7 @@ export default function CourseFinder() {
   const reset = () => {
     setGateCleared(false); setUserName(''); setStep(1);
     setAnswers({}); setResults([]); setShowResults(false); setAnimate(true);
+    setQuestions([]); // clear so they re-fetch fresh next open
   };
 
   const handleOption = (field: string, value: string) => {
@@ -376,6 +373,7 @@ const CF_STYLES = `
   max-width: 600px; width: 100%; max-height: 90vh; overflow: auto;
   position: relative; box-shadow: 0 25px 60px rgba(0,0,0,0.2);
   animation: cf-slide-up 0.3s ease;
+  margin: auto;
 }
 @keyframes cf-slide-up { from{opacity:0;transform:translateY(30px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
 .cf-close-btn {
@@ -398,7 +396,7 @@ const CF_STYLES = `
   margin: 0 auto 20px; color: #0051ba;
   box-shadow: 0 8px 24px rgba(0,81,186,0.15);
 }
-.cf-gate-title { color: #0f172a; font-size: 1.8rem; font-weight: 700; margin: 0 0 10px; }
+.cf-gate-title { color: #0f172a; font-size: 1.8rem; font-weight: 500; margin: 0 0 10px; }
 .cf-gate-sub { color: #64748B; font-size: 1rem; margin: 0 0 30px; }
 .cf-gate-form { display: flex; flex-direction: column; gap: 14px; text-align: left; }
 .cf-field { position: relative; }
@@ -436,7 +434,7 @@ const CF_STYLES = `
   margin: 0 auto 16px; color: #fff;
   box-shadow: 0 8px 20px rgba(0,81,186,0.3);
 }
-.cf-title { color: #0f172a; font-size: 1.5rem; font-weight: 700; margin: 0 0 8px; }
+.cf-title { color: #0f172a; font-size: 1.5rem; font-weight: 500; margin: 0 0 8px; }
 .cf-subtitle { color: #64748B; font-size: 0.95rem; margin: 0; }
 .cf-progress-container { padding: 18px 30px; border-bottom: 1px solid #E2E8F0; background: #fff; }
 .cf-progress-bar { height: 6px; background: #E2E8F0; border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
@@ -445,7 +443,7 @@ const CF_STYLES = `
 .cf-question-container { padding: 28px 30px; background: #fff; }
 .cf-question-container.animate { animation: cf-q-in 0.3s ease; }
 @keyframes cf-q-in { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
-.cf-question { color: #0f172a; font-size: 1.2rem; font-weight: 700; margin-bottom: 22px; text-align: center; line-height: 1.4; }
+.cf-question { color: #0f172a; font-size: 1.2rem; font-weight: 500; margin-bottom: 22px; text-align: center; line-height: 1.4; }
 .cf-options-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
 .cf-option-btn {
   display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -481,7 +479,7 @@ const CF_STYLES = `
   margin: 0 auto 16px; color: #fff;
   box-shadow: 0 8px 20px rgba(0,81,186,0.3);
 }
-.cf-results-title { color: #0f172a; font-size: 1.4rem; font-weight: 700; margin: 0 0 8px; }
+.cf-results-title { color: #0f172a; font-size: 1.4rem; font-weight: 500; margin: 0 0 8px; }
 .cf-results-subtitle { color: #64748B; font-size: 0.9rem; margin: 0; }
 .cf-results-list { padding: 20px; max-height: 350px; overflow: auto; background: #fff; }
 .cf-result-card { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #F8FAFC; border-radius: 12px; margin-bottom: 10px; text-decoration: none; transition: all 0.2s; border: 2px solid transparent; }
@@ -493,7 +491,7 @@ const CF_STYLES = `
 .cf-result-badge { background: #E2E8F0; color: #64748B; padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
 .cf-result-price { text-align: right; flex-shrink: 0; margin-left: 15px; }
 .cf-price-label { display: block; color: #94A3B8; font-size: 0.75rem; margin-bottom: 3px; }
-.cf-price-value { color: #059669; font-size: 1.05rem; font-weight: 700; }
+.cf-price-value { color: #059669; font-size: 1.05rem; font-weight: 500; }
 .cf-no-results { text-align: center; padding: 40px 20px; color: #64748B; }
 .cf-no-results-icon { margin-bottom: 12px; display: flex; justify-content: center; }
 .cf-browse-all-btn { display: inline-block; margin-top: 15px; padding: 11px 22px; background: linear-gradient(135deg, #0051ba, #1a7fe8); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600; transition: all 0.2s; }
@@ -506,8 +504,8 @@ const CF_STYLES = `
 @media (max-width: 768px) {
   .cf-floating-btn span { display: none; }
   .cf-floating-btn { padding: 16px; border-radius: 50%; width: 56px; height: 56px; justify-content: center; bottom: 1.5rem; right: 5rem; }
-  .cf-overlay { align-items: flex-end; padding: 0; }
-  .cf-modal { border-radius: 24px 24px 0 0; max-height: 92vh; width: 100%; }
+  .cf-overlay { align-items: center; padding: 16px; }
+  .cf-modal { border-radius: 20px; max-height: 92vh; width: 100%; }
   .cf-options-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
   .cf-option-btn { padding: 12px 8px; font-size: 0.82rem; }
   .cf-gate { padding: 24px 16px 20px; }

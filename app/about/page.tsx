@@ -19,23 +19,42 @@ export default function AboutPage() {
   return (
     <div style={{ background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
-      {/* ── 1. HERO — full-width dark image, centered text ── */}
-      <section style={{
-        position: 'relative', height: 440, overflow: 'hidden',
-        backgroundImage: 'url(/about-hero.jpg)',
-        backgroundSize: 'cover', backgroundPosition: 'center',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,15,50,0.65)' }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: 80 }}>
-          <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
-            About <span style={{ color: '#90caf9' }}>Us</span>
-          </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Link href="/" style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.9rem', textDecoration: 'none' }}>Home</Link>
-            <span style={{ color: 'rgba(255,255,255,0.4)' }}>/</span>
-            <span style={{ color: '#fff', fontSize: '0.9rem' }}>About Us</span>
-          </div>
+      {/* ── HERO ── */}
+      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+        {/* Background image */}
+        <img
+          src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1600&q=80"
+          alt="About CDCR"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+        />
+        {/* Transparent overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.7) 0%, rgba(67,97,238,0.5) 100%)' }} />
+        
+        {/* Dot grid pattern */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
+
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <AnimateOnScroll animation="fadeUp">
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
+              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+              <span style={{ color: '#93c5fd' }}>About Us</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 4.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.05, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
+                About <span style={{ color: '#90e0ef' }}>Us</span>
+              </h1>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, lineHeight: 1.7 }}>
+                Kerala&apos;s most trusted education consultancy, helping thousands of students <br/> achieve their academic dreams since 2014.
+              </p>
+            </div>
+          </AnimateOnScroll>
         </div>
+
+        {/* Bottom fade into page bg */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, transparent, #fff)', pointerEvents: 'none' }} />
       </section>
 
       {/* ── 2. ABOUT US — left image, right text ── */}
@@ -50,10 +69,10 @@ export default function AboutPage() {
           <AnimateOnScroll animation="slideLeft">
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '0.75rem' }}>
-                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 700 }}>About Us</span>
+                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 500 }}>About Us</span>
                 <span style={{ color: RBL }}>›</span>
               </div>
-              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 900, color: '#0f172a', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
+              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 600, color: '#0f172a', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
                 Your Gateway to<br />Quality Online Education
               </h2>
               <p style={{ color: '#64748b', lineHeight: 1.8, fontSize: '0.92rem', marginBottom: '1rem' }}>
@@ -65,7 +84,7 @@ export default function AboutPage() {
               <Link href="/universities" style={{
                 display: 'inline-block', padding: '0.75rem 1.75rem',
                 background: RBL, color: '#fff', borderRadius: 8,
-                fontWeight: 700, textDecoration: 'none', fontSize: '0.9rem',
+                fontWeight: 500, textDecoration: 'none', fontSize: '0.9rem',
                 boxShadow: `0 4px 16px ${RBL}40`,
               }}>Read Details</Link>
             </div>
@@ -79,10 +98,10 @@ export default function AboutPage() {
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '0.5rem' }}>
-                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 700 }}>Why Choose Us</span>
+                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 500 }}>Why Choose Us</span>
                 <span style={{ color: RBL }}>›</span>
               </div>
-              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>Our Services</h2>
+              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 600, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>Our Services</h2>
               <p style={{ color: '#64748b', fontSize: '0.9rem', maxWidth: 560, margin: '0 auto', lineHeight: 1.7 }}>
                 We provide comprehensive education consultancy services to help students achieve their academic and career goals across India and internationally.
               </p>
@@ -94,7 +113,7 @@ export default function AboutPage() {
               <AnimateOnScroll key={i} animation="fadeUp" delay={i * 100}>
                 <div style={{ textAlign: 'center', padding: '0 1rem' }}>
                   <div style={{ width: 72, height: 72, borderRadius: '50%', background: `linear-gradient(135deg, ${RBL}, ${RBA})`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', boxShadow: `0 6px 20px ${RBL}35` }}>{item.icon}</div>
-                  <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.6rem' }}>{item.title}</h3>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 500, color: '#0f172a', marginBottom: '0.6rem' }}>{item.title}</h3>
                   <p style={{ fontSize: '0.83rem', color: '#64748b', lineHeight: 1.7 }}>{item.desc}</p>
                 </div>
               </AnimateOnScroll>
@@ -112,13 +131,13 @@ export default function AboutPage() {
               borderRadius: '1.5rem', overflow: 'hidden',
               display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
               minHeight: 380,
-            }}>
+            }} className="about-mission-grid">
               <div style={{ padding: 'clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '1rem' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.82rem', fontWeight: 700 }}>Our Mission</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.82rem', fontWeight: 500 }}>Our Mission</span>
                   <span style={{ color: 'rgba(255,255,255,0.5)' }}>›</span>
                 </div>
-                <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.3rem)', fontWeight: 900, color: '#fff', lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
+                <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.3rem)', fontWeight: 600, color: '#fff', lineHeight: 1.2, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
                   Focused on<br />Your Education Journey
                 </h2>
                 <p style={{ color: 'rgba(255,255,255,0.75)', lineHeight: 1.8, fontSize: '0.9rem', marginBottom: '1.5rem' }}>
@@ -128,7 +147,7 @@ export default function AboutPage() {
                   display: 'inline-flex', alignItems: 'center', gap: 8,
                   background: '#fff', color: RB,
                   padding: '0.75rem 1.6rem', borderRadius: 8,
-                  fontWeight: 800, textDecoration: 'none', fontSize: '0.88rem',
+                  fontWeight: 500, textDecoration: 'none', fontSize: '0.88rem',
                   alignSelf: 'flex-start',
                 }}>View More</Link>
               </div>
@@ -149,10 +168,10 @@ export default function AboutPage() {
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '0.5rem' }}>
-                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 700 }}>Our Success Story</span>
+                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 500 }}>Our Success Story</span>
                 <span style={{ color: RBL }}>›</span>
               </div>
-              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
+              <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 600, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
                 Our Proven<br />Success Stories
               </h2>
               <p style={{ color: '#64748b', fontSize: '0.9rem', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
@@ -170,7 +189,7 @@ export default function AboutPage() {
             ].map((s, i) => (
               <AnimateOnScroll key={i} animation="fadeUp" delay={i * 80}>
                 <div style={{ textAlign: 'center', padding: '2rem 1rem', background: '#fff', borderRadius: '1rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
-                  <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>{s.value}</div>
+                  <div style={{ fontSize: '2.5rem', fontWeight: 600, color: '#0f172a', lineHeight: 1 }}>{s.value}</div>
                   <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 8, fontWeight: 500 }}>{s.label}</div>
                 </div>
               </AnimateOnScroll>
@@ -179,6 +198,12 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <style>{`
+        @media (max-width: 768px) {
+          .about-mission-grid { grid-template-columns: 1fr !important; }
+          .about-mission-grid img { min-height: 220px !important; order: -1; }
+        }
+      `}</style>
 
     </div>
   );

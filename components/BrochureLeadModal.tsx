@@ -88,7 +88,7 @@ export default function BrochureLeadModal({ programName, brochureUrl, onClose }:
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
           </div>
-          <h2 style={{ color: '#fff', fontSize: '1.2rem', fontWeight: 800, margin: 0, lineHeight: 1.3 }}>Download Brochure</h2>
+          <h2 style={{ color: '#fff', fontSize: '1.2rem', fontWeight: 500, margin: 0, lineHeight: 1.3 }}>Download Brochure</h2>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.82rem', marginTop: 4 }}>{programName}</p>
         </div>
 
@@ -99,7 +99,7 @@ export default function BrochureLeadModal({ programName, brochureUrl, onClose }:
               <div style={{ width: 60, height: 60, background: '#f0fdf4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
-              <h3 style={{ color: '#0f172a', fontWeight: 800, fontSize: '1.1rem', marginBottom: '0.5rem' }}>
+              <h3 style={{ color: '#0f172a', fontWeight: 500, fontSize: '1.1rem', marginBottom: '0.5rem' }}>
                 {brochureUrl ? 'Your download has started!' : 'Request Received!'}
               </h3>
               <p style={{ color: '#64748b', fontSize: '0.85rem' }}>
@@ -142,7 +142,7 @@ export default function BrochureLeadModal({ programName, brochureUrl, onClose }:
               </div>
 
               <button type="submit" disabled={loading}
-                style={{ width: '100%', padding: '11px', background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: '0.92rem', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 }}>
+                style={{ width: '100%', padding: '11px', background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 500, fontSize: '0.92rem', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 }}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>

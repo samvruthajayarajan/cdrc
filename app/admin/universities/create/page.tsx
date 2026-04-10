@@ -11,17 +11,17 @@ const ACCENT_LIGHT = '#eff6ff';
 const ACCENT_BORDER = '#bfdbfe';
 
 const S: Record<string, React.CSSProperties> = {
-  wrapper: { minHeight: '100vh', background: '#F8FAFC', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" },
+  wrapper: { minHeight: '100vh', background: '#F8FAFC', fontFamily: "'Poppins', system-ui, sans-serif" },
   main: { padding: '28px 32px' },
   container: { maxWidth: 900, margin: '0 auto' },
   pageHeader: { marginBottom: 28 },
   backLink: { display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748b', textDecoration: 'none', fontSize: '0.85rem', marginBottom: 12, fontWeight: 500 },
-  pageTitle: { fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: 0 },
+  pageTitle: { fontSize: '1.6rem', fontWeight: 500, color: '#0f172a', margin: 0 },
   pageSubtitle: { color: '#64748b', fontSize: '0.9rem', marginTop: 4 },
   section: { background: '#fff', borderRadius: 16, padding: '24px 28px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 20, border: '1px solid #f1f5f9' },
   sectionHeader: { display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22, paddingBottom: 16, borderBottom: '1px solid #f1f5f9' },
   sectionIcon: { width: 42, height: 42, borderRadius: 11, background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  sectionTitle: { fontWeight: 700, color: '#0f172a', fontSize: '1rem', margin: 0 },
+  sectionTitle: { fontWeight: 500, color: '#0f172a', fontSize: '1rem', margin: 0 },
   sectionDesc: { color: '#94a3b8', fontSize: '0.78rem', margin: 0 },
   grid2: { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.1rem' },
   label: { display: 'block', marginBottom: 6, fontWeight: 600, color: '#374151', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.04em' },
@@ -31,7 +31,7 @@ const S: Record<string, React.CSSProperties> = {
   successAlert: { background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', padding: '14px 18px', borderRadius: 12, marginBottom: 20, fontSize: '0.9rem' },
   actions: { display: 'flex', justifyContent: 'flex-end', gap: 12, flexWrap: 'wrap', paddingTop: 8 },
   cancelBtn: { padding: '11px 24px', background: '#fff', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: 10, fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit' },
-  submitBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(30,64,175,0.35)' },
+  submitBtn: { display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 500, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(30,64,175,0.35)' },
 };
 
 function SectionHeader({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
@@ -290,7 +290,7 @@ export default function CreateUniversity() {
                   </div>
                 </div>
                 <div style={{ background: ACCENT_LIGHT, borderRadius: 12, padding: '18px 20px', border: `1px solid ${ACCENT_BORDER}` }}>
-                  <p style={{ fontWeight: 700, color: ACCENT, marginBottom: 14, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <p style={{ fontWeight: 500, color: ACCENT, marginBottom: 14, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Globe size={14} color={ACCENT} /> Open Graph (Social Sharing)
                   </p>
                   <div style={S.grid2}>
@@ -347,7 +347,7 @@ export default function CreateUniversity() {
                   <label key={k} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px', borderRadius: 12, border: `2px solid ${(form as unknown as Record<string, boolean>)[k] ? ACCENT_BORDER : '#e2e8f0'}`, background: (form as unknown as Record<string, boolean>)[k] ? ACCENT_LIGHT : '#f8fafc', cursor: 'pointer', transition: 'all 0.2s' }}>
                     <input type="checkbox" checked={(form as unknown as Record<string, boolean>)[k]} onChange={e => set(k, e.target.checked)} style={{ width: 18, height: 18, accentColor: ACCENT }} />
                     <div>
-                      <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.88rem' }}>{lbl}</div>
+                      <div style={{ fontWeight: 500, color: '#0f172a', fontSize: '0.88rem' }}>{lbl}</div>
                       <div style={{ color: '#64748b', fontSize: '0.78rem', marginTop: 2 }}>{desc}</div>
                     </div>
                   </label>
@@ -361,7 +361,7 @@ export default function CreateUniversity() {
               {programs.map((prog, i) => (
                 <div key={i} style={{ background: '#f8fafc', borderRadius: 12, padding: '18px 20px', marginBottom: 14, border: '1px solid #e2e8f0' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                    <span style={{ fontWeight: 700, color: '#374151', fontSize: '0.88rem' }}>Program {i + 1}</span>
+                    <span style={{ fontWeight: 500, color: '#374151', fontSize: '0.88rem' }}>Program {i + 1}</span>
                     {programs.length > 1 && (
                       <button type="button" onClick={() => setPrograms(programs.filter((_, j) => j !== i))} style={{ padding: '5px 10px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}>
                         Remove
@@ -391,7 +391,7 @@ export default function CreateUniversity() {
                 </div>
               ))}
               <button type="button" onClick={() => setPrograms([...programs, { name: '', duration: '', description: '' }])}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 20px', background: ACCENT_LIGHT, color: ACCENT, border: `1.5px solid ${ACCENT_BORDER}`, borderRadius: 9, fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'inherit' }}>
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 20px', background: ACCENT_LIGHT, color: ACCENT, border: `1.5px solid ${ACCENT_BORDER}`, borderRadius: 9, fontWeight: 500, cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'inherit' }}>
                 <Plus size={14} color={ACCENT} /> Add Program
               </button>
             </div>

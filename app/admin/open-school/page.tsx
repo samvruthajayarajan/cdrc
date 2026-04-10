@@ -90,7 +90,7 @@ export default function OpenSchoolManagement() {
           </Link>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'clamp(1rem, 3vw, 2rem)' }}>
             <div style={{ flex: '1', minWidth: '200px' }}>
-              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
+              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 600, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
                 Manage Open School
               </h1>
               <p style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.1rem)', opacity: 0.9, color: '#6b7280' }}>
@@ -216,7 +216,7 @@ export default function OpenSchoolManagement() {
                   <div style={{ flex: 1 }}>
                     <h3 style={{ 
                       fontSize: 'clamp(1rem, 3vw, 1.25rem)', 
-                      fontWeight: 700, 
+                      fontWeight: 500, 
                       color: '#1e293b', 
                       marginBottom: '0.5rem',
                       lineHeight: 1.3
@@ -241,7 +241,7 @@ export default function OpenSchoolManagement() {
                   }}>
                     <div style={{ 
                       fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', 
-                      fontWeight: 700, 
+                      fontWeight: 500, 
                       color: '#64748b', 
                       marginBottom: '0.5rem', 
                       textTransform: 'uppercase' 

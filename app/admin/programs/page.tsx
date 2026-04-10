@@ -94,7 +94,7 @@ export default function ProgramsManagement() {
           </Link>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'clamp(1rem, 3vw, 2rem)' }}>
             <div style={{ flex: '1', minWidth: '200px' }}>
-              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
+              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 600, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
                 Manage Programs
               </h1>
               <p style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.1rem)', opacity: 0.9, color: '#6b7280' }}>
@@ -198,11 +198,11 @@ export default function ProgramsManagement() {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Program Name</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Duration</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>University</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Description</th>
-                      <th style={{ padding: '1rem', textAlign: 'center', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Actions</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Program Name</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Duration</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>University</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Description</th>
+                      <th style={{ padding: '1rem', textAlign: 'center', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -323,7 +323,7 @@ export default function ProgramsManagement() {
                   }}>
                     {/* Program Header */}
                     <div style={{ marginBottom: 'clamp(1rem, 3vw, 1.5rem)' }}>
-                      <div style={{ fontWeight: 700, color: '#1e293b', fontSize: 'clamp(1rem, 3vw, 1.25rem)', marginBottom: '0.5rem' }}>
+                      <div style={{ fontWeight: 500, color: '#1e293b', fontSize: 'clamp(1rem, 3vw, 1.25rem)', marginBottom: '0.5rem' }}>
                         {prog.name}
                       </div>
                       <span style={{

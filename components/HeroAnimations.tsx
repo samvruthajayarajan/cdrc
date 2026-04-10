@@ -199,7 +199,7 @@ export function StatCard({ value, suffix, label, icon, delay = 0 }: {
       onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.14)'; }}
       onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.08)'; }}
     >
-      <div style={{ fontSize: '2rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>
+      <div style={{ fontSize: '2rem', fontWeight: 600, color: '#fff', lineHeight: 1 }}>
         {count}{suffix}
       </div>
       <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.75)', marginTop: '4px', fontWeight: 500 }}>{label}</div>

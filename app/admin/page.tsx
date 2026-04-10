@@ -83,7 +83,7 @@ export default function AdminDashboard() {
     <div style={{ padding: 'clamp(1rem, 4vw, 2.5rem)', background: '#fff', minHeight: '100vh' }}>
       {/* Header */}
       <div style={{ marginBottom: 'clamp(1.5rem, 4vw, 2.5rem)', position: 'relative', zIndex: 100 }}>
-        <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937', marginBottom: '0.5rem', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+        <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 500, color: '#1f2937', marginBottom: '0.5rem', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
           Dashboard
         </h1>
       </div>
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
               <GraduationCap size={18} color="#3b82f6" />
             </div>
           </div>
-          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 500, color: '#1f2937' }}>
             {stats.totalUniversities}
           </div>
         </Link>
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
               <BookOpen size={18} color="#f59e0b" />
             </div>
           </div>
-          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 500, color: '#1f2937' }}>
             {stats.totalPrograms}
           </div>
         </Link>
@@ -189,7 +189,7 @@ export default function AdminDashboard() {
               <BookOpen size={18} color="#10b981" />
             </div>
           </div>
-          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 500, color: '#1f2937' }}>
             5
           </div>
         </Link>
@@ -222,7 +222,7 @@ export default function AdminDashboard() {
               <Users size={18} color="#a855f7" />
             </div>
           </div>
-          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 500, color: '#1f2937' }}>
             {stats.totalEnrollments}
           </div>
         </Link>
@@ -258,7 +258,7 @@ export default function AdminDashboard() {
               </svg>
             </div>
           </div>
-          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 700, color: '#1f2937' }}>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 500, color: '#1f2937' }}>
             {stats.totalContacts}
           </div>
         </Link>
@@ -272,7 +272,7 @@ export default function AdminDashboard() {
         boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
         border: '1px solid #e5e7eb'
       }}>
-        <h2 style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 700, color: '#1f2937', marginBottom: 'clamp(1rem, 3vw, 1.5rem)' }}>
+        <h2 style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)', fontWeight: 500, color: '#1f2937', marginBottom: 'clamp(1rem, 3vw, 1.5rem)' }}>
           Database Management
         </h2>
         

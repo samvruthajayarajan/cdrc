@@ -102,14 +102,14 @@ function FeaturedPrograms() {
                     <div style={{ width: 48, height: 48, borderRadius: 12, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
                       {icon}
                     </div>
-                    <span style={{ background: isUG ? '#f0fdf4' : '#eff6ff', color: isUG ? '#15803d' : '#1e40af', fontSize: '0.65rem', fontWeight: 800, padding: '3px 10px', borderRadius: 50, textTransform: 'uppercase', letterSpacing: '0.06em', border: `1px solid ${isUG ? '#bbf7d0' : '#bfdbfe'}` }}>
+                    <span style={{ background: isUG ? '#f0fdf4' : '#eff6ff', color: isUG ? '#15803d' : '#1e40af', fontSize: '0.65rem', fontWeight: 500, padding: '3px 10px', borderRadius: 50, textTransform: 'uppercase', letterSpacing: '0.06em', border: `1px solid ${isUG ? '#bbf7d0' : '#bfdbfe'}` }}>
                       {isUG ? 'Under Graduate' : 'Post Graduate'}
                     </span>
                   </div>
 
                   {/* Program name */}
                   <div>
-                    <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.3, margin: '0 0 0.3rem' }}>{p.name}</h3>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', lineHeight: 1.3, margin: '0 0 0.3rem' }}>{p.name}</h3>
                     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.78rem', color: '#64748b' }}>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -148,10 +148,10 @@ function UniversityHomeCard({ uni }: { uni: UniCard }) {
         <div style={{ height: 8, background: uni.color }} />
         <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: '1rem' }}>
-            <div style={{ width: 48, height: 48, background: uni.color, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', fontWeight: 900, color: '#fff', flexShrink: 0 }}>{uni.initial}</div>
+            <div style={{ width: 48, height: 48, background: uni.color, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', fontWeight: 600, color: '#fff', flexShrink: 0 }}>{uni.initial}</div>
             <div>
-              <h3 style={{ fontSize: '0.97rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.3, margin: 0 }}>{uni.name}</h3>
-              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '2px 8px', borderRadius: 4, fontSize: '0.72rem', fontWeight: 700, marginTop: 4 }}>{uni.accreditation}</span>
+              <h3 style={{ fontSize: '0.97rem', fontWeight: 500, color: '#0f172a', lineHeight: 1.3, margin: 0 }}>{uni.name}</h3>
+              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '2px 8px', borderRadius: 4, fontSize: '0.72rem', fontWeight: 500, marginTop: 4 }}>{uni.accreditation}</span>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: uni.color, fontWeight: 600, fontSize: '0.82rem' }}>
@@ -161,6 +161,73 @@ function UniversityHomeCard({ uni }: { uni: UniCard }) {
         </div>
       </div>
     </Link>
+  );
+}
+
+function PopupLeadForm({ onClose }: { onClose: () => void }) {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', interest: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, course: form.interest, source: 'Course Finder' }),
+      });
+    } catch {}
+    setSubmitting(false);
+    setDone(true);
+    setTimeout(onClose, 1500);
+  };
+
+  const inp: React.CSSProperties = { width: '100%', padding: '10px 13px', borderRadius: 9, border: '1.5px solid #e2e8f0', fontSize: '.88rem', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' };
+
+  if (done) return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <div style={{ fontSize: '2.5rem', marginBottom: '.5rem' }}>✅</div>
+      <p style={{ fontWeight: 500, color: '#0f172a' }}>Thank you! We&apos;ll be in touch soon.</p>
+    </div>
+  );
+
+  return (
+    <div style={{ padding: '1.5rem 2rem 2rem' }}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '.875rem' }}>
+        {[
+          { key: 'name', label: 'Full Name', type: 'text', placeholder: 'Your name', required: true },
+          { key: 'email', label: 'Email Address', type: 'email', placeholder: 'you@example.com', required: true },
+          { key: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+91 98765 43210', required: true },
+        ].map(({ key, label, type, placeholder, required }) => (
+          <div key={key}>
+            <label style={{ display: 'block', fontSize: '.78rem', fontWeight: 600, color: '#374151', marginBottom: 4 }}>{label}</label>
+            <input type={type} required={required} placeholder={placeholder}
+              value={form[key as keyof typeof form]}
+              onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
+              style={inp}
+              onFocus={e => (e.target.style.borderColor = '#0051ba')}
+              onBlur={e => (e.target.style.borderColor = '#e2e8f0')}
+            />
+          </div>
+        ))}
+        <div>
+          <label style={{ display: 'block', fontSize: '.78rem', fontWeight: 600, color: '#374151', marginBottom: 4 }}>Area of Interest</label>
+          <select value={form.interest} onChange={e => setForm(f => ({ ...f, interest: e.target.value }))} style={{ ...inp, cursor: 'pointer', background: '#fff' }}>
+            <option value="">Select a field...</option>
+            {['MBA / Management', 'BBA / Business', 'MCA / BCA (Tech)', 'B.Com / M.Com', 'Arts & Humanities', 'Science', 'Other'].map(o => <option key={o}>{o}</option>)}
+          </select>
+        </div>
+        <button type="submit" disabled={submitting}
+          style={{ width: '100%', padding: '13px', background: submitting ? '#94a3b8' : 'linear-gradient(135deg, #0051ba, #1a7fe8)', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 500, fontSize: '.92rem', cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit', boxShadow: '0 4px 16px rgba(0,81,186,0.35)' }}>
+          {submitting ? 'Submitting...' : 'Submit & Find My Course →'}
+        </button>
+        <button type="button" onClick={onClose} style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '.8rem', cursor: 'pointer', fontFamily: 'inherit' }}>
+          Maybe later
+        </button>
+      </form>
+    </div>
   );
 }
 
@@ -176,35 +243,15 @@ function HomePageContent() {
   const searchParams = useSearchParams();
   const [featuredUniversityCards, setFeaturedUniversityCards] = useState<UniCard[]>([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [popupStep, setPopupStep] = useState<'intro' | 'form'>('intro');
-  const [leadForm, setLeadForm] = useState({ name: '', email: '', phone: '', interest: '' });
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    // Show popup after 1.2s if lead not yet submitted this session
     if (typeof window !== 'undefined' && !sessionStorage.getItem('cdrc_lead_submitted')) {
       const t = setTimeout(() => setShowPopup(true), 1200);
       return () => clearTimeout(t);
     }
   }, []);
 
-  const handlePopupClose = () => { setShowPopup(false); setPopupStep('intro'); setLeadForm({ name: '', email: '', phone: '', interest: '' }); };
-
-  const handleLeadSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      await fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...leadForm, source: 'Course Finder' }) });
-    } catch {}
-    setSubmitting(false);
-    sessionStorage.setItem('cdrc_lead_submitted', '1');
-    setShowPopup(false);
-    // Now open CourseFinder — intercept will pass through since flag is set
-    setTimeout(() => {
-      const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement | null;
-      if (btn) btn.click();
-    }, 300);
-  };
+  const handlePopupClose = () => setShowPopup(false);
 
   useEffect(() => {
     if (searchParams.get('openCourseFinder') === '1') {
@@ -217,44 +264,32 @@ function HomePageContent() {
     }
   }, [searchParams]);
 
-  // Intercept CourseFinder button — show lead form first if not submitted
-  useEffect(() => {
-    const interceptCF = (e: MouseEvent) => {
-      if (sessionStorage.getItem('cdrc_lead_submitted')) return; // already submitted, let it through
-      e.stopImmediatePropagation();
-      e.preventDefault();
-      setShowPopup(true);
-      setPopupStep('form');
-    };
-
-    const attachIntercept = (attempts = 0) => {
-      const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement | null;
-      if (btn) {
-        btn.addEventListener('click', interceptCF, true); // capture phase
-      } else if (attempts < 15) {
-        setTimeout(() => attachIntercept(attempts + 1), 300);
-      }
-    };
-    attachIntercept();
-
-    return () => {
-      const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement | null;
-      if (btn) btn.removeEventListener('click', interceptCF, true);
-    };
-  }, []);
-
   useEffect(() => {
     fetch('/api/universities').then(r => r.json()).then(d => {
       if (d.success && d.data?.length) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const cards: UniCard[] = d.data.slice(0, 6).map((u: any, i: number) => ({
-          name: u.name,
-          slug: u.slug || u.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-          accreditation: u.naac || u.ranking || u.accreditation || 'UGC Approved',
-          initial: u.name.charAt(0).toUpperCase(),
-          color: CARD_COLORS[i % CARD_COLORS.length],
-          image: UNI_IMAGES[u.slug] || u.image || FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
-        }));
+        const cards: UniCard[] = d.data.slice(0, 6).map((u: any, i: number) => {
+          let brandColor = '#4361EE';
+          if (u.image?.includes('blue')) brandColor = '#2563eb';
+          else if (u.image?.includes('green')) brandColor = '#16a34a';
+          else if (u.image?.includes('red')) brandColor = '#dc2626';
+          else if (u.image?.includes('purple')) brandColor = '#9333ea';
+          else if (u.image?.includes('orange')) brandColor = '#ea580c';
+          else if (u.image?.includes('yellow')) brandColor = '#ca8a04';
+          else brandColor = CARD_COLORS[i % CARD_COLORS.length];
+
+          const definedSlug = u.slug || u.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+          const imageSrc = UNI_IMAGES[definedSlug] || (u.image?.startsWith('http') ? u.image : FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]);
+
+          return {
+            name: u.name,
+            slug: definedSlug,
+            accreditation: u.naac || u.ranking || u.accreditation || 'UGC Approved',
+            initial: u.name.charAt(0).toUpperCase(),
+            color: brandColor,
+            image: imageSrc,
+          };
+        });
         setFeaturedUniversityCards(cards);
       }
     }).catch(() => {});
@@ -269,7 +304,7 @@ function HomePageContent() {
   ];
 
   return (
-    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+    <div style={{ fontFamily: "'Poppins', system-ui, sans-serif" }}>
       <style>{`
         @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
         @keyframes float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
@@ -285,12 +320,18 @@ function HomePageContent() {
           .hg{grid-template-columns:1fr !important}
           .hr{display:none !important}
           .ag{grid-template-columns:1fr !important}
-        }
-        @media(max-width:640px){.sg{grid-template-columns:1fr 1fr !important}}
-        @media(max-width:768px){
           .about-grid-3{grid-template-columns:1fr !important; min-height:auto !important;}
           .about-img-col{flex-direction:row !important;}
           .about-img-col > div{min-height:140px !important;}
+        }
+        @media(max-width:640px){
+          .sg{grid-template-columns:1fr 1fr !important}
+          .h-btns{flex-direction:column !important; align-items:stretch !important;}
+          .h-btns a, .h-btns button{width:100% !important; justify-content:center !important;}
+          .hero-badges{flex-direction:column !important; align-items:flex-start !important;}
+        }
+        @media(max-width:480px){
+          .sg{grid-template-columns:1fr 1fr !important}
         }
         @keyframes shimmer { 0%{transform:scaleX(0);transform-origin:left} 100%{transform:scaleX(1);transform-origin:left} }
         .benefit-divider { animation: shimmer 0.6s ease forwards; }
@@ -304,7 +345,7 @@ function HomePageContent() {
         <div style={{ position: 'absolute', top: '5%', right: '0', width: 600, height: 600, background: 'radial-gradient(circle,rgba(96,165,250,0.12) 0%,transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '0', left: '-5%', width: 400, height: 400, background: 'radial-gradient(circle,rgba(139,92,246,0.08) 0%,transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
 
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '3.5rem 2rem 3rem', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '3.5rem 1.5rem 3rem', position: 'relative', zIndex: 1 }}>
           <div className="hg" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3.5rem', alignItems: 'center', minHeight: '82vh' }}>
 
             {/* LEFT */}
@@ -313,7 +354,7 @@ function HomePageContent() {
                 <span style={{ width: 7, height: 7, background: '#4ade80', borderRadius: '50%', display: 'inline-block' }} />
                 India&apos;s Trusted Online Education Partner
               </div>
-              <h1 className="h-title" style={{ fontSize: 'clamp(2.2rem,5vw,3.75rem)', fontWeight: 900, lineHeight: 1.08, color: '#fff', marginBottom: '1.5rem', letterSpacing: '-0.03em' }}>
+              <h1 className="h-title" style={{ fontSize: 'clamp(2.2rem,5vw,3.75rem)', fontWeight: 600, lineHeight: 1.08, color: '#fff', marginBottom: '1.5rem', letterSpacing: '-0.03em' }}>
                 Advance Your Career<br />
                 with <span style={{ color: '#90e0ef' }}>Online Degrees</span>
               </h1>
@@ -322,7 +363,7 @@ function HomePageContent() {
               </p>
               <div className="h-btns" style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
                 <Link href="/programs"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '13px 26px', borderRadius: 10, fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 4px 18px rgba(37,99,235,0.45)', transition: 'all 0.25s ease' }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '13px 26px', borderRadius: 10, fontWeight: 500, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 4px 18px rgba(37,99,235,0.45)', transition: 'all 0.25s ease' }}
                   onMouseEnter={e => { e.currentTarget.style.background = '#2d4fd6'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(37,99,235,0.55)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = '#4361EE'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(37,99,235,0.45)'; }}
                 >
@@ -356,14 +397,14 @@ function HomePageContent() {
               <div className="fc1" style={{ position: 'absolute', top: 0, left: 0, background: '#fff', borderRadius: 14, padding: '13px 17px', boxShadow: '0 8px 28px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', gap: 12, zIndex: 10 }}>
                 <div style={{ width: 40, height: 40, background: '#eef2ff', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><GraduationCap size={22} color="#4361EE" /></div>
                 <div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#4361EE', lineHeight: 1 }}>15,000+</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#4361EE', lineHeight: 1 }}>15,000+</div>
                   <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Active Students</div>
                 </div>
               </div>
               <div className="fc2" style={{ position: 'absolute', bottom: 56, right: 0, background: '#fff', borderRadius: 14, padding: '13px 17px', boxShadow: '0 8px 28px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', gap: 12, zIndex: 10 }}>
                 <div style={{ width: 40, height: 40, background: '#F0FDF4', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Award size={22} color="#15803d" /></div>
                 <div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#15803d', lineHeight: 1 }}>95%</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#15803d', lineHeight: 1 }}>95%</div>
                   <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Placement Rate</div>
                 </div>
               </div>
@@ -387,8 +428,8 @@ function HomePageContent() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Why CDRC</span>
-              <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.15, marginBottom: '0.75rem' }}>The smarter way to earn your degree</h2>
+              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Why CDRC</span>
+              <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 500, color: '#0f172a', lineHeight: 1.15, marginBottom: '0.75rem' }}>The smarter way to earn your degree</h2>
               <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: 460, margin: '0 auto', lineHeight: 1.75 }}>Everything you need � from expert guidance to UGC-approved degrees � all in one place.</p>
             </div>
           </AnimateOnScroll>
@@ -407,7 +448,7 @@ function HomePageContent() {
                     </div>
                   </div>
                   <div style={{ padding: '1.25rem' }}>
-                    <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.45rem', lineHeight: 1.3 }}>{f.title}</h3>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 500, color: '#0f172a', marginBottom: '0.45rem', lineHeight: 1.3 }}>{f.title}</h3>
                     <p style={{ color: '#64748b', fontSize: '0.875rem', lineHeight: 1.65, margin: 0 }}>{f.desc}</p>
                   </div>
                 </div>
@@ -424,7 +465,7 @@ function HomePageContent() {
           {/* Centered heading */}
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 800, color: '#0f172a', marginBottom: '0.75rem' }}>About CDRC</h2>
+              <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 500, color: '#0f172a', marginBottom: '0.75rem' }}>About CDRC</h2>
               <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: 520, margin: '0 auto', lineHeight: 1.7 }}>
                 CDRC is dedicated to making quality higher education accessible to all students across India.
               </p>
@@ -460,7 +501,7 @@ function HomePageContent() {
                   <div style={{ width: 48, height: 48, background: 'rgba(67,97,238,0.2)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', border: '1px solid rgba(67,97,238,0.4)' }}>
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4361EE" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
                   </div>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fff', lineHeight: 1.25, marginBottom: '1rem' }}>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 500, color: '#fff', lineHeight: 1.25, marginBottom: '1rem' }}>
                     A Team Committed<br />to Real Impact
                   </h3>
                   <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', lineHeight: 1.75, marginBottom: '2rem' }}>
@@ -469,7 +510,7 @@ function HomePageContent() {
                   <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                     {[['14+', 'Universities'], ['500+', 'Programs'], ['10K+', 'Students']].map(([val, lbl]) => (
                       <div key={lbl}>
-                        <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#4361EE', lineHeight: 1 }}>{val}</div>
+                        <div style={{ fontSize: '1.3rem', fontWeight: 600, color: '#4361EE', lineHeight: 1 }}>{val}</div>
                         <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.55)', marginTop: 3, fontWeight: 500 }}>{lbl}</div>
                       </div>
                     ))}
@@ -498,7 +539,7 @@ function HomePageContent() {
           {/* Learn More link */}
           <AnimateOnScroll animation="fadeUp" delay={200}>
             <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-              <Link href="/about" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '12px 28px', borderRadius: 10, fontWeight: 700, textDecoration: 'none', fontSize: '0.93rem', boxShadow: '0 4px 16px rgba(67,97,238,0.3)' }}>
+              <Link href="/about" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '12px 28px', borderRadius: 10, fontWeight: 500, textDecoration: 'none', fontSize: '0.93rem', boxShadow: '0 4px 16px rgba(67,97,238,0.3)' }}>
                 Learn More About Us
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </Link>
@@ -512,8 +553,8 @@ function HomePageContent() {
           <AnimateOnScroll animation="fadeUp">
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '3.5rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
-                <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Benefits</span>
-                <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.15, margin: 0 }}>Why online degrees work</h2>
+                <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Benefits</span>
+                <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 500, color: '#0f172a', lineHeight: 1.15, margin: 0 }}>Why online degrees work</h2>
               </div>
               <Link href="/programs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '11px 22px', borderRadius: 10, fontWeight: 600, textDecoration: 'none', fontSize: '0.9rem', flexShrink: 0 }}>
                 Explore Programs
@@ -529,12 +570,12 @@ function HomePageContent() {
                   onMouseEnter={e => { e.currentTarget.style.borderColor = '#4361EE'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(67,97,238,0.1)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                   {/* Large number */}
-                  <div className="benefit-num" style={{ fontSize: '3rem', fontWeight: 900, color: '#4361EE', lineHeight: 1, letterSpacing: '-0.04em', userSelect: 'none', opacity: 0.6 }}>
+                  <div className="benefit-num" style={{ fontSize: '3rem', fontWeight: 600, color: '#4361EE', lineHeight: 1, letterSpacing: '-0.04em', userSelect: 'none', opacity: 0.6 }}>
                     0{i + 1}
                   </div>
                   {/* Divider */}
                   <div className="benefit-divider" style={{ width: 40, height: 3, background: '#4361EE', borderRadius: 2 }} />
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.3, margin: 0 }}>{a.title}</h3>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', lineHeight: 1.3, margin: 0 }}>{a.title}</h3>
                   <p style={{ color: '#64748b', fontSize: '0.875rem', lineHeight: 1.7, margin: 0 }}>{a.desc}</p>
                 </div>
               </AnimateOnScroll>
@@ -548,32 +589,60 @@ function HomePageContent() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Partner Institutions</span>
-              <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.5rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.15, marginBottom: '0.75rem' }}>Our Partner Universities</h2>
+              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Partner Institutions</span>
+              <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.5rem)', fontWeight: 500, color: '#0f172a', lineHeight: 1.15, marginBottom: '0.75rem' }}>Our Partner Universities</h2>
               <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: 460, margin: '0 auto', lineHeight: 1.75 }}>Top NAAC-accredited universities offering UGC-approved online programs</p>
             </div>
           </AnimateOnScroll>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+          <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
             {featuredUniversityCards.map((uni, i) => (
               <AnimateOnScroll key={uni.slug} animation="bounceIn" delay={i * 100}>
                 <Link href={`/universities/${uni.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
                   <div style={{ background: '#fff', borderRadius: 18, overflow: 'hidden', border: '1px solid #e2e8f0', transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)', height: '100%', display: 'flex', flexDirection: 'column' }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-10px) scale(1.02)'; e.currentTarget.style.boxShadow = `0 24px 56px ${uni.color}35`; e.currentTarget.style.borderColor = uni.color; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#e2e8f0'; }}>
+                    onMouseEnter={e => { 
+                      const el = e.currentTarget as HTMLDivElement; 
+                      el.style.transform = 'translateY(-8px)'; 
+                      el.style.boxShadow = `0 24px 56px ${uni.color}35`; 
+                      el.style.borderColor = uni.color; 
+                      const img = el.querySelector('.uni-img') as HTMLImageElement;
+                      if (img) img.style.transform = 'scale(1.06)';
+                      const overlay = el.querySelector('.uni-color-overlay') as HTMLDivElement;
+                      if (overlay) overlay.style.opacity = '0.7';
+                    }}
+                    onMouseLeave={e => { 
+                      const el = e.currentTarget as HTMLDivElement; 
+                      el.style.transform = 'translateY(0)'; 
+                      el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; 
+                      el.style.borderColor = '#e2e8f0'; 
+                      const img = el.querySelector('.uni-img') as HTMLImageElement;
+                      if (img) img.style.transform = 'scale(1)';
+                      const overlay = el.querySelector('.uni-color-overlay') as HTMLDivElement;
+                      if (overlay) overlay.style.opacity = '0';
+                    }}>
                     {/* Image banner */}
-                    <div style={{ height: 130, position: 'relative', overflow: 'hidden' }}>
-                      <img src={uni.image} alt={uni.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
-                      <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, ${uni.color}55 0%, ${uni.color}cc 100%)` }} />
-                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)', backgroundSize: '200% 100%', animation: `uniShimmer ${2.5 + i * 0.4}s ease-in-out infinite` }} />
+                    <div style={{ height: 160, position: 'relative', overflow: 'hidden' }}>
+                      <img className="uni-img" src={uni.image} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.5s ease' }} />
+                      
+                      {/* Color overlay that fades in on hover */}
+                      <div className="uni-color-overlay" style={{ position: 'absolute', inset: 0, background: uni.color, opacity: 0, transition: 'opacity 0.3s ease', mixBlendMode: 'multiply' }} />
+                      {/* Permanent dark gradient for text legibility */}
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)' }} />
+                      
+                      {/* Bottom-left accreditation badge over image */}
+                      <div style={{ position: 'absolute', bottom: 12, left: 14, right: 14 }}>
+                        <span style={{ display: 'inline-block', background: uni.color, color: '#fff', fontSize: '0.65rem', fontWeight: 600, padding: '4px 10px', borderRadius: 4, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                          {uni.accreditation}
+                        </span>
+                      </div>
                     </div>
+
                     {/* Card body */}
-                    <div style={{ padding: '1.25rem 1.5rem 1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                      <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.3, marginBottom: '0.5rem' }}>{uni.name}</h3>
-                      <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '3px 10px', borderRadius: 6, fontSize: '0.72rem', fontWeight: 700, marginBottom: '1rem' }}>{uni.accreditation}</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: uni.color, fontWeight: 600, fontSize: '0.83rem', marginTop: 'auto', transition: 'gap 0.2s' }}>
+                    <div style={{ padding: '1.25rem 1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                      <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#0f172a', lineHeight: 1.35, marginBottom: '0.5rem' }}>{uni.name}</h3>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: uni.color, fontWeight: 600, fontSize: '0.83rem', marginTop: 'auto', paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }}>
                         View Details
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                       </div>
                     </div>
                   </div>
@@ -584,7 +653,7 @@ function HomePageContent() {
 
           <AnimateOnScroll animation="fadeUp" delay={200}>
             <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-              <Link href="/universities" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '13px 30px', borderRadius: 10, fontWeight: 700, textDecoration: 'none', fontSize: '0.95rem', boxShadow: '0 4px 16px rgba(67,97,238,0.3)' }}>
+              <Link href="/universities" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '13px 30px', borderRadius: 10, fontWeight: 500, textDecoration: 'none', fontSize: '0.95rem', boxShadow: '0 4px 16px rgba(67,97,238,0.3)' }}>
                 View All Universities
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </Link>
@@ -599,8 +668,8 @@ function HomePageContent() {
           <AnimateOnScroll animation="fadeUp">
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
-                <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.875rem' }}>Popular Programs</span>
-                <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.15, margin: 0 }}>Featured Programs</h2>
+                <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.875rem' }}>Popular Programs</span>
+                <h2 style={{ fontSize: 'clamp(1.8rem,3.5vw,2.6rem)', fontWeight: 500, color: '#0f172a', lineHeight: 1.15, margin: 0 }}>Featured Programs</h2>
               </div>
               <Link href="/programs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '11px 22px', borderRadius: 10, fontWeight: 600, textDecoration: 'none', fontSize: '0.9rem', flexShrink: 0 }}>
                 View All Programs
@@ -621,14 +690,14 @@ function HomePageContent() {
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', borderRadius: 20, padding: '5px 14px', color: '#93c5fd', fontSize: '0.8rem', fontWeight: 600, marginBottom: '1.5rem' }}>
               Start Today
             </div>
-            <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 800, color: '#fff', marginBottom: '1rem', lineHeight: 1.15 }}>
+            <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 500, color: '#fff', marginBottom: '1rem', lineHeight: 1.15 }}>
               Ready to transform your career?
             </h2>
             <p style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: 1.8, maxWidth: 500, margin: '0 auto 2.5rem' }}>
               Join 10,000+ students who have advanced their careers with CDRC. Get free expert guidance and find the perfect program.
             </p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/contact" style={{ background: '#4361EE', color: '#fff', padding: '13px 28px', borderRadius: 10, fontWeight: 700, textDecoration: 'none', fontSize: '0.93rem', boxShadow: '0 4px 18px rgba(37,99,235,0.4)' }}>
+              <Link href="/contact" style={{ background: '#4361EE', color: '#fff', padding: '13px 28px', borderRadius: 10, fontWeight: 500, textDecoration: 'none', fontSize: '0.93rem', boxShadow: '0 4px 18px rgba(37,99,235,0.4)' }}>
                 Free Consultation
               </Link>
               <Link href="/universities" style={{ background: 'rgba(255,255,255,0.07)', color: '#e2e8f0', padding: '13px 28px', borderRadius: 10, fontWeight: 600, textDecoration: 'none', fontSize: '0.93rem', border: '1px solid rgba(255,255,255,0.15)' }}>
@@ -639,105 +708,114 @@ function HomePageContent() {
         </div>
       </section>
 
-      {/* COURSE FINDER WELCOME POPUP */}
+      {/* AUTO POPUP — Course Finder promo */}
+      {/* AUTO POPUP — Course Finder promo */}
       {showPopup && (
         <>
-          <div onClick={handlePopupClose} style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.65)', backdropFilter: 'blur(6px)', zIndex: 2000 }} />
           <style>{`
-            @keyframes cfPopupIn { from{opacity:0;transform:translate(-50%,-50%) scale(0.88)} to{opacity:1;transform:translate(-50%,-50%) scale(1)} }
-            @keyframes cfRayRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-            @keyframes cfIconBounce { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-10px) scale(1.08)} }
-            @keyframes cfShimmerSlide { 0%{background-position:200% center} 100%{background-position:-200% center} }
-            .cf-popup-icon { animation: cfIconBounce 2.5s ease-in-out infinite }
+            @keyframes modalEnter {
+              0% { opacity: 0; transform: translate(-50%, -48%) scale(0.95); }
+              100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            }
+            @keyframes pulseGlow {
+              0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4); }
+              70% { box-shadow: 0 0 0 12px rgba(67, 97, 238, 0); }
+              100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+            }
+            @keyframes floatShape1 {
+              0%, 100% { transform: translate(0, 0) scale(1); }
+              50% { transform: translate(25px, -25px) scale(1.1); }
+            }
+            @keyframes floatShape2 {
+              0%, 100% { transform: translate(0, 0) scale(1); }
+              50% { transform: translate(-25px, 25px) scale(1.05); }
+            }
+            @keyframes sweep {
+              0% { background-position: 200% center; }
+              100% { background-position: -200% center; }
+            }
           `}</style>
+          
+          {/* OVERLAY */}
+          <div onClick={handlePopupClose} style={{ position:'fixed', inset:0, background:'rgba(10, 15, 30, 0.8)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', zIndex:2000, transition: 'all 0.5s ease' }} />
+          
+          {/* MODAL CONTAINER */}
+          <div style={{ position:'fixed', top:'50%', left:'50%', transform:'translate(-50%,-50%)', zIndex:2001, width:'92%', maxWidth:420, animation:'modalEnter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both' }}>
+            
+            {/* AMBIENT GLOWING SHAPES - MATCHING SITE'S THEME */}
+            <div style={{ position: 'absolute', top: -40, right: -30, width: 160, height: 160, background: '#4361EE', filter: 'blur(60px)', borderRadius: '50%', opacity: 0.65, animation: 'floatShape1 8s ease-in-out infinite', zIndex: -1 }}></div>
+            <div style={{ position: 'absolute', bottom: -50, left: -40, width: 180, height: 180, background: '#4895ef', filter: 'blur(70px)', borderRadius: '50%', opacity: 0.55, animation: 'floatShape2 9s ease-in-out infinite reverse', zIndex: -1 }}></div>
 
-          {popupStep === 'intro' && (
-            <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 2001, width: '90%', maxWidth: 380, borderRadius: 28, overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.5)', animation: 'cfPopupIn .45s cubic-bezier(0.34,1.56,0.64,1) both' }}>
-              <div style={{ background: 'linear-gradient(160deg, #6c3de8 0%, #4361EE 50%, #2d2d8f 100%)', padding: '2.5rem 2rem 2rem', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
-                <div style={{ position: 'absolute', top: '50%', left: '50%', width: 340, height: 340, marginTop: -170, marginLeft: -170, opacity: 0.12, animation: 'cfRayRotate 18s linear infinite', pointerEvents: 'none' }}>
-                  {[...Array(12)].map((_, i) => <div key={i} style={{ position: 'absolute', top: '50%', left: '50%', width: 2, height: 170, background: '#fff', transformOrigin: '50% 0%', transform: `rotate(${i * 30}deg) translateX(-50%)` }} />)}
+            {/* MAIN CARD */}
+            <div style={{ background: 'rgba(23, 28, 45, 0.65)', backdropFilter: 'blur(25px)', WebkitBackdropFilter: 'blur(25px)', borderRadius: 28, overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 40px 100px rgba(0,0,0,0.5)', position: 'relative' }}>
+              
+              {/* SHIMMER EFFECT BORDER */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)', backgroundSize: '200% 100%', animation: 'sweep 3s linear infinite' }}></div>
+
+              {/* CLOSE BUTTON */}
+              <button onClick={handlePopupClose} style={{ position:'absolute', top:20, right:20, width:32, height:32, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'50%', cursor:'pointer', color:'#94a3b8', display:'flex', alignItems:'center', justifyContent:'center', transition: 'all 0.2s', zIndex: 10 }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'scale(1.1) rotate(90deg)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.transform = 'scale(1) rotate(0deg)'; }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+
+              {/* Content Area */}
+              <div style={{ padding: '3rem 2.5rem 2.5rem', textAlign: 'center' }}>
+                 
+                 {/* Premium Icon - Site Theme Colors */}
+                 <div style={{ margin: '0 auto 1.5rem', width: 72, height: 72, background: 'linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(72, 149, 239, 0.2))', borderRadius: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.08)', boxShadow: 'inset 0 0 20px rgba(67, 97, 238, 0.15)' }}>
+                   <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="url(#modalGrad)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                     <defs>
+                       <linearGradient id="modalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                         <stop offset="0%" stopColor="#4361EE" />
+                         <stop offset="100%" stopColor="#4ade80" />
+                       </linearGradient>
+                     </defs>
+                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                   </svg>
+                 </div>
+                 
+                 <h2 style={{ color: '#fff', fontSize: '1.75rem', fontWeight: 500, margin: '0 0 0.75rem', lineHeight: 1.25, letterSpacing: '-0.03em', background: 'linear-gradient(to right, #fff, #bfdbfe)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                   Find Your <br/>True Calling
+                 </h2>
+                 <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: 1.6, margin: '0 0 2rem', fontWeight: 400 }}>
+                   Stop guessing your future. Our smart Course Finder aligns your ambitions with the perfect degree in under 60 seconds.
+                 </p>
+
+                {/* Features Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '2.5rem' }}>
+                   {[
+                     { icon: '🚀', text: 'Career Aligned' },
+                     { icon: '✨', text: 'Instant Match' },
+                     { icon: '💸', text: '100% Free' },
+                     { icon: '🔒', text: 'Secure' }
+                   ].map((item, i) => (
+                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', background: 'rgba(255,255,255,0.03)', padding: '0.75rem', borderRadius: 12, border: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.2s' }}
+                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
+                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; }}>
+                       <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
+                       <span style={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 600 }}>{item.text}</span>
+                     </div>
+                   ))}
                 </div>
-                <div style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, background: 'radial-gradient(circle,rgba(255,255,255,0.15) 0%,transparent 70%)', borderRadius: '50%' }} />
-                <button onClick={handlePopupClose} style={{ position: 'absolute', top: 14, right: 14, width: 30, height: 30, background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+
+                <button
+                  onClick={() => { handlePopupClose(); const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}
+                  style={{ width: '100%', padding: '16px', background: 'linear-gradient(135deg, #4361EE, #4895ef)', color: '#fff', border: 'none', borderRadius: 16, fontWeight: 500, fontSize: '1rem', cursor: 'pointer', fontFamily: 'inherit', marginBottom: '1.25rem', animation: 'pulseGlow 2.5s infinite', transition: 'transform 0.2s, filter 0.2s', boxShadow: '0 12px 30px rgba(67, 97, 238, 0.35)' }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.filter = 'brightness(1.15)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.filter = 'brightness(1)'; }}
+                >
+                  Match Me With A Course
                 </button>
-                <div className="cf-popup-icon" style={{ position: 'relative', zIndex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', border: '3px solid rgba(255,255,255,0.25)', marginBottom: '1.25rem', backdropFilter: 'blur(8px)' }}>
-                  <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
-                </div>
-                <div style={{ position: 'relative', zIndex: 1 }}>
-                  <div style={{ fontSize: '.7rem', fontWeight: 800, letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: '.4rem' }}>Smart Matching</div>
-                  <h2 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#fff', lineHeight: 1.15, margin: '0 0 .5rem', letterSpacing: '-0.02em', textShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>Find Your<br />Perfect Course</h2>
-                </div>
-              </div>
-              <div style={{ background: '#1a1a2e', padding: '1.5rem 2rem 2rem' }}>
-                <div style={{ display: 'flex', gap: '.5rem', justifyContent: 'center', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-                  {[{ icon: '🎯', label: 'Personalised' }, { icon: '⚡', label: '2 Minutes' }, { icon: '🆓', label: 'Free' }].map(({ icon, label }) => (
-                    <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '5px 12px' }}>
-                      <span style={{ fontSize: '.85rem' }}>{icon}</span>
-                      <span style={{ fontSize: '.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.75)', letterSpacing: '.04em' }}>{label}</span>
-                    </div>
-                  ))}
-                </div>
-                <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '.82rem', lineHeight: 1.65, textAlign: 'center', marginBottom: '1.5rem' }}>
-                  Answer a few quick questions and we&apos;ll match you with the best universities and programs for your goals.
-                </p>
-                <button onClick={() => setPopupStep('form')} style={{ width: '100%', padding: '14px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 800, fontSize: '1rem', color: '#fff', background: 'linear-gradient(90deg, #6c3de8, #4361EE, #6c3de8)', backgroundSize: '200% auto', animation: 'cfShimmerSlide 3s linear infinite', boxShadow: '0 6px 24px rgba(67,97,238,0.6)', letterSpacing: '.02em' }}>
-                  Start Course Finder →
-                </button>
-                <button onClick={handlePopupClose} style={{ width: '100%', marginTop: '.75rem', padding: '10px', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: '.8rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
-                  Maybe later
+                
+                <button onClick={handlePopupClose} style={{ background: 'transparent', border: 'none', color: '#64748b', fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 500, transition: 'color 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = '#fff'; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = '#64748b'; }}>
+                  I already know what I want
                 </button>
               </div>
             </div>
-          )}
-
-          {popupStep === 'form' && (
-            <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 2001, width: '90%', maxWidth: 460, background: '#fff', borderRadius: 24, overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.25)', animation: 'cfPopupIn .4s cubic-bezier(0.34,1.56,0.64,1) both' }}>
-              <div style={{ background: 'linear-gradient(135deg, #1a1a3e 0%, #4361EE 60%, #4895ef 100%)', padding: '1.75rem 2rem 1.5rem', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, background: 'radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 70%)', borderRadius: '50%' }} />
-                <h2 style={{ color: '#fff', fontSize: '1.25rem', fontWeight: 800, lineHeight: 1.2, margin: '0 0 .4rem', letterSpacing: '-0.02em' }}>Tell us about yourself</h2>
-                <p style={{ color: 'rgba(255,255,255,0.72)', fontSize: '.83rem', lineHeight: 1.5, margin: 0 }}>We&apos;ll use this to personalise your recommendations.</p>
-                <button onClick={handlePopupClose} style={{ position: 'absolute', top: 14, right: 14, width: 30, height: 30, background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                </button>
-              </div>
-              <div style={{ padding: '1.5rem 2rem 2rem' }}>
-                <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '.875rem' }}>
-                  {[
-                    { key: 'name', label: 'Full Name', type: 'text', placeholder: 'Your name' },
-                    { key: 'email', label: 'Email Address', type: 'email', placeholder: 'you@example.com' },
-                    { key: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+91 98765 43210' },
-                  ].map(({ key, label, type, placeholder }) => (
-                    <div key={key}>
-                      <label style={{ display: 'block', fontSize: '.78rem', fontWeight: 600, color: '#374151', marginBottom: 5 }}>{label}</label>
-                      <input type={type} required placeholder={placeholder}
-                        value={leadForm[key as keyof typeof leadForm]}
-                        onChange={e => setLeadForm(f => ({ ...f, [key]: e.target.value }))}
-                        style={{ width: '100%', padding: '10px 13px', borderRadius: 9, border: '1.5px solid #e2e8f0', fontSize: '.88rem', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', transition: 'border-color .2s' }}
-                        onFocus={e => (e.target.style.borderColor = '#4361EE')}
-                        onBlur={e => (e.target.style.borderColor = '#e2e8f0')}
-                      />
-                    </div>
-                  ))}
-                  <div>
-                    <label style={{ display: 'block', fontSize: '.78rem', fontWeight: 600, color: '#374151', marginBottom: 5 }}>Area of Interest</label>
-                    <select value={leadForm.interest} onChange={e => setLeadForm(f => ({ ...f, interest: e.target.value }))}
-                      style={{ width: '100%', padding: '10px 13px', borderRadius: 9, border: '1.5px solid #e2e8f0', fontSize: '.88rem', fontFamily: 'inherit', outline: 'none', background: '#fff', boxSizing: 'border-box' }}>
-                      <option value="">Select a field...</option>
-                      {['MBA / Management', 'BBA / Business', 'MCA / BCA (Tech)', 'B.Com / M.Com', 'Arts & Humanities', 'Science', 'Other'].map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
-                  </div>
-                  <div style={{ display: 'flex', gap: '.75rem' }}>
-                    <button type="button" onClick={() => setPopupStep('intro')} style={{ padding: '12px 18px', background: '#f8fafc', color: '#64748b', borderRadius: 10, fontWeight: 600, fontSize: '.9rem', border: '1.5px solid #e2e8f0', cursor: 'pointer', fontFamily: 'inherit' }}>← Back</button>
-                    <button type="submit" disabled={submitting} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: submitting ? '#94a3b8' : '#4361EE', color: '#fff', padding: '13px', borderRadius: 10, fontWeight: 700, fontSize: '.92rem', border: 'none', cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit', boxShadow: submitting ? 'none' : '0 4px 16px rgba(67,97,238,0.4)', transition: 'background .2s' }}>
-                      {submitting ? 'Submitting...' : 'Submit & Find My Course'}
-                      {!submitting && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
+          </div>
         </>
       )}
     </div>

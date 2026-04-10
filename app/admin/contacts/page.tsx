@@ -94,7 +94,7 @@ export default function ContactMessagesPage() {
             <ArrowLeft size={20} />
             Back to Dashboard
           </Link>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#1f2937' }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#1f2937' }}>
             Contact Messages
           </h1>
           <p style={{ color: '#6b7280', marginTop: '0.5rem' }}>
@@ -118,7 +118,7 @@ export default function ContactMessagesPage() {
             boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
           }}>
             <Mail size={48} color="#94a3b8" style={{ marginBottom: '1rem' }} />
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e293b', marginBottom: '0.5rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 500, color: '#1e293b', marginBottom: '0.5rem' }}>
               No messages yet
             </h2>
             <p style={{ color: '#64748b' }}>
@@ -170,7 +170,7 @@ export default function ContactMessagesPage() {
                       justifyContent: 'center',
                       flexShrink: 0,
                       color: '#fff',
-                      fontWeight: 700,
+                      fontWeight: 500,
                       fontSize: '1.25rem'
                     }}>
                       {msg.name.charAt(0).toUpperCase()}
@@ -178,7 +178,7 @@ export default function ContactMessagesPage() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <h3 style={{ 
                         fontSize: '1.1rem', 
-                        fontWeight: 700, 
+                        fontWeight: 500, 
                         color: '#1e293b',
                         marginBottom: '0.25rem',
                         overflow: 'hidden',
@@ -327,7 +327,7 @@ export default function ContactMessagesPage() {
                 overflow: 'auto'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '2rem' }}>
-                  <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1e293b' }}>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 500, color: '#1e293b' }}>
                     Message Details
                   </h2>
                   <button
@@ -397,7 +397,7 @@ export default function ContactMessagesPage() {
                 {selectedMessage.subject && (
                   <div style={{ marginBottom: '2rem' }}>
                     <p style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem' }}>Subject</p>
-                    <p style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e293b' }}>
+                    <p style={{ fontSize: '1.1rem', fontWeight: 500, color: '#1e293b' }}>
                       {selectedMessage.subject}
                     </p>
                   </div>

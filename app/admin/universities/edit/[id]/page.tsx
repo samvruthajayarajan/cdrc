@@ -169,7 +169,7 @@ function EditUniversity() {
             <ArrowLeft size={20} />
             Back to Universities
           </Link>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 900 }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 600 }}>
             Edit University
           </h1>
         </div>
@@ -185,7 +185,7 @@ function EditUniversity() {
             boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
             marginBottom: '2rem'
           }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1e293b', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 500, color: '#1e293b', marginBottom: '1.5rem' }}>
               Basic Information
             </h2>
             
@@ -354,7 +354,7 @@ function EditUniversity() {
             marginBottom: '2rem'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1e293b' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 500, color: '#1e293b' }}>
                 Facilities
               </h2>
               <button
@@ -422,7 +422,7 @@ function EditUniversity() {
             marginBottom: '2rem'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1e293b' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 500, color: '#1e293b' }}>
                 Programs
               </h2>
               <button
@@ -455,7 +455,7 @@ function EditUniversity() {
                 border: '1px solid #e2e8f0'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e293b' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: '#1e293b' }}>
                     Program {index + 1}
                   </h3>
                   {programs.length > 1 && (

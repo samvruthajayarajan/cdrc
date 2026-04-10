@@ -40,7 +40,7 @@ export default function CreateSkillPage() {
           <Link href="/admin/skills" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#fff', textDecoration: 'none', opacity: 0.85, marginBottom: '0.75rem', fontSize: '0.9rem' }}>
             <ArrowLeft size={18} /> Back to Skills
           </Link>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 900 }}>Create Skill Program</h1>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 600 }}>Create Skill Program</h1>
         </div>
       </div>
 
@@ -49,7 +49,7 @@ export default function CreateSkillPage() {
 
           {/* Basic Info */}
           <div style={sectionStyle}>
-            <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '1rem', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>Basic Information</div>
+            <div style={{ fontWeight: 500, color: '#0f172a', fontSize: '1rem', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>Basic Information</div>
             <div style={grid2}>
               <div>
                 <label style={labelStyle}>Skill Name *</label>
@@ -89,7 +89,7 @@ export default function CreateSkillPage() {
           {/* Courses */}
           <div style={sectionStyle}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>
-              <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '1rem' }}>Courses Included</div>
+              <div style={{ fontWeight: 500, color: '#0f172a', fontSize: '1rem' }}>Courses Included</div>
               <button type="button" onClick={() => setCourses([...courses, { name: '', duration: '', description: '' }])}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', background: '#4361EE', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontSize: '0.875rem', fontFamily: 'inherit' }}>
                 <Plus size={15} /> Add Course
@@ -126,7 +126,7 @@ export default function CreateSkillPage() {
           {/* Actions */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
             <Link href="/admin/skills" style={{ padding: '0.75rem 1.5rem', background: '#fff', color: '#374151', border: '1.5px solid #e2e8f0', borderRadius: 8, fontWeight: 600, textDecoration: 'none', fontSize: '0.9rem' }}>Cancel</Link>
-            <button type="submit" disabled={loading} style={{ padding: '0.75rem 1.75rem', background: loading ? '#94a3b8' : '#4361EE', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'inherit' }}>
+            <button type="submit" disabled={loading} style={{ padding: '0.75rem 1.75rem', background: loading ? '#94a3b8' : '#4361EE', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 500, cursor: loading ? 'not-allowed' : 'pointer', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'inherit' }}>
               <Plus size={16} /> {loading ? 'Creating...' : 'Create Skill'}
             </button>
           </div>

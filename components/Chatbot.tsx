@@ -101,13 +101,13 @@ export default function Chatbot() {
       {/* Chat window */}
       {open && (
         <div 
-          className="animate-slideUp"
+          className="animate-slideUp chatbot-window"
           style={{
             position: 'fixed',
             bottom: '6.5rem',
             right: '1.5rem',
             width: 'min(420px, calc(100vw - 2rem))',
-            height: '600px',
+            height: 'min(600px, calc(100vh - 8rem))',
             background: '#fff',
             border: '1px solid #e5e7eb',
             borderRadius: '1.25rem',
@@ -146,7 +146,7 @@ export default function Chatbot() {
               <div>
                 <div style={{ 
                   color: '#fff', 
-                  fontWeight: 700, 
+                  fontWeight: 500, 
                   fontSize: '1rem',
                   letterSpacing: '-0.01em'
                 }}>
@@ -330,7 +330,7 @@ export default function Chatbot() {
                 padding: '0 1.25rem',
                 borderRadius: '1.5rem',
                 cursor: 'pointer',
-                fontWeight: 700,
+                fontWeight: 500,
                 fontSize: '1.125rem',
                 transition: 'all 0.2s ease',
                 boxShadow: '0 4px 12px rgba(30, 64, 175, 0.25)',

@@ -97,7 +97,7 @@ export default function UniversitiesManagement() {
           </Link>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'clamp(1rem, 3vw, 2rem)' }}>
             <div style={{ flex: '1', minWidth: '200px' }}>
-              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
+              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 600, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
                 Manage Universities
               </h1>
               <p style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.1rem)', opacity: 0.9, color: '#6b7280' }}>
@@ -201,11 +201,11 @@ export default function UniversitiesManagement() {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>University</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Location</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>NAAC</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Programs</th>
-                      <th style={{ padding: '1rem', textAlign: 'center', fontWeight: 700, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Actions</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>University</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Location</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>NAAC</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Programs</th>
+                      <th style={{ padding: '1rem', textAlign: 'center', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -222,7 +222,7 @@ export default function UniversitiesManagement() {
                               alignItems: 'center',
                               justifyContent: 'center',
                               color: '#fff',
-                              fontWeight: 800,
+                              fontWeight: 500,
                               fontSize: 'clamp(1rem, 2.5vw, 1.25rem)'
                             }}>
                               {uni.logoInitial || uni.name.charAt(0)}
@@ -363,13 +363,13 @@ export default function UniversitiesManagement() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: '#fff',
-                        fontWeight: 800,
+                        fontWeight: 500,
                         fontSize: 'clamp(1.25rem, 4vw, 1.5rem)'
                       }}>
                         {uni.logoInitial || uni.name.charAt(0)}
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 700, color: '#1e293b', fontSize: 'clamp(1rem, 3vw, 1.25rem)', marginBottom: '0.25rem' }}>
+                        <div style={{ fontWeight: 500, color: '#1e293b', fontSize: 'clamp(1rem, 3vw, 1.25rem)', marginBottom: '0.25rem' }}>
                           {uni.name}
                         </div>
                         <div style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#64748b' }}>

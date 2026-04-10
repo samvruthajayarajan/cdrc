@@ -122,7 +122,7 @@ function EditOpenSchoolPage() {
             <ArrowLeft size={20} />
             Back to Open School
           </Link>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 900 }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 600 }}>
             Edit Board
           </h1>
         </div>
@@ -140,7 +140,7 @@ function EditOpenSchoolPage() {
               <label style={{
                 display: 'block',
                 fontSize: '0.875rem',
-                fontWeight: 700,
+                fontWeight: 500,
                 color: '#1f2937',
                 marginBottom: '0.5rem'
               }}>
@@ -167,7 +167,7 @@ function EditOpenSchoolPage() {
               <label style={{
                 display: 'block',
                 fontSize: '0.875rem',
-                fontWeight: 700,
+                fontWeight: 500,
                 color: '#1f2937',
                 marginBottom: '0.5rem'
               }}>
@@ -199,7 +199,7 @@ function EditOpenSchoolPage() {
               borderRadius: '0.75rem',
               border: '2px dashed #cbd5e1'
             }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#1f2937', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 500, color: '#1f2937', marginBottom: '1rem' }}>
                 Programs
               </h3>
 
@@ -315,7 +315,7 @@ function EditOpenSchoolPage() {
                   border: '2px solid #e5e7eb',
                   background: '#fff',
                   color: '#6b7280',
-                  fontWeight: 700,
+                  fontWeight: 500,
                   fontSize: '1rem',
                   textAlign: 'center',
                   textDecoration: 'none'
@@ -333,7 +333,7 @@ function EditOpenSchoolPage() {
                   background: loading ? '#93c5fd' : 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',
                   color: '#fff',
                   border: 'none',
-                  fontWeight: 700,
+                  fontWeight: 500,
                   fontSize: '1rem',
                   cursor: loading ? 'not-allowed' : 'pointer',
                   boxShadow: '0 4px 12px rgba(30, 64, 175, 0.3)'

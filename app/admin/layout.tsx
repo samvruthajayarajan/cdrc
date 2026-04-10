@@ -147,13 +147,13 @@ export default function AdminLayout({ children }: { children: any }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontWeight: 900,
+                fontWeight: 600,
                 fontSize: '1.25rem'
               }}>
                 C
               </div>
               <div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 800 }}>CDRC Admin</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 500 }}>CDRC Admin</div>
               </div>
             </div>
           </Link>
@@ -221,14 +221,14 @@ export default function AdminLayout({ children }: { children: any }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontWeight: 900,
+                  fontWeight: 600,
                   fontSize: '1.5rem',
                   boxShadow: '0 8px 16px rgba(59, 130, 246, 0.3)'
                 }}>
                   C
                 </div>
                 <div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, lineHeight: 1.2 }}>CDRC</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 500, lineHeight: 1.2 }}>CDRC</div>
                   <div style={{ fontSize: '0.75rem', opacity: 0.7, fontWeight: 500 }}>Admin Panel</div>
                 </div>
               </div>

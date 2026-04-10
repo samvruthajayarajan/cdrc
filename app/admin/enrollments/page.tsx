@@ -110,7 +110,7 @@ export default function EnrollmentsManagement() {
             Back to Dashboard
           </Link>
           <div>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 900, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', fontWeight: 600, marginBottom: '0.5rem', color: '#1f2937', lineHeight: 1.2 }}>
               Enrollment Inquiries
             </h1>
             <p style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.1rem)', opacity: 0.9, color: '#6b7280' }}>
@@ -190,11 +190,11 @@ export default function EnrollmentsManagement() {
                     <div style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                         <Users size={18} color="#1e40af" />
-                        <span style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 500, color: '#64748b', textTransform: 'uppercase' }}>
                           Student
                         </span>
                       </div>
-                      <div style={{ fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', fontWeight: 700, color: '#1e293b' }}>
+                      <div style={{ fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', fontWeight: 500, color: '#1e293b' }}>
                         {enr.studentName}
                       </div>
                     </div>
@@ -220,7 +220,7 @@ export default function EnrollmentsManagement() {
                     <div style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                         <GraduationCap size={18} color="#1e40af" />
-                        <span style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 500, color: '#64748b', textTransform: 'uppercase' }}>
                           Program Details
                         </span>
                       </div>
@@ -240,7 +240,7 @@ export default function EnrollmentsManagement() {
                         border: '1px solid #e2e8f0',
                         marginBottom: 'clamp(0.75rem, 2vw, 1rem)'
                       }}>
-                        <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 700, color: '#64748b', marginBottom: '0.25rem' }}>
+                        <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 500, color: '#64748b', marginBottom: '0.25rem' }}>
                           MESSAGE
                         </div>
                         <div style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#475569', lineHeight: 1.5 }}>
@@ -251,7 +251,7 @@ export default function EnrollmentsManagement() {
 
                     {/* Status Dropdown */}
                     <div>
-                      <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 700, color: '#64748b', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
+                      <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 500, color: '#64748b', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
                         Status
                       </div>
                       <select

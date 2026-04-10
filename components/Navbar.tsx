@@ -36,15 +36,15 @@ export default function Navbar() {
           text-decoration: none;
           border-radius: 8px;
           transition: color 0.2s, background 0.2s;
-          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+          font-family: 'Poppins', system-ui, sans-serif;
           white-space: nowrap;
         }
         .nav-link-light { color: rgba(255,255,255,0.85); }
         .nav-link-light:hover { color: #fff; background: rgba(255,255,255,0.12); }
-        .nav-link-light.active { color: #fff; background: rgba(255,255,255,0.18); font-weight: 700; }
+        .nav-link-light.active { color: #fff; background: rgba(255,255,255,0.18); font-weight: 500; }
         .nav-link-dark { color: #475569; }
         .nav-link-dark:hover { color: #1e40af; background: rgba(30,64,175,0.07); }
-        .nav-link-dark.active { color: #1e40af; background: rgba(30,64,175,0.09); font-weight: 700; }
+        .nav-link-dark.active { color: #1e40af; background: rgba(30,64,175,0.09); font-weight: 500; }
 
         .nav-search {
           padding: 0 1rem 0 2.2rem;
@@ -52,7 +52,7 @@ export default function Navbar() {
           font-size: 0.82rem;
           border-radius: 50px;
           outline: none;
-          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+          font-family: 'Poppins', system-ui, sans-serif;
           transition: all 0.3s;
           width: 180px;
         }
@@ -73,11 +73,11 @@ export default function Navbar() {
         .btn-find {
           padding: 7px 18px;
           border-radius: 50px;
-          font-weight: 700;
+          font-weight: 500;
           font-size: 0.83rem;
           border: none;
           cursor: pointer;
-          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+          font-family: 'Poppins', system-ui, sans-serif;
           transition: all 0.2s;
           white-space: nowrap;
         }
@@ -100,7 +100,7 @@ export default function Navbar() {
           font-weight: 600;
           font-size: 0.83rem;
           text-decoration: none;
-          font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+          font-family: 'Poppins', system-ui, sans-serif;
           transition: all 0.2s;
           white-space: nowrap;
         }
@@ -150,9 +150,9 @@ export default function Navbar() {
                 <path d="M38 62 L50 78 L62 62 Z" fill="white" opacity="0.85"/>
               </svg>
               <span style={{
-                fontWeight: 800, fontSize: '1.35rem', letterSpacing: '-0.04em',
+                fontWeight: 500, fontSize: '1.35rem', letterSpacing: '-0.04em',
                 color: scrolled ? '#1e40af' : '#fff',
-                fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+                fontFamily: "'Poppins', system-ui, sans-serif",
                 transition: 'color 0.35s',
               }}>CDRC</span>
             </Link>
@@ -183,7 +183,7 @@ export default function Navbar() {
               </button>
               <button
                 onClick={() => setSuggestOpen(true)}
-                style={{ padding: '7px 16px', borderRadius: '50px', fontWeight: 700, fontSize: '.83rem', border: scrolled ? '1.5px solid #4361EE' : '1.5px solid rgba(255,255,255,0.35)', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .2s', background: 'transparent', color: scrolled ? '#4361EE' : '#fff', whiteSpace: 'nowrap' }}
+                style={{ padding: '7px 16px', borderRadius: '50px', fontWeight: 500, fontSize: '.83rem', border: scrolled ? '1.5px solid #4361EE' : '1.5px solid rgba(255,255,255,0.35)', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .2s', background: 'transparent', color: scrolled ? '#4361EE' : '#fff', whiteSpace: 'nowrap' }}
                 onMouseEnter={e => { e.currentTarget.style.background = scrolled ? '#eef2ff' : 'rgba(255,255,255,0.12)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
               >
@@ -224,7 +224,7 @@ export default function Navbar() {
             backdropFilter: 'blur(20px)',
             borderBottom: '1px solid #e2e8f0',
             boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-            padding: '1rem 2rem 1.25rem',
+            padding: '1rem 1.25rem 1.25rem',
             display: 'flex', flexDirection: 'column', gap: 4,
           }}>
             {links.map(link => (
@@ -238,16 +238,16 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-              <button className="btn-find btn-find-dark" style={{ flex: 1 }}
+            <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
+              <button className="btn-find btn-find-dark" style={{ flex: 1, minWidth: 120 }}
                 onClick={() => { setOpen(false); const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}>
                 Find My Course
               </button>
               <button onClick={() => { setOpen(false); setSuggestOpen(true); }}
-                style={{ flex: 1, padding: '7px 12px', borderRadius: '50px', fontWeight: 700, fontSize: '.83rem', border: '1.5px solid #4361EE', cursor: 'pointer', fontFamily: 'inherit', background: 'transparent', color: '#4361EE' }}>
+                style={{ flex: 1, minWidth: 120, padding: '7px 12px', borderRadius: '50px', fontWeight: 500, fontSize: '.83rem', border: '1.5px solid #4361EE', cursor: 'pointer', fontFamily: 'inherit', background: 'transparent', color: '#4361EE' }}>
                 🏛️ Suggest Uni
               </button>
-              <Link href="/login" onClick={() => setOpen(false)} className="btn-login btn-login-dark" style={{ flex: 1, textAlign: 'center' }}>
+              <Link href="/login" onClick={() => setOpen(false)} className="btn-login btn-login-dark" style={{ flex: 1, minWidth: 80, textAlign: 'center' }}>
                 Login
               </Link>
             </div>

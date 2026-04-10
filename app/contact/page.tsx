@@ -106,69 +106,43 @@ export default function ContactPage() {
   );
 
   return (
-    <div style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-
-      {/* Hero */}
-      <section style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+    <div style={{ fontFamily: "'Poppins', system-ui, sans-serif" }}>
+      {/* ── HERO ── */}
+      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
         {/* Background image */}
         <img
           src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80"
-          alt="Office"
+          alt="Contact Us"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
         />
-        {/* Overlay */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.92) 0%, rgba(67,97,238,0.75) 100%)' }} />
-
+        {/* Transparent overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.7) 0%, rgba(67,97,238,0.5) 100%)' }} />
+        
         {/* Dot grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '9rem 2rem 5rem', width: '100%' }}>
-          {/* Breadcrumb */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
-            <span>Home</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
-            <span style={{ color: '#93c5fd' }}>Contact</span>
-          </div>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <AnimateOnScroll animation="fadeUp">
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
+              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>Home</Link>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+              <span style={{ color: '#93c5fd' }}>Contact Us</span>
+            </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '2rem', alignItems: 'flex-end' }} className="contact-hero-grid">
-            <div>
-              <h1 style={{ fontSize: 'clamp(2.8rem,6vw,4.5rem)', fontWeight: 900, color: '#fff', lineHeight: 1.05, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
-                Get in Touch<br />
-                <span style={{ color: '#90e0ef' }}>With Our Team</span>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 4.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.05, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
+                Get in Touch <br/> <span style={{ color: '#90e0ef' }}>With Our Team</span>
               </h1>
-              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '1.05rem', lineHeight: 1.8, maxWidth: 500, marginBottom: '2rem' }}>
-                Have questions about admissions, fees, or programs? Our counselors are ready to help — Monday to Saturday, 9 AM to 6 PM.
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, lineHeight: 1.7 }}>
+                Have questions about admissions, fees, or programs? Our counselors are ready <br/> to guide you — Monday to Saturday, 9 AM to 6 PM.
               </p>
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <a href="tel:+919846446055" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '12px 24px', borderRadius: 10, fontWeight: 700, fontSize: '0.9rem', textDecoration: 'none', boxShadow: '0 4px 20px rgba(67,97,238,0.5)' }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-                  Call Now
-                </a>
-                <a href="https://wa.me/919846446055" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.1)', color: '#fff', padding: '12px 24px', borderRadius: 10, fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(8px)' }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-                  WhatsApp Us
-                </a>
-              </div>
             </div>
-
-            {/* Right — quick stats */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', minWidth: 200 }} className="contact-hero-stats">
-              {[
-                { num: '24h', label: 'Response time' },
-                { num: '10K+', label: 'Students helped' },
-                { num: 'Free', label: 'Counseling' },
-              ].map((s, i) => (
-                <div key={i} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 12, padding: '0.875rem 1.25rem', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#90e0ef', lineHeight: 1, minWidth: 52 }}>{s.num}</div>
-                  <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          </AnimateOnScroll>
         </div>
 
         {/* Bottom fade into page bg */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, background: 'linear-gradient(to bottom, transparent, #f8fafc)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 40, background: 'linear-gradient(to bottom, transparent, #f8fafc)', pointerEvents: 'none' }} />
       </section>
 
       {/* Info cards */}
@@ -183,7 +157,7 @@ export default function ContactPage() {
                   <div style={{ width: 46, height: 46, borderRadius: 12, background: c.bg, color: c.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                     {c.icon}
                   </div>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>{c.label}</div>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>{c.label}</div>
                   {c.lines.map((line, j) => {
                     const href = c.href(line);
                     return href
@@ -205,8 +179,8 @@ export default function ContactPage() {
           {/* Left — hours + map placeholder */}
           <AnimateOnScroll animation="slideRight">
             <div>
-              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Office Hours</span>
-              <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.2, marginBottom: '0.75rem' }}>
+              <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '4px 14px', borderRadius: 20, fontSize: '0.72rem', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '1rem' }}>Office Hours</span>
+              <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 500, color: '#0f172a', lineHeight: 1.2, marginBottom: '0.75rem' }}>
                 We&apos;re here<br />when you need us
               </h2>
               <p style={{ color: '#64748b', fontSize: '0.92rem', lineHeight: 1.75, marginBottom: '2rem' }}>
@@ -220,7 +194,7 @@ export default function ContactPage() {
                 ].map(row => (
                   <div key={row.day} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.875rem 1.25rem', borderRadius: 12, background: '#fff', border: '1.5px solid #f1f5f9' }}>
                     <span style={{ fontWeight: 600, fontSize: '0.88rem', color: '#0f172a' }}>{row.day}</span>
-                    <span style={{ fontWeight: 700, fontSize: '0.85rem', color: row.open ? '#16a34a' : '#94a3b8', background: row.open ? '#f0fdf4' : '#f8fafc', padding: '3px 12px', borderRadius: 50 }}>{row.time}</span>
+                    <span style={{ fontWeight: 500, fontSize: '0.85rem', color: row.open ? '#16a34a' : '#94a3b8', background: row.open ? '#f0fdf4' : '#f8fafc', padding: '3px 12px', borderRadius: 50 }}>{row.time}</span>
                   </div>
                 ))}
               </div>
@@ -253,24 +227,24 @@ export default function ContactPage() {
                   <div style={{ width: 72, height: 72, background: '#f0fdf4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
-                  <h3 style={{ color: '#0f172a', fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.5rem' }}>Message Sent!</h3>
+                  <h3 style={{ color: '#0f172a', fontSize: '1.3rem', fontWeight: 500, marginBottom: '0.5rem' }}>Message Sent!</h3>
                   <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.7 }}>Our team will get back to you within 24 hours.</p>
-                  <button onClick={() => setStatus('idle')} style={{ marginTop: '1.5rem', background: '#4361EE', color: '#fff', padding: '10px 28px', borderRadius: 50, border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit' }}>
+                  <button onClick={() => setStatus('idle')} style={{ marginTop: '1.5rem', background: '#4361EE', color: '#fff', padding: '10px 28px', borderRadius: 50, border: 'none', fontWeight: 500, cursor: 'pointer', fontSize: '0.9rem', fontFamily: 'inherit' }}>
                     Send Another
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
                   <div>
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '0.25rem' }}>Send a Message</h3>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 500, color: '#0f172a', marginBottom: '0.25rem' }}>Send a Message</h3>
                     <p style={{ color: '#94a3b8', fontSize: '0.82rem' }}>Fill in the form and we&apos;ll be in touch shortly.</p>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }} className="contact-form-grid">
                     {field('name', 'Full Name', 'text', 'Your name', true)}
                     {field('email', 'Email', 'email', 'you@email.com', true)}
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }} className="contact-form-grid">
                     {field('phone', 'Phone', 'tel', '+91 XXXXXXXXXX')}
                     {field('subject', 'Subject', 'text', 'e.g. Admission Inquiry')}
                   </div>
@@ -298,7 +272,7 @@ export default function ContactPage() {
                   {status === 'error' && <p style={{ color: '#ef4444', fontSize: '0.82rem' }}>Something went wrong. Please try again.</p>}
 
                   <button type="submit" disabled={status === 'loading'}
-                    style={{ width: '100%', background: 'linear-gradient(135deg,#4361EE,#4895ef)', color: '#fff', padding: '0.9rem', border: 'none', borderRadius: 12, fontWeight: 700, fontSize: '0.95rem', cursor: 'pointer', opacity: status === 'loading' ? 0.7 : 1, transition: 'all 0.2s', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                    style={{ width: '100%', background: 'linear-gradient(135deg,#4361EE,#4895ef)', color: '#fff', padding: '0.9rem', border: 'none', borderRadius: 12, fontWeight: 500, fontSize: '0.95rem', cursor: 'pointer', opacity: status === 'loading' ? 0.7 : 1, transition: 'all 0.2s', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
                     onMouseEnter={e => { if (status !== 'loading') { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(67,97,238,0.4)'; } }}
                     onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
                     {status === 'loading' ? 'Sending…' : <>Send Message <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></>}
@@ -319,6 +293,7 @@ export default function ContactPage() {
         }
         @media (max-width: 480px) {
           .info-cards-grid { grid-template-columns: 1fr !important; }
+          .contact-form-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

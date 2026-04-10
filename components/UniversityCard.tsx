@@ -72,7 +72,7 @@ export default function UniversityCard({ name, slug, accreditation, programs, im
         {/* University Name */}
         <h3 style={{
           fontSize: '1.25rem',
-          fontWeight: 800,
+          fontWeight: 500,
           color: '#1e293b',
           marginBottom: '0.75rem',
           lineHeight: 1.3

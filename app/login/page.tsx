@@ -125,14 +125,14 @@ export default function LoginPage() {
             <span style={{
               color: '#fff',
               fontSize: '2.5rem',
-              fontWeight: 900,
+              fontWeight: 600,
               transform: 'rotate(5deg)'
             }}>C</span>
           </div>
           
           <h1 style={{
             fontSize: '2rem',
-            fontWeight: 900,
+            fontWeight: 600,
             color: '#1a202c',
             marginBottom: '0.5rem',
             letterSpacing: '-0.02em'
@@ -377,7 +377,7 @@ export default function LoginPage() {
               padding: '1rem',
               border: 'none',
               borderRadius: '0.75rem',
-              fontWeight: 700,
+              fontWeight: 500,
               fontSize: '1rem',
               cursor: isLoading ? 'not-allowed' : 'pointer',
               opacity: isLoading ? 0.7 : 1,
