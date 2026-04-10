@@ -175,12 +175,38 @@ export default function HomePage() {
 function HomePageContent() {
   const searchParams = useSearchParams();
   const [featuredUniversityCards, setFeaturedUniversityCards] = useState<UniCard[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupStep, setPopupStep] = useState<'intro' | 'form'>('intro');
+  const [leadForm, setLeadForm] = useState({ name: '', email: '', phone: '', interest: '' });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    // Show popup after 1.2s if lead not yet submitted this session
     if (typeof window !== 'undefined' && !sessionStorage.getItem('cdrc_lead_submitted')) {
-      window.location.replace('/landing');
-      return;
+      const t = setTimeout(() => setShowPopup(true), 1200);
+      return () => clearTimeout(t);
     }
+  }, []);
+
+  const handlePopupClose = () => { setShowPopup(false); setPopupStep('intro'); setLeadForm({ name: '', email: '', phone: '', interest: '' }); };
+
+  const handleLeadSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...leadForm, source: 'Course Finder' }) });
+    } catch {}
+    setSubmitting(false);
+    sessionStorage.setItem('cdrc_lead_submitted', '1');
+    setShowPopup(false);
+    // Now open CourseFinder — intercept will pass through since flag is set
+    setTimeout(() => {
+      const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement | null;
+      if (btn) btn.click();
+    }, 300);
+  };
+
+  useEffect(() => {
     if (searchParams.get('openCourseFinder') === '1') {
       const tryOpen = (attempts = 0) => {
         const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement | null;
@@ -190,6 +216,32 @@ function HomePageContent() {
       setTimeout(() => tryOpen(), 400);
     }
   }, [searchParams]);
+
+  // Intercept CourseFinder button — show lead form first if not submitted
+  useEffect(() => {
+    const interceptCF = (e: MouseEvent) => {
+      if (sessionStorage.getItem('cdrc_lead_submitted')) return; // already submitted, let it through
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      setShowPopup(true);
+      setPopupStep('form');
+    };
+
+    const attachIntercept = (attempts = 0) => {
+      const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement | null;
+      if (btn) {
+        btn.addEventListener('click', interceptCF, true); // capture phase
+      } else if (attempts < 15) {
+        setTimeout(() => attachIntercept(attempts + 1), 300);
+      }
+    };
+    attachIntercept();
+
+    return () => {
+      const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement | null;
+      if (btn) btn.removeEventListener('click', interceptCF, true);
+    };
+  }, []);
 
   useEffect(() => {
     fetch('/api/universities').then(r => r.json()).then(d => {
@@ -269,11 +321,19 @@ function HomePageContent() {
                 Get UGC-approved degrees from India&apos;s top NAAC-accredited universities. Study at your own pace, from anywhere in the world.
               </p>
               <div className="h-btns" style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
-                <Link href="/programs" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '13px 26px', borderRadius: 10, fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 4px 18px rgba(37,99,235,0.45)' }}>
+                <Link href="/programs"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '13px 26px', borderRadius: 10, fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 4px 18px rgba(37,99,235,0.45)', transition: 'all 0.25s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#2d4fd6'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(37,99,235,0.55)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#4361EE'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(37,99,235,0.45)'; }}
+                >
                   Explore Programs
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </Link>
-                <button onClick={() => { const b = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (b) b.click(); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', color: '#fff', padding: '13px 26px', borderRadius: 10, fontWeight: 600, fontSize: '0.95rem', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer', fontFamily: 'inherit', backdropFilter: 'blur(8px)' }}>
+                <button onClick={() => { const b = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (b) b.click(); }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', color: '#fff', padding: '13px 26px', borderRadius: 10, fontWeight: 600, fontSize: '0.95rem', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer', fontFamily: 'inherit', backdropFilter: 'blur(8px)', transition: 'all 0.25s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.18)'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
+                >
                   Find My Course
                 </button>
               </div>
@@ -578,6 +638,108 @@ function HomePageContent() {
           </AnimateOnScroll>
         </div>
       </section>
+
+      {/* COURSE FINDER WELCOME POPUP */}
+      {showPopup && (
+        <>
+          <div onClick={handlePopupClose} style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.65)', backdropFilter: 'blur(6px)', zIndex: 2000 }} />
+          <style>{`
+            @keyframes cfPopupIn { from{opacity:0;transform:translate(-50%,-50%) scale(0.88)} to{opacity:1;transform:translate(-50%,-50%) scale(1)} }
+            @keyframes cfRayRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+            @keyframes cfIconBounce { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-10px) scale(1.08)} }
+            @keyframes cfShimmerSlide { 0%{background-position:200% center} 100%{background-position:-200% center} }
+            .cf-popup-icon { animation: cfIconBounce 2.5s ease-in-out infinite }
+          `}</style>
+
+          {popupStep === 'intro' && (
+            <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 2001, width: '90%', maxWidth: 380, borderRadius: 28, overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.5)', animation: 'cfPopupIn .45s cubic-bezier(0.34,1.56,0.64,1) both' }}>
+              <div style={{ background: 'linear-gradient(160deg, #6c3de8 0%, #4361EE 50%, #2d2d8f 100%)', padding: '2.5rem 2rem 2rem', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
+                <div style={{ position: 'absolute', top: '50%', left: '50%', width: 340, height: 340, marginTop: -170, marginLeft: -170, opacity: 0.12, animation: 'cfRayRotate 18s linear infinite', pointerEvents: 'none' }}>
+                  {[...Array(12)].map((_, i) => <div key={i} style={{ position: 'absolute', top: '50%', left: '50%', width: 2, height: 170, background: '#fff', transformOrigin: '50% 0%', transform: `rotate(${i * 30}deg) translateX(-50%)` }} />)}
+                </div>
+                <div style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, background: 'radial-gradient(circle,rgba(255,255,255,0.15) 0%,transparent 70%)', borderRadius: '50%' }} />
+                <button onClick={handlePopupClose} style={{ position: 'absolute', top: 14, right: 14, width: 30, height: 30, background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+                <div className="cf-popup-icon" style={{ position: 'relative', zIndex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 90, height: 90, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', border: '3px solid rgba(255,255,255,0.25)', marginBottom: '1.25rem', backdropFilter: 'blur(8px)' }}>
+                  <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                </div>
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ fontSize: '.7rem', fontWeight: 800, letterSpacing: '.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', marginBottom: '.4rem' }}>Smart Matching</div>
+                  <h2 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#fff', lineHeight: 1.15, margin: '0 0 .5rem', letterSpacing: '-0.02em', textShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>Find Your<br />Perfect Course</h2>
+                </div>
+              </div>
+              <div style={{ background: '#1a1a2e', padding: '1.5rem 2rem 2rem' }}>
+                <div style={{ display: 'flex', gap: '.5rem', justifyContent: 'center', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
+                  {[{ icon: '🎯', label: 'Personalised' }, { icon: '⚡', label: '2 Minutes' }, { icon: '🆓', label: 'Free' }].map(({ icon, label }) => (
+                    <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '5px 12px' }}>
+                      <span style={{ fontSize: '.85rem' }}>{icon}</span>
+                      <span style={{ fontSize: '.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.75)', letterSpacing: '.04em' }}>{label}</span>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '.82rem', lineHeight: 1.65, textAlign: 'center', marginBottom: '1.5rem' }}>
+                  Answer a few quick questions and we&apos;ll match you with the best universities and programs for your goals.
+                </p>
+                <button onClick={() => setPopupStep('form')} style={{ width: '100%', padding: '14px', borderRadius: 14, border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 800, fontSize: '1rem', color: '#fff', background: 'linear-gradient(90deg, #6c3de8, #4361EE, #6c3de8)', backgroundSize: '200% auto', animation: 'cfShimmerSlide 3s linear infinite', boxShadow: '0 6px 24px rgba(67,97,238,0.6)', letterSpacing: '.02em' }}>
+                  Start Course Finder →
+                </button>
+                <button onClick={handlePopupClose} style={{ width: '100%', marginTop: '.75rem', padding: '10px', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: '.8rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
+                  Maybe later
+                </button>
+              </div>
+            </div>
+          )}
+
+          {popupStep === 'form' && (
+            <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 2001, width: '90%', maxWidth: 460, background: '#fff', borderRadius: 24, overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.25)', animation: 'cfPopupIn .4s cubic-bezier(0.34,1.56,0.64,1) both' }}>
+              <div style={{ background: 'linear-gradient(135deg, #1a1a3e 0%, #4361EE 60%, #4895ef 100%)', padding: '1.75rem 2rem 1.5rem', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, background: 'radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 70%)', borderRadius: '50%' }} />
+                <h2 style={{ color: '#fff', fontSize: '1.25rem', fontWeight: 800, lineHeight: 1.2, margin: '0 0 .4rem', letterSpacing: '-0.02em' }}>Tell us about yourself</h2>
+                <p style={{ color: 'rgba(255,255,255,0.72)', fontSize: '.83rem', lineHeight: 1.5, margin: 0 }}>We&apos;ll use this to personalise your recommendations.</p>
+                <button onClick={handlePopupClose} style={{ position: 'absolute', top: 14, right: 14, width: 30, height: 30, background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+              <div style={{ padding: '1.5rem 2rem 2rem' }}>
+                <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '.875rem' }}>
+                  {[
+                    { key: 'name', label: 'Full Name', type: 'text', placeholder: 'Your name' },
+                    { key: 'email', label: 'Email Address', type: 'email', placeholder: 'you@example.com' },
+                    { key: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+91 98765 43210' },
+                  ].map(({ key, label, type, placeholder }) => (
+                    <div key={key}>
+                      <label style={{ display: 'block', fontSize: '.78rem', fontWeight: 600, color: '#374151', marginBottom: 5 }}>{label}</label>
+                      <input type={type} required placeholder={placeholder}
+                        value={leadForm[key as keyof typeof leadForm]}
+                        onChange={e => setLeadForm(f => ({ ...f, [key]: e.target.value }))}
+                        style={{ width: '100%', padding: '10px 13px', borderRadius: 9, border: '1.5px solid #e2e8f0', fontSize: '.88rem', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', transition: 'border-color .2s' }}
+                        onFocus={e => (e.target.style.borderColor = '#4361EE')}
+                        onBlur={e => (e.target.style.borderColor = '#e2e8f0')}
+                      />
+                    </div>
+                  ))}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '.78rem', fontWeight: 600, color: '#374151', marginBottom: 5 }}>Area of Interest</label>
+                    <select value={leadForm.interest} onChange={e => setLeadForm(f => ({ ...f, interest: e.target.value }))}
+                      style={{ width: '100%', padding: '10px 13px', borderRadius: 9, border: '1.5px solid #e2e8f0', fontSize: '.88rem', fontFamily: 'inherit', outline: 'none', background: '#fff', boxSizing: 'border-box' }}>
+                      <option value="">Select a field...</option>
+                      {['MBA / Management', 'BBA / Business', 'MCA / BCA (Tech)', 'B.Com / M.Com', 'Arts & Humanities', 'Science', 'Other'].map(o => <option key={o} value={o}>{o}</option>)}
+                    </select>
+                  </div>
+                  <div style={{ display: 'flex', gap: '.75rem' }}>
+                    <button type="button" onClick={() => setPopupStep('intro')} style={{ padding: '12px 18px', background: '#f8fafc', color: '#64748b', borderRadius: 10, fontWeight: 600, fontSize: '.9rem', border: '1.5px solid #e2e8f0', cursor: 'pointer', fontFamily: 'inherit' }}>← Back</button>
+                    <button type="submit" disabled={submitting} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: submitting ? '#94a3b8' : '#4361EE', color: '#fff', padding: '13px', borderRadius: 10, fontWeight: 700, fontSize: '.92rem', border: 'none', cursor: submitting ? 'not-allowed' : 'pointer', fontFamily: 'inherit', boxShadow: submitting ? 'none' : '0 4px 16px rgba(67,97,238,0.4)', transition: 'background .2s' }}>
+                      {submitting ? 'Submitting...' : 'Submit & Find My Course'}
+                      {!submitting && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

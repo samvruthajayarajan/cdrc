@@ -12,7 +12,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const isLoginPage = pathname === '/login';
   const isAdminPage = pathname.startsWith('/admin');
-  const isLandingPage = pathname === '/landing';
 
   return (
     <html lang="en">
@@ -24,11 +23,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {isLoginPage || isAdminPage ? (
           <>{children}</>
-        ) : isLandingPage ? (
-          <>
-            {children}
-            <CourseFinder />
-          </>
         ) : (
           <>
             <Navbar />
