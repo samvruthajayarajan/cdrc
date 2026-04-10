@@ -10,8 +10,8 @@ const links = [
   { href: '/open-school', label: 'Open School' },
   { href: '/programs', label: 'Programs' },
   { href: '/skills', label: 'Skills' },
-  { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
+  { href: '/about', label: 'About' },
 ];
 
 export default function Navbar() {
