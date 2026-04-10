@@ -6,11 +6,11 @@ import SuggestUniversity from '@/components/SuggestUniversity';
 
 const links = [
   { href: '/home', label: 'Home' },
-  { href: '/about', label: 'About' },
   { href: '/universities', label: 'Universities' },
   { href: '/open-school', label: 'Open School' },
   { href: '/programs', label: 'Programs' },
   { href: '/skills', label: 'Skills' },
+  { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
 
