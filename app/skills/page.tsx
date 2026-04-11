@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 import EnrollmentModal from '@/components/EnrollmentModal';
+import { getContrastColor } from '@/lib/colors';
 
 interface Course { name: string; duration: string; description?: string; }
 interface Skill {
@@ -50,7 +51,7 @@ export default function SkillsPage() {
     <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+      <section style={{ position: 'relative', minHeight: 580, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
         {/* Background image */}
         <img
           src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1600"
@@ -167,14 +168,14 @@ export default function SkillsPage() {
                           />
                         ) : (
                           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <div style={{ fontSize: '4rem', fontWeight: 600, color: 'rgba(255,255,255,0.2)', letterSpacing: '-0.04em' }}>{skill.name.charAt(0)}</div>
+                            <div style={{ fontSize: '4rem', fontWeight: 600, color: getContrastColor(accent), opacity: 0.2, letterSpacing: '-0.04em' }}>{skill.name.charAt(0)}</div>
                           </div>
                         )}
                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 55%)' }} />
                         <span style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(255,255,255,0.92)', color: '#0f172a', fontSize: '0.65rem', fontWeight: 500, padding: '3px 9px', borderRadius: 6 }}>
                           {skill.category}
                         </span>
-                        <span style={{ position: 'absolute', top: 12, right: 12, background: levelColor, color: '#fff', fontSize: '0.65rem', fontWeight: 500, padding: '3px 9px', borderRadius: 6 }}>
+                        <span style={{ position: 'absolute', top: 12, right: 12, background: levelColor, color: getContrastColor(levelColor), fontSize: '0.65rem', fontWeight: 500, padding: '3px 9px', borderRadius: 6 }}>
                           {skill.level}
                         </span>
                       </div>

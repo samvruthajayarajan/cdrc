@@ -109,7 +109,7 @@ export default function ContactPage() {
   return (
     <div style={{ fontFamily: "'Poppins', system-ui, sans-serif" }}>
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+      <section style={{ position: 'relative', minHeight: 700, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
         {/* Background image */}
         <img
           src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80"

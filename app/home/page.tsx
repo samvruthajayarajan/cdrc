@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 import { GraduationCap, Award, Monitor, Building, DollarSign, Phone } from '@/components/Icon';
 import { StatCard } from '@/components/HeroAnimations';
+import { getContrastColor } from '@/lib/colors';
 
 const CARD_COLORS = ['#4361EE', '#4895ef', '#3a0ca3', '#7c3aed', '#0f766e', '#b45309'];
 
@@ -148,7 +149,7 @@ function UniversityHomeCard({ uni }: { uni: UniCard }) {
         <div style={{ height: 8, background: uni.color }} />
         <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: '1rem' }}>
-            <div style={{ width: 48, height: 48, background: uni.color, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', fontWeight: 600, color: '#fff', flexShrink: 0 }}>{uni.initial}</div>
+            <div style={{ width: 48, height: 48, background: uni.color, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', fontWeight: 600, color: getContrastColor(uni.color), flexShrink: 0 }}>{uni.initial}</div>
             <div>
               <h3 style={{ fontSize: '0.97rem', fontWeight: 500, color: '#0f172a', lineHeight: 1.3, margin: 0 }}>{uni.name}</h3>
               <span style={{ display: 'inline-block', background: '#eef2ff', color: '#4361EE', padding: '2px 8px', borderRadius: 4, fontSize: '0.72rem', fontWeight: 500, marginTop: 4 }}>{uni.accreditation}</span>
@@ -341,7 +342,7 @@ function HomePageContent() {
       `}</style>
 
       {/* -- HERO -- */}
-      <section style={{ background: 'linear-gradient(150deg,#2d2d6b 0%,#4361EE 55%,#4895ef 100%)', minHeight: '100vh', paddingTop: 68, position: 'relative', overflow: 'hidden' }}>
+      <section style={{ background: 'linear-gradient(150deg,#2d2d6b 0%,#4361EE 55%,#4895ef 100%)', minHeight: '100vh', paddingTop: 80, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '5%', right: '0', width: 600, height: 600, background: 'radial-gradient(circle,rgba(96,165,250,0.12) 0%,transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '0', left: '-5%', width: 400, height: 400, background: 'radial-gradient(circle,rgba(139,92,246,0.08) 0%,transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
 
@@ -631,7 +632,7 @@ function HomePageContent() {
                       
                       {/* Bottom-left accreditation badge over image */}
                       <div style={{ position: 'absolute', bottom: 12, left: 14, right: 14 }}>
-                        <span style={{ display: 'inline-block', background: uni.color, color: '#fff', fontSize: '0.65rem', fontWeight: 600, padding: '4px 10px', borderRadius: 4, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                        <span style={{ display: 'inline-block', background: uni.color, color: getContrastColor(uni.color), fontSize: '0.65rem', fontWeight: 600, padding: '4px 10px', borderRadius: 4, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                           {uni.accreditation}
                         </span>
                       </div>

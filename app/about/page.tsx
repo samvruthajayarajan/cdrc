@@ -20,7 +20,7 @@ export default function AboutPage() {
     <div style={{ background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+      <section style={{ position: 'relative', minHeight: 700, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
         {/* Background image */}
         <img
           src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1600&q=80"
@@ -162,35 +162,49 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── 6. SUCCESS STORIES — light grey, centered, 4 big stats ── */}
+      {/* ── 6. LEADERSHIP — centered, 2 owner cards ── */}
       <section style={{ padding: '5rem 2rem', background: '#f4f6fb' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <AnimateOnScroll animation="fadeUp">
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: '0.5rem' }}>
-                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 500 }}>Our Success Story</span>
+                <span style={{ color: RBL, fontSize: '0.82rem', fontWeight: 500 }}>Leadership</span>
                 <span style={{ color: RBL }}>›</span>
               </div>
               <h2 style={{ fontSize: 'clamp(1.7rem, 3vw, 2.5rem)', fontWeight: 600, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
-                Our Proven<br />Success Stories
+                The <span style={{ color: RBL }}>Visionaries</span> Behind CDRC
               </h2>
-              <p style={{ color: '#64748b', fontSize: '0.9rem', maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>
-                Our track record speaks for itself. Thousands of students have transformed their careers through CDRC's guidance and support.
+              <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
+                Our leadership team is dedicated to empowering students through accessible, high-quality distance education and personalized guidance.
               </p>
             </div>
           </AnimateOnScroll>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
             {[
-              { value: '10K+', label: 'Students Enrolled' },
-              { value: '500+', label: 'Programs Available' },
-              { value: '10+', label: 'Years of Experience' },
-              { value: '98%', label: 'Positive Reviews' },
-            ].map((s, i) => (
-              <AnimateOnScroll key={i} animation="fadeUp" delay={i * 80}>
-                <div style={{ textAlign: 'center', padding: '2rem 1rem', background: '#fff', borderRadius: '1rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
-                  <div style={{ fontSize: '2.5rem', fontWeight: 600, color: '#0f172a', lineHeight: 1 }}>{s.value}</div>
-                  <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 8, fontWeight: 500 }}>{s.label}</div>
+              { 
+                name: 'Dr. Rajesh Kumar', 
+                role: 'Founder & CEO', 
+                image: '/owners/owner1.png',
+                details: 'A visionary educator with over 20 years of experience in the distance learning sector, committed to academic excellence.'
+              },
+              { 
+                name: 'Mrs. Shanthi Rajesh', 
+                role: 'Managing Director', 
+                image: '/owners/owner2.png',
+                details: 'Leading CDRC with a focus on student-centric consulting and strategic institutional partnerships across India.'
+              },
+            ].map((owner, i) => (
+              <AnimateOnScroll key={i} animation="fadeUp" delay={i * 100}>
+                <div style={{ background: '#fff', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+                  <div style={{ position: 'relative', height: 320, width: '100%' }}>
+                    <Image src={owner.image} alt={owner.name} fill style={{ objectFit: 'cover' }} />
+                  </div>
+                  <div style={{ padding: '1.75rem', textAlign: 'center' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.25rem' }}>{owner.name}</h3>
+                    <div style={{ fontSize: '0.85rem', color: RBL, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>{owner.role}</div>
+                    <p style={{ fontSize: '0.9rem', color: '#64748b', lineHeight: 1.6 }}>{owner.details}</p>
+                  </div>
                 </div>
               </AnimateOnScroll>
             ))}

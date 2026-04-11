@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, CheckCircle, Clock, Award, Users } from '@/components/Icon';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 import EnrollmentModal from '@/components/EnrollmentModal';
+import { getContrastColor } from '@/lib/colors';
 
 interface Course { name: string; duration: string; description?: string; }
 interface Skill {
@@ -99,7 +100,7 @@ export default function SkillDetailPage() {
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', justifyContent: 'center' }}>
-                <span style={{ background: `${levelColor}25`, border: `1px solid ${levelColor}40`, borderRadius: 50, padding: '4px 14px', color: '#fff', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                <span style={{ background: `${levelColor}25`, border: `1px solid ${levelColor}40`, borderRadius: 50, padding: '4px 14px', color: getContrastColor(levelColor), fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                   {skill.level}
                 </span>
                 <span style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 50, padding: '4px 14px', color: 'rgba(255,255,255,0.85)', fontSize: '0.72rem', fontWeight: 600 }}>

@@ -107,7 +107,7 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO */}
-      <section style={{ minHeight: '100vh', background: `linear-gradient(150deg, #1a1a3e 0%, ${ACCENT} 60%, #4895ef 100%)`, paddingTop: 64, position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
+      <section style={{ minHeight: '100vh', background: `linear-gradient(150deg, #1a1a3e 0%, ${ACCENT} 60%, #4895ef 100%)`, paddingTop: 80, position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center' }}>
         <MorphingShapes />
         <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 600, height: 600, background: 'radial-gradient(circle,rgba(96,165,250,.12) 0%,transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-5%', left: '-5%', width: 400, height: 400, background: 'radial-gradient(circle,rgba(139,92,246,.1) 0%,transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />

@@ -137,24 +137,18 @@ export default function Navbar() {
           display: 'flex', alignItems: 'center',
           gap: '0.75rem',
           padding: '0 2rem',
-          height: 64,
+          height: 80,
           transition: 'all 0.35s ease',
         }}>
           <div style={{ maxWidth: 1320, margin: '0 auto', width: '100%', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
 
             {/* Logo */}
             <Link href="/home" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9, flexShrink: 0, marginRight: '0.5rem' }}>
-              <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" rx="22" fill="#4169e1"/>
-                <path d="M28 35 L50 62 L72 35 L58 35 L50 48 L42 35 Z" fill="white"/>
-                <path d="M38 62 L50 78 L62 62 Z" fill="white" opacity="0.85"/>
-              </svg>
-              <span style={{
-                fontWeight: 500, fontSize: '1.35rem', letterSpacing: '-0.04em',
-                color: scrolled ? '#1e40af' : '#fff',
-                fontFamily: "'Poppins', system-ui, sans-serif",
-                transition: 'color 0.35s',
-              }}>CDRC</span>
+              <img
+                src={scrolled ? '/CDRC LOGOpng.png' : '/CDRC LOGO W.png'}
+                alt="CDRC Logo"
+                style={{ height: 70, width: 'auto', objectFit: 'contain', transition: 'opacity 0.35s' }}
+              />
             </Link>
 
             {/* Nav links */}

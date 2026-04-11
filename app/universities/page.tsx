@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 import { Search, MapPin, GraduationCap } from '@/components/Icon';
+import { getContrastColor } from '@/lib/colors';
 
 interface University {
   name: string;
@@ -54,7 +55,7 @@ export default function UniversitiesPage() {
     <div style={{ minHeight: '100vh', background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: 460, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+      <section style={{ position: 'relative', minHeight: 720, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
         {/* Background image */}
         <img
           src="https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80"
@@ -137,7 +138,7 @@ export default function UniversitiesPage() {
               <p style={{ color: '#64748b' }}>No universities found.</p>
             </div>
           ) : (
-            <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
+            <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
               {filtered.map((uni, i) => {
                 const actualImgSrc = (uni.image && uni.image.startsWith('http')) ? uni.image : UNI_IMAGES[i % UNI_IMAGES.length];
                 let brandColor = '#4361EE';
@@ -194,7 +195,7 @@ export default function UniversitiesPage() {
                             </div>
                           )}
                           <div style={{ position: 'absolute', bottom: 12, left: 14, right: 14 }}>
-                            <div style={{ display: 'inline-block', background: brandColor, color: '#fff', fontSize: '0.6rem', fontWeight: 600, padding: '4px 10px', borderRadius: 4, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 4 }}>
+                            <div style={{ display: 'inline-block', background: brandColor, color: getContrastColor(brandColor), fontSize: '0.6rem', fontWeight: 600, padding: '4px 10px', borderRadius: 4, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 4 }}>
                               UGC Approved
                             </div>
                           </div>
@@ -253,6 +254,12 @@ export default function UniversitiesPage() {
           </AnimateOnScroll>
         </div>
       </section>
+      <style>{`
+        @media (max-width: 640px) {
+          .grid-card-container { grid-template-columns: repeat(2, 1fr) !important; gap: 0.75rem !important; }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 }

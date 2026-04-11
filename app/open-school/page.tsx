@@ -43,7 +43,7 @@ export default function OpenSchoolPage() {
     <div style={{ background: '#f8fafc', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: 480, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a0f28' }}>
+      <section style={{ position: 'relative', minHeight: 720, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a0f28' }}>
         {/* New Background image - Bright Library Setting */}
         <img
           src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1600&q=80"
@@ -124,7 +124,7 @@ export default function OpenSchoolPage() {
               <p style={{ color: '#64748b' }}>No boards found.</p>
             </div>
           ) : (
-            <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
+            <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
               {filtered.map((board, i) => {
                 const brandColor = CARD_COLORS[i % CARD_COLORS.length];
                 const imgSrc = OPEN_SCHOOL_IMAGES[i % OPEN_SCHOOL_IMAGES.length];
@@ -248,6 +248,7 @@ export default function OpenSchoolPage() {
         @media (max-width: 640px) {
           .open-school-cta { flex-direction: column !important; text-align: center !important; padding: 1.5rem !important; }
           .open-school-cta a { align-self: center !important; }
+          .grid-card-container { grid-template-columns: repeat(2, 1fr) !important; gap: 0.75rem !important; }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
