@@ -13,6 +13,7 @@ interface University {
   location?: string;
   programs: Array<{ name: string; duration: string }>;
   image?: string;
+  logo?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,7 +23,8 @@ const mapUni = (u: any): University => ({
   naac: u.naac || u.ranking || u.accreditation,
   location: u.location || 'India',
   programs: u.programs || [],
-  image: u.image?.startsWith('http') ? u.image : undefined,
+  image: u.image || undefined,
+  logo: u.logo || undefined,
 });
 
 
@@ -171,6 +173,14 @@ export default function UniversitiesPage() {
                           {/* Permanent dark gradient for text legibility */}
                           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)' }} />
                           
+                          {/* Logo Overlay */}
+                          {uni.logo && (
+                            <div style={{ position: 'absolute', top: 12, left: 12, width: 44, height: 44, background: '#fff', borderRadius: 8, padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.15)', zIndex: 2 }}>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={uni.logo} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                            </div>
+                          )}
+
                           {uni.naac && (
                             <div style={{ position: 'absolute', top: 12, right: 12, background: 'rgba(255,255,255,0.95)', color: brandColor, fontSize: '0.65rem', fontWeight: 600, padding: '4px 10px', borderRadius: 6, letterSpacing: '0.04em' }}>
                               {uni.naac}
@@ -225,9 +235,9 @@ export default function UniversitiesPage() {
               Our counsellors provide free, personalised guidance to help you choose the right university and program.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button onClick={() => { const btn = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (btn) btn.click(); }}
+              <button onClick={() => { const btn = document.getElementById('suggest-uni-nav-btn') as HTMLButtonElement; if (btn) btn.click(); }}
                 style={{ padding: '0.8rem 2rem', background: '#1e40af', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 500, fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit' }}>
-                Find My Course
+                Suggest University
               </button>
               <Link href="/contact" style={{ padding: '0.8rem 2rem', background: '#fff', color: '#374151', border: '1px solid #e2e8f0', borderRadius: 8, fontWeight: 600, fontSize: '0.9rem', textDecoration: 'none' }}>
                 Talk to Counsellor

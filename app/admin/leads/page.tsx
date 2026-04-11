@@ -55,8 +55,11 @@ export default function LeadsPage() {
       l.phone.includes(search) ||
       l.course?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'All' || l.status === statusFilter;
+    const isCF = l.source && l.source.startsWith('Course Finder');
     const matchSource = sourceFilter === 'All' ||
-      (sourceFilter === 'Course Finder' ? l.source === 'Course Finder' : l.source !== 'Course Finder');
+      (sourceFilter === 'Course Finder' ? isCF :
+       sourceFilter === 'Suggest University' ? l.source === 'Suggest University' :
+       (!isCF && l.source !== 'Suggest University')); // Brochure Download
     return matchSearch && matchStatus && matchSource;
   });
 
@@ -109,8 +112,9 @@ export default function LeadsPage() {
         <div style={{ display: 'flex', gap: '.5rem', marginBottom: 16, flexWrap: 'wrap' }}>
           {[
             { key: 'All', label: '📋 All Leads', count: leads.length },
-            { key: 'Brochure Download', label: '📄 Brochure Download', count: leads.filter(l => l.source !== 'Course Finder').length },
-            { key: 'Course Finder', label: '🔍 Course Finder', count: leads.filter(l => l.source === 'Course Finder').length },
+            { key: 'Brochure Download', label: '📄 Brochure Download', count: leads.filter(l => !(l.source && l.source.startsWith('Course Finder')) && l.source !== 'Suggest University').length },
+            { key: 'Course Finder', label: '🔍 Course Finder', count: leads.filter(l => l.source && l.source.startsWith('Course Finder')).length },
+            { key: 'Suggest University', label: '🏛️ Suggest University', count: leads.filter(l => l.source === 'Suggest University').length },
           ].map(({ key, label, count }) => (
             <button key={key} onClick={() => setSourceFilter(key)}
               style={{ padding: '7px 16px', borderRadius: 50, border: `2px solid ${sourceFilter === key ? '#4361EE' : '#e2e8f0'}`, background: sourceFilter === key ? '#4361EE' : '#fff', color: sourceFilter === key ? '#fff' : '#64748b', fontWeight: 500, fontSize: '.78rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .15s', display: 'flex', alignItems: 'center', gap: 6 }}>

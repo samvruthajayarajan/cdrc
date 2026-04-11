@@ -79,7 +79,7 @@ const IconWand = () => (
   </svg>
 );
 
-function EnquiryGate({ onSuccess }: { onSuccess: (name: string) => void }) {
+function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: string, phone: string }) => void }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -94,7 +94,7 @@ function EnquiryGate({ onSuccess }: { onSuccess: (name: string) => void }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, source: 'Course Finder' }),
       });
-      onSuccess(form.name);
+      onSuccess(form);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -168,11 +168,12 @@ const FALLBACK_QUESTIONS = [
 export default function CourseFinder() {
   const [isOpen, setIsOpen] = useState(false);
   const [gateCleared, setGateCleared] = useState(false);
-  const [userName, setUserName] = useState('');
+  const [userData, setUserData] = useState({ name: '', email: '', phone: '' });
   const [questions, setQuestions] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [results, setResults] = useState<any[]>([]);
+  const [fallbackResults, setFallbackResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [animate, setAnimate] = useState(true);
@@ -205,7 +206,7 @@ export default function CourseFinder() {
 
   const closeModal = () => { setIsOpen(false); reset(); };
   const reset = () => {
-    setGateCleared(false); setUserName(''); setStep(1);
+    setGateCleared(false); setUserData({ name: '', email: '', phone: '' }); setStep(1);
     setAnswers({}); setResults([]); setShowResults(false); setAnimate(true);
     setQuestions([]); // clear so they re-fetch fresh next open
   };
@@ -227,71 +228,139 @@ export default function CourseFinder() {
     setLoading(true);
     try {
       const res = await fetch('/api/public/programs');
-      let programs = await res.json();
-      questions.forEach(q => {
-        const val = answers[q.field];
-        if (!val) return;
-        const opt = q.options.find((o: any) => o.value === val);
-        if (!opt) return;
-        if (q.field === 'education') {
-          if (val === 'below_12') {
-            // Diploma / Certificate level
-            programs = programs.filter((p: any) => ['Diploma', 'Certificate'].includes(p.level));
-          } else if (val === '12th') {
-            // Undergraduate
-            programs = programs.filter((p: any) => ['Undergraduate', 'UG'].includes(p.level));
-          } else if (val === 'graduate') {
-            // Both UG and PG open to graduates
-            programs = programs.filter((p: any) => ['Postgraduate', 'PG', 'Undergraduate', 'UG'].includes(p.level));
-          } else if (val === 'postgraduate') {
-            // PG, Doctorate, etc.
-            programs = programs.filter((p: any) => ['Postgraduate', 'PG', 'Doctorate', 'PhD'].includes(p.level));
-          }
-        }
-        if (opt.categories?.length) {
-          programs = programs.filter((p: any) => {
-            const pName = (p.name || '').toLowerCase();
-            const pCat = (p.category || '').toLowerCase();
-            const pSpecs = (p.specializations || []).map((s: string) => s.toLowerCase());
-            
-            return opt.categories.some((cat: string) => {
-              const lowerCat = cat.toLowerCase();
-              
-              // Standard acronyms should match strictly or with word boundaries
-              // to avoid 'MA' matching 'Management'
-              if (lowerCat.length <= 3) {
-                const regex = new RegExp(`\\b${lowerCat}\\b`, 'i');
-                return regex.test(pName) || regex.test(pCat) || pSpecs.some((s: string) => regex.test(s));
-              }
+      const allPrograms: any[] = await res.json();
 
-              // Longer category names can use .includes
-              return pCat.includes(lowerCat) || pName.includes(lowerCat) || pSpecs.some((s: string) => s.includes(lowerCat));
-            }) || pCat === opt.value.toLowerCase() || pCat === opt.label.toLowerCase();
-          });
-        }
-        if (q.field === 'budget') {
-          if (opt.min !== undefined || opt.max !== undefined) {
-            programs = programs.filter((p: any) => {
-              if (!p.fee) return true; // no fee data — include it
-              // Normalize: if fee is per-semester, approximate annual = fee * 2
-              const annualFee = p.feePeriod === 'Per Semester' ? p.fee * 2
-                : p.feePeriod === 'Per Month' ? p.fee * 12
-                : p.fee;
-              if (opt.max && !opt.min) return annualFee <= opt.max;
-              if (opt.min && opt.max)  return annualFee >= opt.min && annualFee <= opt.max;
-              if (opt.min && !opt.max) return annualFee >= opt.min;
-              return true;
-            });
-          }
-          // opt.value === 'any' → no filter applied
-        }
-        if (q.field === 'mode' && val !== 'any') {
-          programs = programs.filter((p: any) => p.mode === val);
-        }
+      const normalize = (s: string) => (s || '').toLowerCase().replace(/[\s.\-&]/g, '');
+
+      // Semantic keyword map: label keyword → related program terms
+      const KEYWORD_MAP: Record<string, string[]> = {
+        commerce: ['bcom', 'mcom', 'commerce', 'accounting', 'finance', 'ca'],
+        finance: ['bcom', 'mcom', 'finance', 'commerce', 'accounting', 'mba'],
+        technology: ['btech', 'mtech', 'bca', 'mca', 'computer', 'it', 'software', 'tech', 'engineering'],
+        tech: ['btech', 'mtech', 'bca', 'mca', 'computer', 'it', 'software', 'tech', 'engineering'],
+        science: ['bsc', 'msc', 'science', 'physics', 'chemistry', 'biology', 'mathematics'],
+        arts: ['ba', 'ma', 'arts', 'english', 'history', 'sociology', 'political'],
+        management: ['bba', 'mba', 'management', 'business', 'administration'],
+        business: ['bba', 'mba', 'management', 'business', 'administration'],
+        medical: ['mbbs', 'bams', 'medical', 'nursing', 'pharmacy', 'health'],
+        law: ['llb', 'llm', 'law', 'legal', 'judiciary'],
+        education: ['bed', 'med', 'education', 'teaching'],
+        design: ['design', 'bdes', 'mdes', 'fashion', 'interior', 'graphic'],
+        // Qualification → Level mapping
+        '12thpass': ['undergraduate', 'ug', 'diploma', 'certificate'],
+        '12th': ['undergraduate', 'ug', 'diploma', 'certificate'],
+        'highersecondary': ['undergraduate', 'ug', 'diploma', 'certificate'],
+        'below12': ['diploma', 'certificate'],
+        'graduate': ['postgraduate', 'pg', 'undergraduate', 'ug'],
+        'bachelors': ['postgraduate', 'pg'],
+        'bachelorsdegree': ['postgraduate', 'pg'],
+        'postgraduate': ['doctorate', 'phd', 'postgraduate', 'pg'],
+        'masters': ['doctorate', 'phd'],
+        // Mode
+        'online': ['online'],
+        'offline': ['offline'],
+        'distance': ['distance'],
+        'hybrid': ['hybrid'],
+        // Level
+        'undergraduate': ['undergraduate', 'ug'],
+        'ug': ['undergraduate', 'ug'],
+        'pg': ['postgraduate', 'pg'],
+      };
+
+      // Collect all selected labels and expand them with synonyms
+      const selectedLabels = questions
+        .map(q => q.options.find((o: any) => o.value === answers[q.field])?.label || '')
+        .filter(Boolean);
+
+      const expandedTerms: string[] = [];
+      selectedLabels.forEach((label: string) => {
+        const norm = normalize(label);
+        expandedTerms.push(norm);
+        // Check each word in the label against the keyword map
+        const words = label.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+        words.forEach(word => {
+          const mapped = KEYWORD_MAP[word] || KEYWORD_MAP[normalize(word)];
+          if (mapped) expandedTerms.push(...mapped);
+        });
+        // Also check the full normalized label
+        const mapped = KEYWORD_MAP[norm];
+        if (mapped) expandedTerms.push(...mapped);
       });
-      programs.sort((a: any, b: any) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-      setResults(programs.slice(0, 6));
+
+      const uniqueTerms = [...new Set(expandedTerms)];
+
+      const matchesAny = (program: any) => {
+        const pName = normalize(program.name);
+        const pCat = normalize(program.category);
+        const pLevel = normalize(program.level);
+        const pMode = normalize(program.mode);
+        const pCourseType = normalize(program.courseType);
+        const pSpecs = (program.specializations || []).map(normalize);
+        const pAll = [pName, pCat, pLevel, pMode, pCourseType, ...pSpecs];
+
+        return uniqueTerms.some(term =>
+          pAll.some(field => field.includes(term) || term.includes(field))
+        );
+      };
+
+      // Score programs: more term matches = higher score
+      const scored = allPrograms.map(p => {
+        const pName = normalize(p.name);
+        const pCat = normalize(p.category);
+        const pLevel = normalize(p.level);
+        const pMode = normalize(p.mode);
+        const pCourseType = normalize(p.courseType);
+        const pSpecs = (p.specializations || []).map(normalize);
+        const pAll = [pName, pCat, pLevel, pMode, pCourseType, ...pSpecs];
+
+        let score = 0;
+        uniqueTerms.forEach(term => {
+          if (pAll.some(field => field.includes(term) || term.includes(field))) score++;
+        });
+        return { ...p, _score: score };
+      });
+
+      const matched = scored.filter(p => p._score > 0);
+      matched.sort((a, b) => b._score - a._score || (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+
+      if (matched.length > 0) {
+        // Top matches (score >= half of max score) are "exact", rest are fallback
+        const maxScore = matched[0]._score;
+        const threshold = Math.max(1, Math.floor(maxScore * 0.5));
+        const exact = matched.filter(p => p._score >= threshold);
+        const fallback = matched.filter(p => p._score < threshold);
+
+        if (exact.length > 0) {
+          setResults(exact.slice(0, 6));
+          setFallbackResults(fallback.slice(0, 4));
+        } else {
+          setResults([]);
+          setFallbackResults(matched.slice(0, 6));
+        }
+      } else {
+        setResults([]);
+        setFallbackResults(allPrograms.slice(0, 6));
+      }
+
       setShowResults(true);
+
+      // Save lead
+      const formattedAnswers = questions.map(q => {
+        const opt = q.options.find((o: any) => o.value === answers[q.field]);
+        return opt ? opt.label : '';
+      }).filter(Boolean).join(' | ');
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: userData.name,
+          email: userData.email,
+          phone: userData.phone || 'N/A',
+          source: 'Course Finder Quiz',
+          course: `Preferences: ${formattedAnswers}`,
+        }),
+      }).catch(() => {});
+
     } catch (err) {
       console.error(err);
     } finally {
@@ -301,6 +370,24 @@ export default function CourseFinder() {
 
   const currentQ = questions[step - 1];
   const allAnswered = currentQ && answers[currentQ.field];
+
+  const trackCourseClick = async (program: any) => {
+    try {
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: userData.name,
+          email: userData.email,
+          phone: userData.phone || 'N/A',
+          source: 'Course Finder Click',
+          course: `${program.name} at ${program.university || program.universityId?.name || 'Unknown'}`,
+        }),
+      });
+    } catch (e) {
+      // Fire and forget
+    }
+  };
 
   return (
     <>
@@ -316,7 +403,7 @@ export default function CourseFinder() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
 
-            {!gateCleared && <EnquiryGate onSuccess={(name) => { setUserName(name); setGateCleared(true); }} />}
+            {!gateCleared && <EnquiryGate onSuccess={(data) => { setUserData(data); setGateCleared(true); }} />}
 
             {gateCleared && questionsLoading && (
               <div className="cf-loading-screen"><p>Loading questions...</p></div>
@@ -326,7 +413,7 @@ export default function CourseFinder() {
               <>
                 <div className="cf-header">
                   <div className="cf-header-icon"><IconCompass /></div>
-                  <h2 className="cf-title">Hi {userName}! Let&apos;s find your course</h2>
+                  <h2 className="cf-title">Hi {userData.name}! Let&apos;s find your course</h2>
                   <p className="cf-subtitle">Answer a few questions for personalised recommendations</p>
                 </div>
                 <div className="cf-progress-container">
@@ -376,14 +463,20 @@ export default function CourseFinder() {
               <>
                 <div className="cf-results-header">
                   <div className="cf-results-icon"><IconStar /></div>
-                  <h2 className="cf-results-title">{results.length > 0 ? 'Recommended Courses For You!' : 'No Exact Matches Found'}</h2>
+                  <h2 className="cf-results-title">
+                    {results.length > 0 ? 'Recommended Courses For You!' : fallbackResults.length > 0 ? 'Similar Courses You May Like' : 'No Matches Found'}
+                  </h2>
                   <p className="cf-results-subtitle">
-                    {results.length > 0 ? `We found ${results.length} courses matching your preferences` : 'Try adjusting your preferences'}
+                    {results.length > 0
+                      ? `We found ${results.length} courses matching your preferences`
+                      : fallbackResults.length > 0
+                      ? 'No exact match — here are similar courses based on your choices'
+                      : 'Try adjusting your preferences'}
                   </p>
                 </div>
                 <div className="cf-results-list">
-                  {results.length > 0 ? results.map(program => (
-                    <Link key={program._id} href="/programs" className="cf-result-card" onClick={() => setIsOpen(false)}>
+                  {(results.length > 0 ? results : fallbackResults).length > 0 ? (results.length > 0 ? results : fallbackResults).map(program => (
+                    <Link key={program._id} href="/programs" className="cf-result-card" onClick={() => { trackCourseClick(program); setIsOpen(false); }}>
                       <div className="cf-result-info">
                         <h4 className="cf-result-name">{program.name}</h4>
                         <p className="cf-result-university"><IconBuilding /> {program.university || program.universityId?.name || 'University'}</p>
@@ -400,7 +493,7 @@ export default function CourseFinder() {
                   )) : (
                     <div className="cf-no-results">
                       <span className="cf-no-results-icon"><IconFrown /></span>
-                      <p>No programs match your exact criteria.</p>
+                      <p>No programs match your criteria.</p>
                       <Link href="/programs" className="cf-browse-all-btn" onClick={() => setIsOpen(false)}>Browse All Programs</Link>
                     </div>
                   )}

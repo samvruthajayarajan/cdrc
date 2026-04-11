@@ -142,8 +142,8 @@ export default function SkillsPage() {
                 const levelColor = LEVEL_COLOR[skill.level] || '#1e40af';
 
                 return (
-                  <AnimateOnScroll key={skill._id} animation="fadeUp" delay={(i % 6) * 60}>
-                    <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', transition: 'all 0.25s', display: 'flex', flexDirection: 'column' }}
+                  <AnimateOnScroll key={skill._id} animation="fadeUp" delay={(i % 6) * 60} style={{ height: '100%' }}>
+                    <div style={{ height: '100%', background: '#fff', borderRadius: 14, overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', transition: 'all 0.25s', display: 'flex', flexDirection: 'column' }}
                       onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(-5px)'; el.style.boxShadow = `0 16px 40px ${accent}18`; el.style.borderColor = `${accent}44`; }}
                       onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(0)'; el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; el.style.borderColor = '#e2e8f0'; }}
                     >
@@ -190,20 +190,6 @@ export default function SkillsPage() {
                                 {skill.price && <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#64748b', fontSize: '0.8rem' }}>₹ {skill.price}</span>}
                               </div>
                             )}
-                            {skill.courses?.length > 0 && (
-                              <div style={{ marginBottom: '0.875rem' }}>
-                                <div style={{ fontSize: '0.72rem', fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.4rem' }}>Courses Included</div>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                                  {skill.courses.slice(0, 3).map((c, ci) => (
-                                    <div key={ci} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: '0.82rem', color: '#374151' }}>
-                                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: accent, flexShrink: 0 }} />
-                                      {c.name} {c.duration && <span style={{ color: '#94a3b8', fontSize: '0.73rem' }}>({c.duration})</span>}
-                                    </div>
-                                  ))}
-                                  {skill.courses.length > 3 && <div style={{ fontSize: '0.78rem', color: accent, fontWeight: 600 }}>+{skill.courses.length - 3} more</div>}
-                                </div>
-                              </div>
-                            )}
                           </>
                         )}
 
@@ -216,6 +202,15 @@ export default function SkillsPage() {
                           >
                             Details
                           </Link>
+                          {(skill as any).brochureUrl && (
+                            <a href={(skill as any).brochureUrl} target="_blank" rel="noreferrer" download
+                              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '0.65rem 0.75rem', background: '#f0fdf4', color: '#15803d', border: '1.5px solid #bbf7d0', borderRadius: 8, fontWeight: 500, fontSize: '0.8rem', textDecoration: 'none', transition: 'background 0.2s', whiteSpace: 'nowrap' }}
+                              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#dcfce7'; }}
+                              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#f0fdf4'; }}
+                            >
+                              📄 Brochure
+                            </a>
+                          )}
                           <button onClick={() => setEnrollModal({ open: true, skill: skill.name, course: skill.name })}
                             style={{ flex: 1, padding: '0.65rem', background: accent, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 500, fontSize: '0.8rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'opacity 0.2s' }}
                             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.opacity = '0.88'; }}

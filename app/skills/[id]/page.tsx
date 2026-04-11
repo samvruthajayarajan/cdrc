@@ -12,7 +12,7 @@ interface Course { name: string; duration: string; description?: string; }
 interface Skill {
   _id: string; name: string; description: string; category: string;
   duration: string; level: string; price: string; image?: string;
-  courses: Course[]; slug: string;
+  brochureUrl?: string; courses: Course[]; slug: string;
 }
 
 const LEVEL_COLOR: Record<string, string> = {
@@ -158,34 +158,7 @@ export default function SkillDetailPage() {
             </div>
           </AnimateOnScroll>
 
-          {/* Course Modules */}
-          {skill.courses?.length > 0 && (
-            <AnimateOnScroll animation="fadeUp" delay={100}>
-              <div style={{ background: '#fff', borderRadius: 14, padding: '1.75rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <h2 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ width: 28, height: 28, background: '#eef2ff', borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Users size={14} color="#4361EE" />
-                  </span>
-                  Course Modules
-                  <span style={{ marginLeft: 'auto', fontSize: '0.72rem', fontWeight: 500, color: '#4361EE', background: '#eef2ff', borderRadius: 50, padding: '2px 10px' }}>{skill.courses.length} modules</span>
-                </h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {skill.courses.map((c, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', padding: '1rem', background: '#f8fafc', borderRadius: 10, border: '1px solid #e2e8f0' }}>
-                      <div style={{ width: 32, height: 32, background: '#4361EE', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '0.78rem', fontWeight: 500, flexShrink: 0 }}>
-                        {String(i + 1).padStart(2, '0')}
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: '0.9rem', fontWeight: 500, color: '#0f172a', marginBottom: '0.2rem' }}>{c.name}</div>
-                        {c.duration && <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{c.duration}</div>}
-                        {c.description && <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.3rem', lineHeight: 1.5 }}>{c.description}</div>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </AnimateOnScroll>
-          )}
+          {/* Course Modules Removed per request */}
         </div>
 
         {/* Sidebar */}
@@ -218,6 +191,15 @@ export default function SkillDetailPage() {
               >
                 Enroll Now
               </button>
+              {skill.brochureUrl && (
+                <a href={skill.brochureUrl} target="_blank" rel="noreferrer" download
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: '0.75rem', background: '#f0fdf4', color: '#15803d', border: '1.5px solid #bbf7d0', borderRadius: 10, fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none', textAlign: 'center', boxSizing: 'border-box', marginBottom: '0.625rem', transition: 'background 0.2s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#dcfce7'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#f0fdf4'; }}
+                >
+                  📄 Download Brochure
+                </a>
+              )}
               <Link href="/contact" style={{ display: 'block', padding: '0.75rem', border: '1.5px solid #4361EE', color: '#4361EE', borderRadius: 10, fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none', textAlign: 'center', transition: 'background 0.2s', boxSizing: 'border-box' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#eef2ff'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; }}

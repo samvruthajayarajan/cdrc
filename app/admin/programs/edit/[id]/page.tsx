@@ -64,6 +64,7 @@ export default function EditProgramPage() {
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [universities, setUniversities] = useState<Array<{ _id: string; name: string }>>([]);
 
   const [form, setForm] = useState({
@@ -358,8 +359,29 @@ export default function EditProgramPage() {
                   {form.imageUrl && <img src={form.imageUrl} alt="preview" style={{ marginTop: 10, width: '100%', height: 80, objectFit: 'cover', borderRadius: 10, border: `1.5px solid ${ACCENT_BORDER}` }} onError={e => (e.currentTarget.style.display = 'none')} />}
                 </div>
                 <div>
-                  <label style={S.label}>Brochure URL</label>
-                  <input {...inputProps('brochureUrl')} placeholder="https://example.com/brochure.pdf" />
+                  <label style={S.label}>Brochure (Link or Upload)</label>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <input {...inputProps('brochureUrl')} style={{ ...S.input, flex: 1 }} placeholder="Paste URL or upload a file" />
+                    <label style={{ padding: '10px 16px', background: uploading ? '#94a3b8' : `linear-gradient(135deg, ${ACCENT}, #3b82f6)`, color: '#fff', borderRadius: 10, fontWeight: 600, fontSize: '0.82rem', cursor: uploading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' as const, flexShrink: 0 }}>
+                      {uploading ? 'Uploading...' : '📎 Upload'}
+                      <input type="file" accept=".pdf,.doc,.docx" style={{ display: 'none' }} disabled={uploading} onChange={async (e) => {
+                        const file = e.target.files?.[0]; if (!file) return;
+                        setUploading(true);
+                        try {
+                          const fd = new FormData(); fd.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: fd });
+                          const data = await res.json();
+                          if (data.url) set('brochureUrl', data.url);
+                        } catch {}
+                        finally { setUploading(false); }
+                      }} />
+                    </label>
+                  </div>
+                  {form.brochureUrl && (
+                    <div style={{ marginTop: 6, fontSize: '0.73rem', color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      ✓ Brochure: <a href={form.brochureUrl} target="_blank" rel="noreferrer" style={{ color: ACCENT, textDecoration: 'underline', maxWidth: 250, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'inline-block' }}>{form.brochureUrl}</a>
+                    </div>
+                  )}
                 </div>
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={S.label}>YouTube Video URL</label>

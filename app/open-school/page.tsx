@@ -24,6 +24,7 @@ export default function OpenSchoolPage() {
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<{ university: string; program: string } | null>(null);
   const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState('Most Popular');
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -37,7 +38,14 @@ export default function OpenSchoolPage() {
     const s = new Set(prev); s.has(key) ? s.delete(key) : s.add(key); return s;
   });
 
-  const filtered = boards.filter(b => b.name.toLowerCase().includes(search.toLowerCase()));
+  const filtered = boards
+    .filter(b => b.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => {
+      if (sortBy === 'Name A-Z') {
+        return a.name.localeCompare(b.name);
+      }
+      return 0; // Default to Most Popular (or API order)
+    });
 
   return (
     <div style={{ background: '#f8fafc', minHeight: '100vh', fontFamily: 'Inter, system-ui, sans-serif' }}>
@@ -103,9 +111,13 @@ export default function OpenSchoolPage() {
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.85rem', color: '#64748b' }}>
               <span>Sort by:</span>
-              <select style={{ border: '1px solid #e2e8f0', borderRadius: 6, padding: '0.4rem 0.75rem', fontSize: '0.85rem', color: '#0f172a', outline: 'none', cursor: 'pointer', background: '#fff' }}>
-                <option>Most Popular</option>
-                <option>Name A-Z</option>
+              <select 
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                style={{ border: '1px solid #e2e8f0', borderRadius: 6, padding: '0.4rem 0.75rem', fontSize: '0.85rem', color: '#0f172a', outline: 'none', cursor: 'pointer', background: '#fff' }}
+              >
+                <option value="Most Popular">Most Popular</option>
+                <option value="Name A-Z">Name A-Z</option>
               </select>
             </div>
           </div>

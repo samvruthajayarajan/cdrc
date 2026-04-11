@@ -176,6 +176,7 @@ export default function Navbar() {
                 Find My Course
               </button>
               <button
+                id="suggest-uni-nav-btn"
                 onClick={() => setSuggestOpen(true)}
                 style={{ padding: '7px 16px', borderRadius: '50px', fontWeight: 500, fontSize: '.83rem', border: scrolled ? '1.5px solid #4361EE' : '1.5px solid rgba(255,255,255,0.35)', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .2s', background: 'transparent', color: scrolled ? '#4361EE' : '#fff', whiteSpace: 'nowrap' }}
                 onMouseEnter={e => { e.currentTarget.style.background = scrolled ? '#eef2ff' : 'rgba(255,255,255,0.12)'; }}

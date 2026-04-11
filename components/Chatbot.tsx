@@ -30,15 +30,19 @@ function getBotResponse(msg: string): { text: string; suggestions: string[] } {
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([{
-    role: 'bot', text: "Hi! 👋 I'm your CDRC assistant. I can help you with:",
-    suggestions: ['Online Degrees', 'Open Schooling', 'Fee Structure', 'Admission Process'],
-    timestamp: new Date(),
-  }]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const sessionId = useRef(uuidv4());
   const startedAt = useRef(new Date());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMessages([{
+      role: 'bot', text: "Hi! 👋 I'm your CDRC assistant. I can help you with:",
+      suggestions: ['Online Degrees', 'Open Schooling', 'Fee Structure', 'Admission Process'],
+      timestamp: new Date(),
+    }]);
+  }, []);
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 

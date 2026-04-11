@@ -19,6 +19,7 @@ interface University {
   location: string;
   naac: string;
   image?: string;
+  logo?: string;
   description: string;
   facilities: string[];
   ranking?: string;
@@ -88,6 +89,7 @@ export default function UniversityDetailPage() {
       naac: uni.naac || uni.ranking || uni.accreditation || 'UGC Approved',
       description: uni.description || `${uni.name} is a UGC-approved university offering quality online degree programs.`,
       facilities: uni.facilities?.length ? uni.facilities : ['Online Learning Platform', 'Digital Library', 'Student Support', 'Live Classes', 'Career Guidance'],
+      logo: uni.logo || undefined,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const match = (uni: any) => uni.slug === slug || uni.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === slug;
@@ -123,7 +125,7 @@ export default function UniversityDetailPage() {
   );
 
   const handleEnroll = (p: string) => { setSelectedProgram(p); setIsEnrollmentOpen(true); };
-  const hasImage = university.image?.startsWith('http');
+  const hasImage = !!university.image;
 
   return (
     <div className="page-enter" style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
@@ -156,7 +158,13 @@ export default function UniversityDetailPage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
+              {university.logo && (
+                <div style={{ width: 80, height: 80, background: '#fff', borderRadius: 16, padding: 8, marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 24px rgba(0,0,0,0.2)' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={university.logo} alt={`${university.name} Logo`} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                </div>
+              )}
+              <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-0.02em', textAlign: 'center' }}>
                 {university.name}
               </h1>
             </div>

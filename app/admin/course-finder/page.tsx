@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-const BLANK_OPTION = { value: '', label: '', icon: 'fa-circle', categories: [] as string[], min: '' as string | number, max: '' as string | number };
-const BLANK_Q = { question: '', field: '', order: 0, isActive: true, options: [{ ...BLANK_OPTION }] };
+const BLANK_OPTION = { label: '' };
+const BLANK_Q = { question: '', options: [{ label: '' }] };
 
 function FormField({ label, children }: { label: string; children: React.ReactNode }) {
   return <div><label style={labelStyle}>{label}</label>{children}</div>;
@@ -34,7 +34,10 @@ export default function CourseFinderPage() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/course-finder-questions', { headers: h() });
+      const res = await fetch('/api/admin/course-finder-questions', { 
+        headers: h(), 
+        cache: 'no-store' 
+      });
       const data = await res.json();
       setQuestions(Array.isArray(data) ? data : []);
     } catch { showToast('Failed to load questions', 'error'); }
@@ -59,20 +62,22 @@ export default function CourseFinderPage() {
 
   const save = async () => {
     const { data, mode } = modal;
-    if (!data.question.trim() || !data.field.trim() || data.options.length === 0) {
-      showToast('Question, field, and at least one option are required', 'error'); return;
+    if (!data.question.trim() || data.options.length === 0 || data.options.some((o: any) => !o.label.trim())) {
+      showToast('Question and all option labels are required', 'error'); return;
     }
     setSaving(true);
     try {
       const url = mode === 'add' ? '/api/admin/course-finder-questions' : `/api/admin/course-finder-questions/${data._id}`;
       const method = mode === 'add' ? 'POST' : 'PUT';
+      // Auto-generate field from question, options value from label
+      const autoField = data.field || data.question.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 30);
       const cleanOptions = data.options.map((o: any) => ({
-        value: o.value, label: o.label, icon: o.icon || 'fa-circle',
-        ...(o.categories?.length ? { categories: o.categories } : {}),
-        ...(o.min !== '' && o.min !== undefined ? { min: Number(o.min) } : {}),
-        ...(o.max !== '' && o.max !== undefined ? { max: Number(o.max) } : {}),
+        label: o.label,
+        value: o.value || o.label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, ''),
+        icon: 'fa-circle',
       }));
-      const res = await fetch(url, { method, headers: h(), body: JSON.stringify({ ...data, options: cleanOptions }) });
+      const autoOrder = mode === 'add' ? questions.length + 1 : data.order;
+      const res = await fetch(url, { method, headers: h(), body: JSON.stringify({ ...data, field: autoField, order: autoOrder, isActive: true, options: cleanOptions }) });
       if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
       showToast(mode === 'add' ? 'Question added!' : 'Question updated!');
       setModal(null); load();
@@ -81,10 +86,13 @@ export default function CourseFinderPage() {
   };
 
   const deleteQ = async (id: string, question: string) => {
-    if (!confirm(`Delete question: "${question}"?`)) return;
+    if (!window.confirm(`Delete question: "${question}"?`)) return;
     try {
-      await fetch(`/api/admin/course-finder-questions/${id}`, { method: 'DELETE', headers: h() });
-      showToast('Question deleted'); load();
+      showToast('Deleting...');
+      const res = await fetch(`/api/admin/course-finder-questions/${id}`, { method: 'DELETE', headers: h() });
+      if (!res.ok) throw new Error('Failed to delete');
+      setQuestions(prev => prev.filter(q => q._id !== id)); // Optimistic UI update
+      showToast('Question deleted'); 
     } catch { showToast('Delete failed', 'error'); }
   };
 
@@ -118,11 +126,6 @@ export default function CourseFinderPage() {
             <p style={{ margin: 0, color: '#64748B', fontSize: '0.9rem' }}>Manage the quiz questions shown in the "Find My Course" widget.</p>
           </div>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            {questions.length === 0 && (
-              <button onClick={seed} disabled={seeding} style={btnStyle('#6366F1')}>
-                {seeding ? 'Seeding...' : 'Seed Default Questions'}
-              </button>
-            )}
             <button onClick={openAdd} style={btnStyle('#1e40af')}>+ Add Question</button>
           </div>
         </div>
@@ -167,55 +170,32 @@ export default function CourseFinderPage() {
 
       {modal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
-          <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '700px', maxHeight: '90vh', overflow: 'auto', padding: '35px' }}>
+          <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '520px', maxHeight: '90vh', overflow: 'auto', padding: '35px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
               <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 500, color: '#0F172A' }}>{modal.mode === 'add' ? 'Add New Question' : 'Edit Question'}</h2>
               <button onClick={() => setModal(null)} style={{ background: '#F1F5F9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', fontSize: '1rem', color: '#64748B' }}>✕</button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <FormField label="Question Text *">
-                <input value={modal.data.question} onChange={e => setField('question', e.target.value)} placeholder="e.g. What is your highest education qualification?" style={inputStyle} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <FormField label="Question *">
+                <input value={modal.data.question} onChange={e => setField('question', e.target.value)} placeholder="e.g. What is your highest qualification?" style={inputStyle} />
               </FormField>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
-                <FormField label="Field Name *">
-                  <input value={modal.data.field} onChange={e => setField('field', e.target.value)} placeholder="e.g. education" style={inputStyle} />
-                </FormField>
-                <FormField label="Order">
-                  <input type="number" value={modal.data.order} onChange={e => setField('order', Number(e.target.value))} style={inputStyle} />
-                </FormField>
-                <FormField label="Status">
-                  <select value={String(modal.data.isActive)} onChange={e => setField('isActive', e.target.value === 'true')} style={inputStyle}>
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                  </select>
-                </FormField>
-              </div>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <label style={labelStyle}>Options *</label>
                   <button onClick={addOption} style={{ ...btnStyle('#10B981'), padding: '6px 14px', fontSize: '0.85rem' }}>+ Add Option</button>
                 </div>
                 {modal.data.options.map((opt: any, i: number) => (
-                  <div key={i} style={{ background: '#F8FAFC', borderRadius: '12px', padding: '15px', marginBottom: '10px', border: '1px solid #E2E8F0' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                      <span style={{ fontWeight: 600, color: '#64748B', fontSize: '0.85rem' }}>Option {i + 1}</span>
-                      {modal.data.options.length > 1 && (
-                        <button onClick={() => removeOption(i)} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', borderRadius: '8px', padding: '4px 10px', cursor: 'pointer', fontSize: '0.8rem', fontFamily: 'inherit' }}>Remove</button>
-                      )}
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
-                      <div><label style={{ ...labelStyle, fontSize: '0.8rem' }}>Value *</label><input value={opt.value} onChange={e => setOption(i, 'value', e.target.value)} placeholder="e.g. graduate" style={{ ...inputStyle, padding: '8px 12px' }} /></div>
-                      <div><label style={{ ...labelStyle, fontSize: '0.8rem' }}>Label *</label><input value={opt.label} onChange={e => setOption(i, 'label', e.target.value)} placeholder="e.g. Graduate" style={{ ...inputStyle, padding: '8px 12px' }} /></div>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
-                      <div><label style={{ ...labelStyle, fontSize: '0.8rem' }}>FA Icon</label><input value={opt.icon} onChange={e => setOption(i, 'icon', e.target.value)} placeholder="fa-graduation-cap" style={{ ...inputStyle, padding: '8px 12px' }} /></div>
-                      <div><label style={{ ...labelStyle, fontSize: '0.8rem' }}>Min Fee</label><input type="number" value={opt.min ?? ''} onChange={e => setOption(i, 'min', e.target.value)} placeholder="50000" style={{ ...inputStyle, padding: '8px 12px' }} /></div>
-                      <div><label style={{ ...labelStyle, fontSize: '0.8rem' }}>Max Fee</label><input type="number" value={opt.max ?? ''} onChange={e => setOption(i, 'max', e.target.value)} placeholder="100000" style={{ ...inputStyle, padding: '8px 12px' }} /></div>
-                    </div>
-                    <div style={{ marginTop: '10px' }}>
-                      <label style={{ ...labelStyle, fontSize: '0.8rem' }}>Categories (comma-separated)</label>
-                      <input value={Array.isArray(opt.categories) ? opt.categories.join(', ') : ''} onChange={e => setOption(i, 'categories', e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean))} placeholder="MBA, BBA" style={{ ...inputStyle, padding: '8px 12px' }} />
-                    </div>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                    <span style={{ color: '#94A3B8', fontSize: '0.85rem', fontWeight: 600, minWidth: '24px' }}>{i + 1}.</span>
+                    <input
+                      value={opt.label}
+                      onChange={e => setOption(i, 'label', e.target.value)}
+                      placeholder={`Option ${i + 1} label`}
+                      style={{ ...inputStyle, margin: 0 }}
+                    />
+                    {modal.data.options.length > 1 && (
+                      <button onClick={() => removeOption(i)} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', borderRadius: '8px', padding: '8px 12px', cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>✕</button>
+                    )}
                   </div>
                 ))}
               </div>

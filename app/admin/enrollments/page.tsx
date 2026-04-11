@@ -170,102 +170,54 @@ export default function EnrollmentsManagement() {
             </p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gap: 'clamp(1rem, 3vw, 1.5rem)' }}>
-            {filteredEnrollments.map((enr, index) => (
-              <div key={enr._id || index} style={{
-                background: '#fff',
-                borderRadius: 'clamp(0.75rem, 2vw, 1rem)',
-                padding: 'clamp(1rem, 4vw, 1.5rem)',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-                border: '1px solid #e2e8f0',
-                transition: 'all 0.3s'
-              }}>
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
-                  gap: 'clamp(1rem, 3vw, 1.5rem)' 
-                }}>
-                  {/* Left Column */}
-                  <div>
-                    <div style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                        <Users size={18} color="#1e40af" />
-                        <span style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 500, color: '#64748b', textTransform: 'uppercase' }}>
-                          Student
-                        </span>
-                      </div>
-                      <div style={{ fontSize: 'clamp(1rem, 2.5vw, 1.1rem)', fontWeight: 500, color: '#1e293b' }}>
-                        {enr.studentName}
-                      </div>
-                    </div>
-
-                    <div style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                        <Mail size={16} color="#64748b" />
-                        <span style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#64748b', wordBreak: 'break-word' }}>
-                          {enr.email}
-                        </span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Phone size={16} color="#64748b" />
-                        <span style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#64748b' }}>
-                          {enr.phone}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column */}
-                  <div>
-                    <div style={{ marginBottom: 'clamp(0.75rem, 2vw, 1rem)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                        <GraduationCap size={18} color="#1e40af" />
-                        <span style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 500, color: '#64748b', textTransform: 'uppercase' }}>
-                          Program Details
-                        </span>
-                      </div>
-                      <div style={{ fontSize: 'clamp(0.9rem, 2.2vw, 1rem)', fontWeight: 600, color: '#1e293b', marginBottom: '0.25rem' }}>
-                        {enr.program}
-                      </div>
-                      <div style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#64748b' }}>
-                        {enr.university}
-                      </div>
-                    </div>
-
-                    {enr.message && (
-                      <div style={{
-                        padding: 'clamp(0.625rem, 2vw, 0.75rem)',
-                        background: '#f8fafc',
-                        borderRadius: '0.5rem',
-                        border: '1px solid #e2e8f0',
-                        marginBottom: 'clamp(0.75rem, 2vw, 1rem)'
-                      }}>
-                        <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 500, color: '#64748b', marginBottom: '0.25rem' }}>
-                          MESSAGE
-                        </div>
-                        <div style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: '#475569', lineHeight: 1.5 }}>
+          <div style={{ overflowX: 'auto', background: '#fff', borderRadius: 'clamp(0.75rem, 2vw, 1rem)', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', border: '1px solid #e2e8f0' }}>
+            <table style={{ width: '100%', minWidth: '950px', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                  <th style={{ padding: '1.25rem 1.5rem', fontWeight: 600, color: '#475569', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Student</th>
+                  <th style={{ padding: '1.25rem 1.5rem', fontWeight: 600, color: '#475569', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contact</th>
+                  <th style={{ padding: '1.25rem 1.5rem', fontWeight: 600, color: '#475569', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Program & University</th>
+                  <th style={{ padding: '1.25rem 1.5rem', fontWeight: 600, color: '#475569', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Message</th>
+                  <th style={{ padding: '1.25rem 1.5rem', fontWeight: 600, color: '#475569', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date</th>
+                  <th style={{ padding: '1.25rem 1.5rem', fontWeight: 600, color: '#475569', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredEnrollments.map((enr, index) => (
+                  <tr key={enr._id || index} style={{ borderBottom: '1px solid #e2e8f0', transition: 'background 0.2s', ':hover': { background: '#f1f5f9' } } as React.CSSProperties}>
+                    <td style={{ padding: '1rem 1.5rem', verticalAlign: 'top' }}>
+                      <div style={{ fontWeight: 600, color: '#1e293b', fontSize: '0.95rem', marginBottom: '4px' }}>{enr.studentName}</div>
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: '#64748b', verticalAlign: 'top' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}><Mail size={14} /> {enr.email}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Phone size={14} /> {enr.phone}</div>
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', verticalAlign: 'top' }}>
+                      <div style={{ fontWeight: 600, color: '#1e293b', fontSize: '0.9rem', marginBottom: '4px' }}>{enr.program}</div>
+                      <div style={{ fontSize: '0.82rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}><GraduationCap size={14} /> {enr.university}</div>
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: '#475569', maxWidth: '250px', verticalAlign: 'top' }}>
+                      {enr.message ? (
+                        <div style={{ background: '#f8fafc', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '0.82rem', maxHeight: '80px', overflowY: 'auto' }}>
                           {enr.message}
                         </div>
-                      </div>
-                    )}
-
-                    {/* Status Dropdown */}
-                    <div>
-                      <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)', fontWeight: 500, color: '#64748b', marginBottom: '0.5rem', textTransform: 'uppercase' }}>
-                        Status
-                      </div>
+                      ) : <span style={{ color: '#cbd5e1' }}>—</span>}
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: '#64748b', verticalAlign: 'top' }}>
+                      {enr.createdAt ? new Date(enr.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                    </td>
+                    <td style={{ padding: '1rem 1.5rem', verticalAlign: 'top' }}>
                       <select
                         value={enr.status || 'pending'}
                         onChange={(e) => handleStatusChange(enr._id || '', e.target.value)}
                         style={{
-                          width: '100%',
-                          padding: 'clamp(0.5rem, 1.5vw, 0.625rem) clamp(0.75rem, 2vw, 0.875rem)',
+                          width: '120px',
+                          padding: '0.5rem 0.6rem',
                           borderRadius: '0.5rem',
-                          fontSize: 'clamp(0.8rem, 2vw, 0.875rem)',
+                          fontSize: '0.85rem',
                           fontWeight: 600,
                           cursor: 'pointer',
                           outline: 'none',
-                          transition: 'all 0.3s',
                           ...getStatusStyle(enr.status)
                         }}
                       >
@@ -273,24 +225,11 @@ export default function EnrollmentsManagement() {
                         <option value="approved">Approved</option>
                         <option value="rejected">Rejected</option>
                       </select>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Date */}
-                {enr.createdAt && (
-                  <div style={{ 
-                    marginTop: 'clamp(0.75rem, 2vw, 1rem)', 
-                    paddingTop: 'clamp(0.75rem, 2vw, 1rem)', 
-                    borderTop: '1px solid #e2e8f0',
-                    fontSize: 'clamp(0.7rem, 1.8vw, 0.75rem)',
-                    color: '#94a3b8'
-                  }}>
-                    Submitted: {new Date(enr.createdAt).toLocaleString()}
-                  </div>
-                )}
-              </div>
-            ))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

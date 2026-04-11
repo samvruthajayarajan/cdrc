@@ -27,6 +27,7 @@ function EditUniversity() {
     accreditation: '',
     logoInitial: '',
     image: '',
+    logo: '',
     description: '',
     facilities: [''],
     ranking: '',
@@ -50,6 +51,7 @@ function EditUniversity() {
               accreditation: uni.accreditation || '',
               logoInitial: uni.logoInitial || '',
               image: uni.image || '',
+              logo: uni.logo || '',
               description: uni.description || '',
               facilities: uni.facilities && uni.facilities.length > 0 ? uni.facilities : [''],
               ranking: uni.ranking || '',
@@ -299,6 +301,29 @@ function EditUniversity() {
                 />
                 <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.5rem' }}>
                   Optional: Image displayed on university card (180px height)
+                </p>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#1e293b' }}>
+                  Logo Image URL
+                </label>
+                <input
+                  type="text"
+                  name="logo"
+                  value={formData.logo}
+                  onChange={handleInputChange}
+                  placeholder="https://example.com/logo.jpg"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '0.5rem',
+                    fontSize: '1rem'
+                  }}
+                />
+                <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.5rem' }}>
+                  Optional: Small logo displayed on university card and details page
                 </p>
               </div>
             </div>

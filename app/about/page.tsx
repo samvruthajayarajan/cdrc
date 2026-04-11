@@ -195,8 +195,8 @@ export default function AboutPage() {
             ].map((owner, i) => (
               <AnimateOnScroll key={i} animation="fadeUp" delay={i * 100}>
                 <div style={{ background: '#fff', borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-                  <div style={{ position: 'relative', height: 320, width: '100%' }}>
-                    <Image src={owner.image} alt={owner.name} fill style={{ objectFit: 'cover' }} />
+                  <div style={{ position: 'relative', height: 420, width: '100%' }}>
+                    <Image src={owner.image} alt={owner.name} fill style={{ objectFit: 'cover', objectPosition: 'top' }} />
                   </div>
                   <div style={{ padding: '1.75rem', textAlign: 'center' }}>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.25rem' }}>{owner.name}</h3>

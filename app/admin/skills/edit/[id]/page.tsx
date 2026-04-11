@@ -18,8 +18,27 @@ export default function EditSkillPage() {
 
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [form, setForm] = useState({ name: '', description: '', category: 'Technology', level: 'Beginner', duration: '', price: '', image: '' });
+  const [uploading, setUploading] = useState(false);
+  const [form, setForm] = useState({ name: '', description: '', category: 'Technology', level: 'Beginner', duration: '', price: '', image: '', brochureUrl: '' });
   const [courses, setCourses] = useState<Course[]>([{ name: '', duration: '', description: '' }]);
+
+  const set = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }));
+
+  const handleBrochureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) set('brochureUrl', data.url);
+      else alert('Upload failed');
+    } catch { alert('Upload error'); }
+    finally { setUploading(false); }
+  };
+
 
   useEffect(() => {
     fetch('/api/skills').then(r => r.json()).then(d => {
@@ -27,7 +46,7 @@ export default function EditSkillPage() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const skill = d.data.find((s: any) => s._id === id);
         if (skill) {
-          setForm({ name: skill.name || '', description: skill.description || '', category: skill.category || 'Technology', level: skill.level || 'Beginner', duration: skill.duration || '', price: skill.price || '', image: skill.image || '' });
+          setForm({ name: skill.name || '', description: skill.description || '', category: skill.category || 'Technology', level: skill.level || 'Beginner', duration: skill.duration || '', price: skill.price || '', image: skill.image || '', brochureUrl: skill.brochureUrl || '' });
           setCourses(skill.courses?.length ? skill.courses : [{ name: '', duration: '', description: '' }]);
         }
       }
@@ -35,7 +54,7 @@ export default function EditSkillPage() {
     }).catch(() => setFetching(false));
   }, [id]);
 
-  const set = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }));
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,6 +116,21 @@ export default function EditSkillPage() {
               <div>
                 <label style={labelStyle}>Banner Image URL</label>
                 <input style={inputStyle} value={form.image} onChange={e => set('image', e.target.value)} placeholder="https://example.com/image.jpg" />
+              </div>
+              <div>
+                <label style={labelStyle}>Brochure (Link or Upload)</label>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <input style={{ ...inputStyle, flex: 1 }} value={form.brochureUrl} onChange={e => set('brochureUrl', e.target.value)} placeholder="Paste URL or upload a file" />
+                  <label style={{ padding: '0.7rem 1rem', background: uploading ? '#94a3b8' : '#4361EE', color: '#fff', borderRadius: 8, fontWeight: 600, fontSize: '0.85rem', cursor: uploading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    {uploading ? 'Uploading...' : '📎 Upload'}
+                    <input type="file" accept=".pdf,.doc,.docx" onChange={handleBrochureUpload} style={{ display: 'none' }} disabled={uploading} />
+                  </label>
+                </div>
+                {form.brochureUrl && (
+                  <div style={{ marginTop: 6, fontSize: '0.8rem', color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
+                    ✓ Brochure set: <a href={form.brochureUrl} target="_blank" rel="noreferrer" style={{ color: '#4361EE', textDecoration: 'underline', maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'inline-block' }}>{form.brochureUrl}</a>
+                  </div>
+                )}
               </div>
             </div>
             <div style={{ marginTop: '1.25rem' }}>
