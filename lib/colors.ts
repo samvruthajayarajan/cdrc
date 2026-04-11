@@ -4,7 +4,7 @@
  * Uses the YIQ formula to determine brightness.
  */
 export function getContrastColor(hexcolor: string): string {
-  if (!hexcolor || hexcolor.transparent) return '#000';
+  if (!hexcolor || hexcolor === 'transparent') return '#000';
   
   // Remove the hash if it exists
   const hex = hexcolor.replace('#', '');
