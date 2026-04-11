@@ -6,26 +6,10 @@ import AnimateOnScroll from '@/components/AnimateOnScroll';
 import { GraduationCap, Award, Monitor, Building, DollarSign, Phone } from '@/components/Icon';
 import { StatCard } from '@/components/HeroAnimations';
 import { getContrastColor } from '@/lib/colors';
+import { DotGrid, PlusSymbol } from '@/components/HeroDecorations';
 
 const CARD_COLORS = ['#4361EE', '#4895ef', '#3a0ca3', '#7c3aed', '#0f766e', '#b45309'];
 
-const UNI_IMAGES: Record<string, string> = {
-  amity:      'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600&q=80',
-  manipal:    'https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80',
-  gla:        'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80',
-  jain:       'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80',
-  chandigarh: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80',
-  lpu:        'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=600&q=80',
-};
-
-const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=600&q=80',
-  'https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80',
-  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&q=80',
-  'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80',
-  'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80',
-  'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=600&q=80',
-];
 
 interface UniCard {
   name: string;
@@ -280,7 +264,7 @@ function HomePageContent() {
           else brandColor = CARD_COLORS[i % CARD_COLORS.length];
 
           const definedSlug = u.slug || u.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-          const imageSrc = UNI_IMAGES[definedSlug] || (u.image?.startsWith('http') ? u.image : FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]);
+          const imageSrc = u.image?.startsWith('http') ? u.image : undefined;
 
           return {
             name: u.name,
@@ -342,29 +326,62 @@ function HomePageContent() {
       `}</style>
 
       {/* -- HERO -- */}
-      <section style={{ background: 'linear-gradient(150deg,#2d2d6b 0%,#4361EE 55%,#4895ef 100%)', minHeight: '100vh', paddingTop: 80, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '5%', right: '0', width: 600, height: 600, background: 'radial-gradient(circle,rgba(96,165,250,0.12) 0%,transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '0', left: '-5%', width: 400, height: 400, background: 'radial-gradient(circle,rgba(139,92,246,0.08) 0%,transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+      <section style={{ background: '#4169E1', minHeight: '100vh', paddingTop: 80, position: 'relative', overflow: 'hidden' }}>
+        {/* Royal blue layered mesh */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #2a4db5 0%, #4169E1 40%, #5a7fe8 70%, #3358d4 100%)', pointerEvents: 'none' }} />
+        {/* Glowing orbs */}
+        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(100,160,255,0.35) 0%, rgba(41,82,196,0.15) 40%, transparent 70%)', pointerEvents: 'none', filter: 'blur(30px)' }} />
+        <div style={{ position: 'absolute', bottom: '-15%', left: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(30,77,183,0.5) 0%, rgba(13,43,122,0.2) 50%, transparent 70%)', pointerEvents: 'none', filter: 'blur(40px)' }} />
+        <div style={{ position: 'absolute', top: '40%', left: '30%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(120,180,255,0.15) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(20px)' }} />
+        {/* Subtle grid */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)', backgroundSize: '50px 50px', pointerEvents: 'none' }} />
+        {/* Decorative Dot Grid Bottom Left */}
+        <DotGrid style={{ position: 'absolute', bottom: '40px', left: '20px' }} />
+        {/* Diagonal light streak */}
+        <div style={{ position: 'absolute', top: 0, right: '20%', width: 2, height: '100%', background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.06) 30%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.06) 70%, transparent)', transform: 'rotate(15deg)', transformOrigin: 'top', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: 0, right: '35%', width: 1, height: '100%', background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 40%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.04) 60%, transparent)', transform: 'rotate(15deg)', transformOrigin: 'top', pointerEvents: 'none' }} />
+        <style>{`
+          @keyframes heroFloat1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-40px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
+          @keyframes heroFloat2 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(-40px,30px) scale(1.08)} 66%{transform:translate(25px,-25px) scale(0.92)} }
+          @keyframes heroFloat3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-30px)} }
+          @keyframes heroPulse { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
+          @keyframes heroRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+          @media (max-width: 991px) {
+            .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
+            .hero-left { display: flex; flex-direction: column; align-items: center; }
+            .hero-right { height: auto !important; padding: 40px 0; }
+            .hero-card { position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; margin: 10px auto !important; width: 100% !important; max-width: 280px !important; transform: none !important; }
+          }
+        `}</style>
+        <div style={{ position: 'absolute', top: '10%', right: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(100,160,255,0.3) 0%, transparent 70%)', animation: 'heroFloat1 8s ease-in-out infinite', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '15%', left: '5%', width: 250, height: 250, borderRadius: '50%', background: 'radial-gradient(circle, rgba(60,120,220,0.35) 0%, transparent 70%)', animation: 'heroFloat2 10s ease-in-out infinite', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '40%', width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(circle, rgba(150,200,255,0.2) 0%, transparent 70%)', animation: 'heroFloat3 6s ease-in-out infinite', pointerEvents: 'none' }} />
+        {/* Pulsing ring */}
+        <div style={{ position: 'absolute', top: '20%', left: '15%', width: 120, height: 120, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.15)', animation: 'heroPulse 4s ease-in-out infinite', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '20%', left: '15%', width: 80, height: 80, margin: '20px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.1)', animation: 'heroPulse 4s ease-in-out infinite 1s', pointerEvents: 'none' }} />
+        {/* Slow rotating ring bottom-right */}
+        <div style={{ position: 'absolute', bottom: '-60px', right: '-60px', width: 300, height: 300, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.08)', animation: 'heroRotate 20s linear infinite', pointerEvents: 'none' }} />
 
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '3.5rem 1.5rem 3rem', position: 'relative', zIndex: 1 }}>
-          <div className="hg" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3.5rem', alignItems: 'center', minHeight: '82vh' }}>
+          <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) 1fr', gap: '4rem', alignItems: 'center', minHeight: '82vh' }}>
 
-            {/* LEFT */}
-            <div>
-              <div className="h-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.18)', borderRadius: 50, padding: '6px 16px', color: '#93c5fd', fontSize: '0.8rem', fontWeight: 600, marginBottom: '1.5rem', backdropFilter: 'blur(8px)' }}>
+            {/* LEFT COLUMN */}
+            <div className="hero-left" style={{ position: 'relative' }}>
+              <div className="h-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.18)', borderRadius: 50, padding: '6px 16px', color: '#fff', fontSize: '0.8rem', fontWeight: 600, marginBottom: '2.5rem', backdropFilter: 'blur(8px)' }}>
                 <span style={{ width: 7, height: 7, background: '#4ade80', borderRadius: '50%', display: 'inline-block' }} />
                 India&apos;s Trusted Online Education Partner
               </div>
-              <h1 className="h-title" style={{ fontSize: 'clamp(2.2rem,5vw,3.75rem)', fontWeight: 600, lineHeight: 1.08, color: '#fff', marginBottom: '1.5rem', letterSpacing: '-0.03em' }}>
-                Advance Your Career<br />
+              <h1 className="h-title" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 600, lineHeight: 1.1, color: '#fff', marginBottom: '1.8rem', letterSpacing: '-0.02em' }}>
+                Advance Your<br />
+                Career<br />
                 with <span style={{ color: '#90e0ef' }}>Online Degrees</span>
               </h1>
-              <p className="h-sub" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '2.5rem', maxWidth: 460 }}>
+              <p className="h-sub" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.15rem', lineHeight: 1.8, marginBottom: '2.8rem', maxWidth: 480 }}>
                 Get UGC-approved degrees from India&apos;s top NAAC-accredited universities. Study at your own pace, from anywhere in the world.
               </p>
-              <div className="h-btns" style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
+              <div className="h-btns" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
                 <Link href="/programs"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '13px 26px', borderRadius: 10, fontWeight: 500, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 4px 18px rgba(37,99,235,0.45)', transition: 'all 0.25s ease' }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#4361EE', color: '#fff', padding: '14px 28px', borderRadius: 12, fontWeight: 500, fontSize: '1rem', textDecoration: 'none', boxShadow: '0 4px 18px rgba(37,99,235,0.45)', transition: 'all 0.25s ease' }}
                   onMouseEnter={e => { e.currentTarget.style.background = '#2d4fd6'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 10px 28px rgba(37,99,235,0.55)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = '#4361EE'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(37,99,235,0.45)'; }}
                 >
@@ -372,55 +389,52 @@ function HomePageContent() {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </Link>
                 <button onClick={() => { const b = document.querySelector('.cf-floating-btn') as HTMLButtonElement; if (b) b.click(); }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', color: '#fff', padding: '13px 26px', borderRadius: 10, fontWeight: 600, fontSize: '0.95rem', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer', fontFamily: 'inherit', backdropFilter: 'blur(8px)', transition: 'all 0.25s ease' }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.08)', color: '#fff', padding: '14px 28px', borderRadius: 12, fontWeight: 600, fontSize: '1rem', border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer', fontFamily: 'inherit', backdropFilter: 'blur(8px)', transition: 'all 0.25s ease' }}
                   onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.18)'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.2)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
                 >
                   Find My Course
                 </button>
               </div>
-              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
                 {[['UGC Approved', '#4ade80'], ['NAAC Accredited', '#90e0ef'], ['WES Recognized', '#c084fc']].map(([lbl, clr]) => (
-                  <div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.75)', fontSize: '0.8rem', fontWeight: 500 }}>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={clr} strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem', fontWeight: 500 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={clr} strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
                     {lbl}
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* RIGHT ? keep original image */}
-            <div className="hr h-img" style={{ position: 'relative', height: 520 }}>
-              <div style={{ position: 'absolute', top: 24, left: 48, right: 0, height: 390, borderRadius: 20, overflow: 'hidden', boxShadow: '0 32px 64px rgba(0,0,0,0.45)' }}>
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=700&q=80" alt="Students" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(15,23,42,0.45) 0%,transparent 55%)' }} />
+            {/* RIGHT COLUMN */}
+            <div className="hero-right" style={{ position: 'relative', height: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <DotGrid style={{ position: 'absolute', top: -30, right: -40, zIndex: 0 }} />
+              <PlusSymbol style={{ top: '15%', left: '0' }} />
+              
+              <div style={{ position: 'relative', width: '100%', maxWidth: 460, height: 440, borderRadius: 32, overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.4)', zIndex: 2 }}>
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="Students" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,0.4) 0%, transparent 60%)' }} />
               </div>
-              <div className="fc1" style={{ position: 'absolute', top: 0, left: 0, background: '#fff', borderRadius: 14, padding: '13px 17px', boxShadow: '0 8px 28px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', gap: 12, zIndex: 10 }}>
-                <div style={{ width: 40, height: 40, background: '#eef2ff', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><GraduationCap size={22} color="#4361EE" /></div>
+
+              {/* FLOATING CARDS */}
+              <div className="hero-card fc1" style={{ position: 'absolute', top: '25px', left: '-50px', background: '#fff', borderRadius: 20, padding: '16px 28px', boxShadow: '0 25px 50px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', gap: 16, zIndex: 10 }}>
+                <div style={{ width: 44, height: 44, background: '#eef2ff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><GraduationCap size={24} color="#4361EE" /></div>
                 <div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#4361EE', lineHeight: 1 }}>15,000+</div>
-                  <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Active Students</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#1e40af', lineHeight: 1 }}>15,000+</div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>Active Students</div>
                 </div>
               </div>
-              <div className="fc2" style={{ position: 'absolute', bottom: 56, right: 0, background: '#fff', borderRadius: 14, padding: '13px 17px', boxShadow: '0 8px 28px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', gap: 12, zIndex: 10 }}>
-                <div style={{ width: 40, height: 40, background: '#F0FDF4', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Award size={22} color="#15803d" /></div>
+
+              <div className="hero-card fc2" style={{ position: 'absolute', bottom: '25px', right: '-50px', background: '#fff', borderRadius: 20, padding: '16px 28px', boxShadow: '0 25px 50px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', gap: 16, zIndex: 10 }}>
+                <div style={{ width: 44, height: 44, background: '#F0FDF4', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Award size={24} color="#15803d" /></div>
                 <div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#15803d', lineHeight: 1 }}>95%</div>
-                  <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Placement Rate</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#15803d', lineHeight: 1 }}>95%</div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>Placement Rate</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Stats bar */}
-          <AnimateOnScroll animation="fadeUp" delay={400}>
-            <div className="sg" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(255,255,255,0.08)', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', marginTop: '2.5rem' }}>
-              <StatCard value={10000} suffix="+" label="Students Enrolled" icon={null} delay={0} />
-              <StatCard value={14} suffix="+" label="Partner Universities" icon={null} delay={200} />
-              <StatCard value={500} suffix="+" label="Programs Available" icon={null} delay={400} />
-              <StatCard value={10} suffix="+" label="Years of Excellence" icon={null} delay={600} />
-            </div>
-          </AnimateOnScroll>
         </div>
       </section>
 
@@ -622,8 +636,10 @@ function HomePageContent() {
                       if (overlay) overlay.style.opacity = '0';
                     }}>
                     {/* Image banner */}
-                    <div style={{ height: 160, position: 'relative', overflow: 'hidden' }}>
-                      <img className="uni-img" src={uni.image} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.5s ease' }} />
+                    <div style={{ height: 160, position: 'relative', overflow: 'hidden', background: '#0a102b' }}>
+                      {uni.image && (
+                        <img className="uni-img" src={uni.image} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', transition: 'transform 0.5s ease' }} />
+                      )}
                       
                       {/* Color overlay that fades in on hover */}
                       <div className="uni-color-overlay" style={{ position: 'absolute', inset: 0, background: uni.color, opacity: 0, transition: 'opacity 0.3s ease', mixBlendMode: 'multiply' }} />

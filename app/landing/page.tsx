@@ -181,15 +181,6 @@ export default function LandingPage() {
           </div>
         </ParallaxLayer>
 
-        {/* Stats bar — frosted glass strip */}
-        <div style={{ width: '100%', maxWidth: 1100, margin: '0 auto', padding: '0 2rem', position: 'relative', zIndex: 2, marginBottom: '5rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, overflow: 'hidden' }}>
-            <StatCard value={10000} suffix="+" label="Students Enrolled" icon={null} delay={0} />
-            <StatCard value={14} suffix="+" label="Partner Universities" icon={null} delay={200} />
-            <StatCard value={500} suffix="+" label="Programs Available" icon={null} delay={400} />
-            <StatCard value={10} suffix="+" label="Years of Excellence" icon={null} delay={600} />
-          </div>
-        </div>
 
         <HeroWave />
       </section>

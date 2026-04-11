@@ -12,6 +12,7 @@ const menuItems = [
   { icon: <BookOpen size={22} />, label: 'Programs', href: '/admin/programs' },
   { icon: <Users size={22} />, label: 'Skills', href: '/admin/skills' },
   { icon: <Search size={22} />, label: 'Course Finder', href: '/admin/course-finder' },
+  { icon: <Globe size={22} />, label: 'Suggest University', href: '/admin/suggest-university' },
   { icon: <Users size={22} />, label: 'Enrollments', href: '/admin/enrollments' },
   { icon: <Mail size={22} />, label: 'Contact Messages', href: '/admin/contacts' },
   { icon: <Globe size={22} />, label: 'SEO Settings', href: '/admin/seo' },

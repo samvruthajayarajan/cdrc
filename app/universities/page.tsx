@@ -25,14 +25,6 @@ const mapUni = (u: any): University => ({
   image: u.image?.startsWith('http') ? u.image : undefined,
 });
 
-const UNI_IMAGES = [
-  'https://images.pexels.com/photos/207692/pexels-photo-207692.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/159490/yale-university-landscape-universities-schools-159490.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/2982449/pexels-photo-2982449.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1205651/pexels-photo-1205651.jpeg?auto=compress&cs=tinysrgb&w=800',
-];
 
 export default function UniversitiesPage() {
   const [universities, setUniversities] = useState<University[]>([]);
@@ -68,7 +60,7 @@ export default function UniversitiesPage() {
         {/* Dot grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '14rem 2rem 10rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
             {/* Breadcrumb */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
@@ -103,18 +95,6 @@ export default function UniversitiesPage() {
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, background: 'linear-gradient(to bottom, transparent, #1e40af)', pointerEvents: 'none' }} />
       </section>
 
-      {/* ── STATS STRIP ── */}
-      <div style={{ background: '#1e40af', padding: '1rem 2rem' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' }}>
-          {[['14+', 'Universities'], ['500+', 'Programs'], ['UGC-DEB', 'Approved'], ['NAAC', 'Accredited']].map(([val, lbl]) => (
-            <div key={lbl} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', lineHeight: 1 }}>{val}</div>
-              <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>{lbl}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* ── RESULTS COUNT ── */}
       <div style={{ padding: '1.5rem 2rem 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -140,7 +120,7 @@ export default function UniversitiesPage() {
           ) : (
             <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
               {filtered.map((uni, i) => {
-                const actualImgSrc = (uni.image && uni.image.startsWith('http')) ? uni.image : UNI_IMAGES[i % UNI_IMAGES.length];
+                const actualImgSrc = (uni.image && uni.image.startsWith('http')) ? uni.image : undefined;
                 let brandColor = '#4361EE';
                 if (uni.image?.includes('blue')) brandColor = '#2563eb';
                 else if (uni.image?.includes('green')) brandColor = '#16a34a';
@@ -179,11 +159,13 @@ export default function UniversitiesPage() {
                         }}
                       >
                         {/* Image */}
-                        <div style={{ position: 'relative', height: 200, overflow: 'hidden' }}>
+                        <div style={{ position: 'relative', height: 200, overflow: 'hidden', background: '#0a102b' }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img className="uni-img" src={actualImgSrc} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }}
-                            onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                          />
+                          {actualImgSrc && (
+                            <img className="uni-img" src={actualImgSrc} alt={uni.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }}
+                              onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                            />
+                          )}
                           {/* Color overlay that fades in on hover */}
                           <div className="uni-color-overlay" style={{ position: 'absolute', inset: 0, background: brandColor, opacity: 0, transition: 'opacity 0.3s ease', mixBlendMode: 'multiply' }} />
                           {/* Permanent dark gradient for text legibility */}

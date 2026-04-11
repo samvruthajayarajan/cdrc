@@ -267,43 +267,6 @@ export default function CreateUniversity() {
               </div>
             </div>
 
-            {/* SEO */}
-            <div style={S.section}>
-              <SectionHeader icon={<Search size={18} color="#fff" />} title="SEO & Social Sharing" desc="Optimize for search engines and social media" />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div>
-                  <label style={S.label}>Meta Title</label>
-                  <input style={S.input} value={form.metaTitle} onChange={e => set('metaTitle', e.target.value)} placeholder="Best Private University in India..." maxLength={60}
-                    onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
-                  <p style={S.hint}>{form.metaTitle.length}/60 characters</p>
-                </div>
-                <Textarea label="Meta Description" value={form.metaDescription} onChange={v => set('metaDescription', v)} rows={2} placeholder="Brief summary for search results..." hint={`${form.metaDescription.length}/160 characters`} />
-                <Field label="Keywords" name="keywords" placeholder="university, admission, courses" hint="Comma separated keywords" value={form.keywords} onChange={v => set('keywords', v)} />
-                <div style={S.grid2}>
-                  <Field label="Canonical URL" name="canonicalUrl" placeholder="https://example.com/university/slug" value={form.canonicalUrl} onChange={v => set('canonicalUrl', v)} />
-                  <div>
-                    <label style={S.label}>Robots Meta</label>
-                    <select value={form.robotsMeta} onChange={e => set('robotsMeta', e.target.value)} style={S.input}>
-                      <option>Index, Follow</option><option>NoIndex, Follow</option><option>Index, NoFollow</option><option>NoIndex, NoFollow</option>
-                    </select>
-                  </div>
-                </div>
-                <div style={{ background: ACCENT_LIGHT, borderRadius: 12, padding: '18px 20px', border: `1px solid ${ACCENT_BORDER}` }}>
-                  <p style={{ fontWeight: 500, color: ACCENT, marginBottom: 14, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Globe size={14} color={ACCENT} /> Open Graph (Social Sharing)
-                  </p>
-                  <div style={S.grid2}>
-                    <Field label="OG Title" name="ogTitle" placeholder="Title for Facebook/Twitter" value={form.ogTitle} onChange={v => set('ogTitle', v)} />
-                    <Field label="OG Image URL" name="ogImageUrl" placeholder="Image URL for social preview" value={form.ogImageUrl} onChange={v => set('ogImageUrl', v)} />
-                  </div>
-                  <div style={{ marginTop: 14 }}>
-                    <Textarea label="OG Description" value={form.ogDescription} onChange={v => set('ogDescription', v)} rows={2} placeholder="Description for social sharing..." />
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* Description */}
             <div style={S.section}>
               <SectionHeader icon={<BookOpen size={18} color="#fff" />} title="Description" desc="Provide detailed information about the university" />

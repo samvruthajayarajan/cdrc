@@ -129,14 +129,19 @@ export default function UniversityDetailPage() {
     <div className="page-enter" style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* ── HERO ── */}
       <section style={{ position: 'relative', minHeight: 480, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
-        {/* Background image */}
-        <img
-          src={hasImage ? university.image : "https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80"}
-          alt={university.name}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
-        />
+        {/* Background image - ONLY IF PROVIDED */}
+        {hasImage && (
+          <img
+            src={university.image}
+            alt={university.name}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
+          />
+        )}
         {/* Transparent overlay */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.75) 0%, rgba(67,97,238,0.55) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: hasImage 
+          ? 'linear-gradient(135deg, rgba(15,23,42,0.75) 0%, rgba(67,97,238,0.55) 100%)'
+          : 'linear-gradient(135deg, #0f172a 0%, #1e40af 100%)' // Darker blue gradient if no image
+        }} />
         
         {/* Dot grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
@@ -154,18 +159,6 @@ export default function UniversityDetailPage() {
               <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.1, marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
                 {university.name}
               </h1>
-              
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
-                {[
-                  { icon: <MapPin size={14} color="#90e0ef" />, text: university.location },
-                  { icon: <Award size={14} color="#90e0ef" />, text: university.naac },
-                  { icon: <GraduationCap size={14} color="#90e0ef" />, text: `${university.programs.length}+ Programs` },
-                ].map((b, i) => (
-                  <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 50, padding: '7px 16px', color: '#fff', fontSize: '0.8rem', fontWeight: 500 }}>
-                    {b.icon} {b.text}
-                  </span>
-                ))}
-              </div>
             </div>
           </AnimateOnScroll>
         </div>

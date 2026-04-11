@@ -13,6 +13,25 @@ interface Program {
   duration: string;
   university: string;
   description?: string;
+  youtubeUrl?: string;
+  image?: string;
+}
+
+// Converts any YouTube URL format to an embeddable URL
+function getYouTubeEmbedUrl(url: string): string | null {
+  try {
+    // Handle youtu.be short links
+    const shortMatch = url.match(/youtu\.be\/([\w-]+)/);
+    if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`;
+    // Handle youtube.com/watch?v=
+    const watchMatch = url.match(/[?&]v=([\w-]+)/);
+    if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`;
+    // Handle youtube.com/embed/ (already embedded)
+    if (url.includes('youtube.com/embed/')) return url;
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 const HIGHLIGHTS: Record<string, string[]> = {
@@ -101,7 +120,7 @@ export default function ProgramDetailPage() {
       `}</style>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: 480, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+      <section style={{ position: 'relative', minHeight: 640, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
         {/* Background image */}
         <img
           src="https://images.pexels.com/photos/256490/pexels-photo-256490.jpeg?auto=compress&cs=tinysrgb&w=1600"
@@ -114,7 +133,7 @@ export default function ProgramDetailPage() {
         {/* Dot grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '13rem 2rem 9rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
             {/* Breadcrumb */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem', fontWeight: 600 }}>
@@ -136,22 +155,6 @@ export default function ProgramDetailPage() {
               <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.1, marginBottom: '2rem', letterSpacing: '-0.02em', maxWidth: 800 }}>
                 {program.name}
               </h1>
-              
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2rem' }}>
-                {[
-                  { icon: <Clock size={15} color="#90e0ef" />, label: 'Duration', value: program.duration },
-                  { icon: <BookOpen size={15} color="#90e0ef" />, label: 'Mode', value: 'Online' },
-                  { icon: <GraduationCap size={15} color="#90e0ef" />, label: 'University', value: program.university || 'Multiple' },
-                ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</div>
-                    <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{item.label}</div>
-                      <div style={{ fontSize: '0.9rem', color: '#fff', fontWeight: 500 }}>{item.value}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </AnimateOnScroll>
         </div>
@@ -181,7 +184,29 @@ export default function ProgramDetailPage() {
             </div>
           </AnimateOnScroll>
 
-          {/* What you'll learn */}
+          {/* ── YouTube Video ── */}
+          {program.youtubeUrl && getYouTubeEmbedUrl(program.youtubeUrl) && (
+            <AnimateOnScroll animation="fadeUp" delay={40}>
+              <div style={{ background: '#fff', borderRadius: 14, padding: '1.75rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                <h2 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 28, height: 28, background: '#fef2f2', borderRadius: 7, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#dc2626"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.1 3 12 3 12 3s-4.1 0-6.8.2C4.5 4 3.2 4 2.2 5.2 1.3 6 1 8 1 8S.7 10.3.7 12.5v2.1c0 2.3.3 4.5.3 4.5s.3 2 1.2 2.8C3.3 23 4.8 22.9 5.5 23c2.1.2 8.5.2 8.5.2s4.1 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.3.3-4.5v-2.1C23.3 9.3 23 7 23 7zM9.7 15.5V8.5l6.6 3.5-6.6 3.5z"/></svg>
+                  </span>
+                  Program Overview Video
+                </h2>
+                <div style={{ position: 'relative', paddingTop: '56.25%', borderRadius: 10, overflow: 'hidden', background: '#000' }}>
+                  <iframe
+                    src={getYouTubeEmbedUrl(program.youtubeUrl)!}
+                    title={`${program.name} overview video`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
+                  />
+                </div>
+              </div>
+            </AnimateOnScroll>
+          )}
+
           <AnimateOnScroll animation="fadeUp" delay={60}>
             <div style={{ background: '#fff', borderRadius: 14, padding: '1.75rem', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
               <h2 style={{ fontSize: '1.05rem', fontWeight: 500, color: '#0f172a', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: 8 }}>

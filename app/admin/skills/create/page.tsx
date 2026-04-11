@@ -2,9 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Plus, Trash2 } from '@/components/Icon';
-
-interface Course { name: string; duration: string; description: string; }
+import { ArrowLeft, Plus } from '@/components/Icon';
 
 const inputStyle: React.CSSProperties = { width: '100%', padding: '0.75rem 1rem', border: '1.5px solid #e2e8f0', borderRadius: 8, fontSize: '0.95rem', outline: 'none', background: '#fff', color: '#1e293b', boxSizing: 'border-box' };
 const labelStyle: React.CSSProperties = { display: 'block', marginBottom: '0.4rem', fontWeight: 600, color: '#374151', fontSize: '0.875rem' };
@@ -15,7 +13,6 @@ export default function CreateSkillPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: '', description: '', category: 'Technology', level: 'Beginner', duration: '', price: '', image: '' });
-  const [courses, setCourses] = useState<Course[]>([{ name: '', duration: '', description: '' }]);
 
   const set = (k: string, v: string) => setForm(p => ({ ...p, [k]: v }));
 
@@ -25,7 +22,7 @@ export default function CreateSkillPage() {
     try {
       const res = await fetch('/api/skills', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, courses: courses.filter(c => c.name.trim()) }),
+        body: JSON.stringify({ ...form }),
       });
       if (res.ok) router.push('/admin/skills');
       else { const err = await res.json(); alert(err.error || 'Failed'); }
@@ -84,43 +81,6 @@ export default function CreateSkillPage() {
               <label style={labelStyle}>Description *</label>
               <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={4} value={form.description} onChange={e => set('description', e.target.value)} required placeholder="Describe what students will learn in this skill program..." />
             </div>
-          </div>
-
-          {/* Courses */}
-          <div style={sectionStyle}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>
-              <div style={{ fontWeight: 500, color: '#0f172a', fontSize: '1rem' }}>Courses Included</div>
-              <button type="button" onClick={() => setCourses([...courses, { name: '', duration: '', description: '' }])}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', background: '#4361EE', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontSize: '0.875rem', fontFamily: 'inherit' }}>
-                <Plus size={15} /> Add Course
-              </button>
-            </div>
-            {courses.map((c, i) => (
-              <div key={i} style={{ background: '#f8fafc', borderRadius: 10, padding: '1.25rem', marginBottom: '1rem', border: '1px solid #e2e8f0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontWeight: 600, color: '#374151', fontSize: '0.9rem' }}>Course {i + 1}</span>
-                  {courses.length > 1 && (
-                    <button type="button" onClick={() => setCourses(courses.filter((_, j) => j !== i))} style={{ padding: '4px 8px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', fontFamily: 'inherit' }}>
-                      <Trash2 size={14} />
-                    </button>
-                  )}
-                </div>
-                <div style={grid2}>
-                  <div>
-                    <label style={labelStyle}>Course Name *</label>
-                    <input style={inputStyle} value={c.name} onChange={e => { const n = [...courses]; n[i].name = e.target.value; setCourses(n); }} placeholder="e.g., SEO Fundamentals" />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Duration</label>
-                    <input style={inputStyle} value={c.duration} onChange={e => { const n = [...courses]; n[i].duration = e.target.value; setCourses(n); }} placeholder="e.g., 2 Weeks" />
-                  </div>
-                </div>
-                <div style={{ marginTop: '1rem' }}>
-                  <label style={labelStyle}>Description</label>
-                  <textarea style={{ ...inputStyle, resize: 'vertical' }} rows={2} value={c.description} onChange={e => { const n = [...courses]; n[i].description = e.target.value; setCourses(n); }} placeholder="Brief course description..." />
-                </div>
-              </div>
-            ))}
           </div>
 
           {/* Actions */}

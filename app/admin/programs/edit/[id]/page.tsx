@@ -68,7 +68,7 @@ export default function EditProgramPage() {
 
   const [form, setForm] = useState({
     name: '', duration: '', university: '', universityId: '',
-    category: '', level: '', mode: 'Online', fee: '', feePeriod: 'Total',
+    category: '', courseType: '', level: '', qualification: '', mode: 'Online', fee: '', feePeriod: 'Total',
     description: '', eligibility: '',
     imageUrl: '', brochureUrl: '', youtubeUrl: '',
     syllabus: '', highlights: '', careerOptions: '', specializations: '',
@@ -94,7 +94,9 @@ export default function EditProgramPage() {
           university: p.university || '',
           universityId: p.universityId || '',
           category: p.category || '',
+          courseType: p.courseType || '',
           level: p.level || '',
+          qualification: p.qualification || '',
           mode: p.mode || 'Online',
           fee: p.fee ? String(p.fee) : '',
           feePeriod: p.feePeriod || 'Total',
@@ -140,7 +142,7 @@ export default function EditProgramPage() {
         name: form.name, duration: form.duration,
         university: form.university,
         universityId: form.universityId,
-        category: form.category, level: form.level, mode: form.mode,
+        category: form.category, courseType: form.courseType, level: form.level, qualification: form.qualification, mode: form.mode,
         fee: form.fee ? Number(form.fee) : undefined, feePeriod: form.feePeriod,
         description: form.description, eligibility: form.eligibility,
         image: form.imageUrl, brochureUrl: form.brochureUrl, youtubeUrl: form.youtubeUrl,
@@ -242,6 +244,13 @@ export default function EditProgramPage() {
                   <input {...inputProps('university')} placeholder="e.g., Amity University" />
                 </div>
                 <div>
+                  <label style={S.label}>Course Type</label>
+                  <select {...selectProps('courseType')}>
+                    <option value="">Select Course Type</option>
+                    {['Commerce', 'Arts', 'Science', 'Technology', 'Management', 'Other'].map(v => <option key={v}>{v}</option>)}
+                  </select>
+                </div>
+                <div>
                   <label style={S.label}>Category</label>
                   <select {...selectProps('category')}>
                     <option value="">Select Category</option>
@@ -253,6 +262,13 @@ export default function EditProgramPage() {
                   <select {...selectProps('level')}>
                     <option value="">Select Level</option>
                     {['Undergraduate', 'Postgraduate', 'Doctorate', 'Diploma', 'Certificate'].map(v => <option key={v}>{v}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label style={S.label}>Minimum Qualification Required</label>
+                  <select {...selectProps('qualification')}>
+                    <option value="">Select Qualification</option>
+                    {['Below 12th', '12th Pass', 'Graduate', 'Post Graduate'].map(v => <option key={v}>{v}</option>)}
                   </select>
                 </div>
                 <div>
@@ -348,58 +364,6 @@ export default function EditProgramPage() {
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={S.label}>YouTube Video URL</label>
                   <input {...inputProps('youtubeUrl')} placeholder="https://www.youtube.com/watch?v=..." />
-                </div>
-              </div>
-            </div>
-
-            {/* SEO */}
-            <div style={S.section}>
-              <SectionHeader icon={<Search size={18} color="#fff" />} title="SEO & Social Sharing" desc="Optimize for search engines and social media" />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div>
-                  <label style={S.label}>Meta Title</label>
-                  <input {...inputProps('metaTitle')} placeholder="Program Name | University Name" maxLength={60} />
-                  <p style={S.hint}>{form.metaTitle.length}/60 characters</p>
-                </div>
-                <div>
-                  <label style={S.label}>Meta Description</label>
-                  <textarea {...textareaProps('metaDescription', 2)} placeholder="Brief summary for search results..." />
-                  <p style={S.hint}>{form.metaDescription.length}/160 characters</p>
-                </div>
-                <div style={S.grid2}>
-                  <div>
-                    <label style={S.label}>Keywords</label>
-                    <input {...inputProps('keywords')} placeholder="mba, online mba, business degree" />
-                  </div>
-                  <div>
-                    <label style={S.label}>Canonical URL</label>
-                    <input {...inputProps('canonicalUrl')} placeholder="https://example.com/programs/slug" />
-                  </div>
-                  <div>
-                    <label style={S.label}>Robots Meta</label>
-                    <select {...selectProps('robotsMeta')}>
-                      <option>Index, Follow</option><option>NoIndex, Follow</option><option>Index, NoFollow</option><option>NoIndex, NoFollow</option>
-                    </select>
-                  </div>
-                </div>
-                <div style={{ background: ACCENT_LIGHT, borderRadius: 12, padding: '18px 20px', border: `1px solid ${ACCENT_BORDER}` }}>
-                  <p style={{ fontWeight: 500, color: ACCENT, marginBottom: 14, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <Globe size={14} color={ACCENT} /> Open Graph (Social Sharing)
-                  </p>
-                  <div style={S.grid2}>
-                    <div>
-                      <label style={S.label}>OG Title</label>
-                      <input {...inputProps('ogTitle')} placeholder="Title for Facebook/Twitter" />
-                    </div>
-                    <div>
-                      <label style={S.label}>OG Image URL</label>
-                      <input {...inputProps('ogImageUrl')} placeholder="Image URL for social preview" />
-                    </div>
-                  </div>
-                  <div style={{ marginTop: 14 }}>
-                    <label style={S.label}>OG Description</label>
-                    <textarea {...textareaProps('ogDescription', 2)} placeholder="Description for social sharing..." />
-                  </div>
                 </div>
               </div>
             </div>

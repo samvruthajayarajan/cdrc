@@ -20,7 +20,7 @@ export default function AboutPage() {
     <div style={{ background: '#fff', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: 700, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+      <section style={{ position: 'relative', minHeight: 720, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
         {/* Background image */}
         <img
           src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1600&q=80"
@@ -33,7 +33,7 @@ export default function AboutPage() {
         {/* Dot grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '14rem 2rem 10rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
             {/* Breadcrumb */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', fontWeight: 500 }}>
@@ -183,16 +183,14 @@ export default function AboutPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
             {[
               { 
-                name: 'Dr. Rajesh Kumar', 
-                role: 'Founder & CEO', 
-                image: '/owners/owner1.png',
-                details: 'A visionary educator with over 20 years of experience in the distance learning sector, committed to academic excellence.'
+                name: 'Adv. Nizam Falah', 
+                role: 'Director', 
+                image: '/Adv Nizam Falah.jpeg',
               },
               { 
-                name: 'Mrs. Shanthi Rajesh', 
-                role: 'Managing Director', 
-                image: '/owners/owner2.png',
-                details: 'Leading CDRC with a focus on student-centric consulting and strategic institutional partnerships across India.'
+                name: 'Muneer A', 
+                role: 'Director', 
+                image: '/Muneer A.jpeg',
               },
             ].map((owner, i) => (
               <AnimateOnScroll key={i} animation="fadeUp" delay={i * 100}>
@@ -203,7 +201,6 @@ export default function AboutPage() {
                   <div style={{ padding: '1.75rem', textAlign: 'center' }}>
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.25rem' }}>{owner.name}</h3>
                     <div style={{ fontSize: '0.85rem', color: RBL, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>{owner.role}</div>
-                    <p style={{ fontSize: '0.9rem', color: '#64748b', lineHeight: 1.6 }}>{owner.details}</p>
                   </div>
                 </div>
               </AnimateOnScroll>

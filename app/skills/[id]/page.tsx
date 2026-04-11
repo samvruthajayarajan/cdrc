@@ -76,7 +76,7 @@ export default function SkillDetailPage() {
       `}</style>
 
       {/* ── HERO ── */}
-      <section style={{ position: 'relative', minHeight: 480, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
+      <section style={{ position: 'relative', minHeight: 640, display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#0a102b' }}>
         {/* Background image */}
         <img
           src={skill.image || 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1600'}
@@ -89,7 +89,7 @@ export default function SkillDetailPage() {
         {/* Dot grid pattern */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '10rem 2rem 5rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1100, margin: '0 auto', padding: '13rem 2rem 9rem', width: '100%', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <AnimateOnScroll animation="fadeUp">
             {/* Breadcrumb */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: '1.5rem', color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem', fontWeight: 600 }}>
@@ -111,22 +111,6 @@ export default function SkillDetailPage() {
               <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, color: '#fff', lineHeight: 1.1, marginBottom: '2rem', letterSpacing: '-0.02em', maxWidth: 800 }}>
                 {skill.name}
               </h1>
-              
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2rem' }}>
-                {[
-                  { icon: <Clock size={15} color="#90e0ef" />, label: 'Duration', value: skill.duration || 'Flexible' },
-                  { icon: <Award size={15} color="#90e0ef" />, label: 'Experience', value: skill.level },
-                  { icon: <Users size={15} color="#90e0ef" />, label: 'Modules', value: `${skill.courses?.length || 0} Lessons` },
-                ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</div>
-                    <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.5)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{item.label}</div>
-                      <div style={{ fontSize: '0.9rem', color: '#fff', fontWeight: 500 }}>{item.value}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           </AnimateOnScroll>
         </div>

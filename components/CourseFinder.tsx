@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
@@ -130,6 +130,41 @@ function EnquiryGate({ onSuccess }: { onSuccess: (name: string) => void }) {
   );
 }
 
+// Built-in questions — used as fallback if DB has none configured
+const FALLBACK_QUESTIONS = [
+  {
+    _id: 'fq1', field: 'education', order: 1, isActive: true,
+    question: 'What is your highest qualification?',
+    options: [
+      { value: 'below_12', label: 'Below 12th' },
+      { value: '12th',     label: '12th Pass'  },
+      { value: 'graduate', label: 'Graduate (Bachelors)' },
+      { value: 'postgraduate', label: 'Post Graduate' },
+    ],
+  },
+  {
+    _id: 'fq2', field: 'field', order: 2, isActive: true,
+    question: 'Which field of study interests you?',
+    options: [
+      { value: 'commerce',   label: 'Commerce',   categories: ['B.Com', 'M.Com', 'Com'] },
+      { value: 'arts',       label: 'Arts',       categories: ['BA', 'MA'] },
+      { value: 'science',    label: 'Science',    categories: ['B.Sc', 'M.Sc', 'BSc', 'MSc', 'Sc'] },
+      { value: 'technology', label: 'Technology', categories: ['BCA', 'MCA', 'B.Tech', 'M.Tech'] },
+      { value: 'management', label: 'Management', categories: ['MBA', 'BBA', 'PGDM'] },
+    ],
+  },
+  {
+    _id: 'fq3', field: 'budget', order: 3, isActive: true,
+    question: 'What is your preferred fee range?',
+    options: [
+      { value: 'low',   label: 'Under ₹50,000',      max: 50000 },
+      { value: 'mid1',  label: '₹50K – ₹1 Lakh',    min: 50000,  max: 100000 },
+      { value: 'mid2',  label: '₹1L – ₹2 Lakh',     min: 100000, max: 200000 },
+      { value: 'any',   label: 'No Preference' },
+    ],
+  },
+];
+
 export default function CourseFinder() {
   const [isOpen, setIsOpen] = useState(false);
   const [gateCleared, setGateCleared] = useState(false);
@@ -159,8 +194,12 @@ export default function CourseFinder() {
     setQuestionsLoading(true);
     fetch('/api/public/course-finder-questions')
       .then(r => r.json())
-      .then(data => setQuestions(Array.isArray(data) ? data : []))
-      .catch(() => setQuestions([]))
+      .then(data => {
+        // Use DB questions if configured, else fall back to built-in set
+        const loaded = Array.isArray(data) && data.length > 0 ? data : FALLBACK_QUESTIONS;
+        setQuestions(loaded);
+      })
+      .catch(() => setQuestions(FALLBACK_QUESTIONS))
       .finally(() => setQuestionsLoading(false));
   }, [gateCleared]);
 
@@ -195,24 +234,56 @@ export default function CourseFinder() {
         const opt = q.options.find((o: any) => o.value === val);
         if (!opt) return;
         if (q.field === 'education') {
-          if (val === '12th') programs = programs.filter((p: any) => p.level === 'Undergraduate' || p.level === 'UG');
-          else if (val === 'graduate') programs = programs.filter((p: any) => ['Postgraduate', 'PG', 'Undergraduate', 'UG'].includes(p.level));
+          if (val === 'below_12') {
+            // Diploma / Certificate level
+            programs = programs.filter((p: any) => ['Diploma', 'Certificate'].includes(p.level));
+          } else if (val === '12th') {
+            // Undergraduate
+            programs = programs.filter((p: any) => ['Undergraduate', 'UG'].includes(p.level));
+          } else if (val === 'graduate') {
+            // Both UG and PG open to graduates
+            programs = programs.filter((p: any) => ['Postgraduate', 'PG', 'Undergraduate', 'UG'].includes(p.level));
+          } else if (val === 'postgraduate') {
+            // PG, Doctorate, etc.
+            programs = programs.filter((p: any) => ['Postgraduate', 'PG', 'Doctorate', 'PhD'].includes(p.level));
+          }
         }
         if (opt.categories?.length) {
-          programs = programs.filter((p: any) =>
-            opt.categories.some((cat: string) =>
-              p.category?.toLowerCase().includes(cat.toLowerCase()) ||
-              p.name?.toLowerCase().includes(cat.toLowerCase())
-            )
-          );
+          programs = programs.filter((p: any) => {
+            const pName = (p.name || '').toLowerCase();
+            const pCat = (p.category || '').toLowerCase();
+            const pSpecs = (p.specializations || []).map((s: string) => s.toLowerCase());
+            
+            return opt.categories.some((cat: string) => {
+              const lowerCat = cat.toLowerCase();
+              
+              // Standard acronyms should match strictly or with word boundaries
+              // to avoid 'MA' matching 'Management'
+              if (lowerCat.length <= 3) {
+                const regex = new RegExp(`\\b${lowerCat}\\b`, 'i');
+                return regex.test(pName) || regex.test(pCat) || pSpecs.some((s: string) => regex.test(s));
+              }
+
+              // Longer category names can use .includes
+              return pCat.includes(lowerCat) || pName.includes(lowerCat) || pSpecs.some((s: string) => s.includes(lowerCat));
+            }) || pCat === opt.value.toLowerCase() || pCat === opt.label.toLowerCase();
+          });
         }
         if (q.field === 'budget') {
-          programs = programs.filter((p: any) => {
-            if (opt.max && !opt.min) return p.fee <= opt.max;
-            if (opt.min && opt.max) return p.fee >= opt.min && p.fee <= opt.max;
-            if (opt.min && !opt.max) return p.fee >= opt.min;
-            return true;
-          });
+          if (opt.min !== undefined || opt.max !== undefined) {
+            programs = programs.filter((p: any) => {
+              if (!p.fee) return true; // no fee data — include it
+              // Normalize: if fee is per-semester, approximate annual = fee * 2
+              const annualFee = p.feePeriod === 'Per Semester' ? p.fee * 2
+                : p.feePeriod === 'Per Month' ? p.fee * 12
+                : p.fee;
+              if (opt.max && !opt.min) return annualFee <= opt.max;
+              if (opt.min && opt.max)  return annualFee >= opt.min && annualFee <= opt.max;
+              if (opt.min && !opt.max) return annualFee >= opt.min;
+              return true;
+            });
+          }
+          // opt.value === 'any' → no filter applied
         }
         if (q.field === 'mode' && val !== 'any') {
           programs = programs.filter((p: any) => p.mode === val);
@@ -251,7 +322,7 @@ export default function CourseFinder() {
               <div className="cf-loading-screen"><p>Loading questions...</p></div>
             )}
 
-            {gateCleared && !questionsLoading && !showResults && questions.length > 0 && (
+            {gateCleared && !questionsLoading && !showResults && questions.length > 0 && currentQ && (
               <>
                 <div className="cf-header">
                   <div className="cf-header-icon"><IconCompass /></div>
@@ -315,7 +386,7 @@ export default function CourseFinder() {
                     <Link key={program._id} href="/programs" className="cf-result-card" onClick={() => setIsOpen(false)}>
                       <div className="cf-result-info">
                         <h4 className="cf-result-name">{program.name}</h4>
-                        <p className="cf-result-university"><IconBuilding /> {program.universityId?.name || 'University'}</p>
+                        <p className="cf-result-university"><IconBuilding /> {program.university || program.universityId?.name || 'University'}</p>
                         <div className="cf-result-meta">
                           <span className="cf-result-badge"><IconClock /> {program.duration}</span>
                           <span className="cf-result-badge"><IconMonitor /> {program.mode}</span>
