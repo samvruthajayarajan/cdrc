@@ -32,9 +32,6 @@ function EditUniversity() {
     facilities: [''],
     ranking: '',
   });
-  const [programs, setPrograms] = useState<Program[]>([
-    { name: '', duration: '', description: '' }
-  ]);
 
   useEffect(() => {
     if (id) {
@@ -56,7 +53,6 @@ function EditUniversity() {
               facilities: uni.facilities && uni.facilities.length > 0 ? uni.facilities : [''],
               ranking: uni.ranking || '',
             });
-            setPrograms(uni.programs && uni.programs.length > 0 ? uni.programs : [{ name: '', duration: '', description: '' }]);
           } else {
             setError('Failed to load university');
           }
@@ -97,20 +93,6 @@ function EditUniversity() {
     }));
   };
 
-  const handleProgramChange = (index: number, field: keyof Program, value: string) => {
-    const newPrograms = [...programs];
-    newPrograms[index][field] = value;
-    setPrograms(newPrograms);
-  };
-
-  const addProgram = () => {
-    setPrograms([...programs, { name: '', duration: '', description: '' }]);
-  };
-
-  const removeProgram = (index: number) => {
-    setPrograms(programs.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
@@ -123,7 +105,7 @@ function EditUniversity() {
         body: JSON.stringify({
           ...formData,
           facilities: formData.facilities.filter(f => f.trim() !== ''),
-          programs: programs.filter(p => p.name.trim() !== '')
+          programs: []
         }),
       });
 
@@ -434,134 +416,6 @@ function EditUniversity() {
                     <Trash2 size={20} />
                   </button>
                 )}
-              </div>
-            ))}
-          </div>
-
-          {/* Programs */}
-          <div style={{
-            background: '#fff',
-            borderRadius: '1rem',
-            padding: '2rem',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-            marginBottom: '2rem'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 500, color: '#1e293b' }}>
-                Programs
-              </h2>
-              <button
-                type="button"
-                onClick={addProgram}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.5rem 1rem',
-                  background: '#059669',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '0.5rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                <Plus size={16} />
-                Add Program
-              </button>
-            </div>
-
-            {programs.map((program, index) => (
-              <div key={index} style={{
-                padding: '1.5rem',
-                background: '#f8fafc',
-                borderRadius: '0.75rem',
-                marginBottom: '1rem',
-                border: '1px solid #e2e8f0'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: '#1e293b' }}>
-                    Program {index + 1}
-                  </h3>
-                  {programs.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeProgram(index)}
-                      style={{
-                        padding: '0.5rem',
-                        background: '#fee2e2',
-                        color: '#dc2626',
-                        border: 'none',
-                        borderRadius: '0.5rem',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  )}
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#1e293b', fontSize: '0.9rem' }}>
-                      Program Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={program.name}
-                      onChange={(e) => handleProgramChange(index, 'name', e.target.value)}
-                      required
-                      placeholder="e.g., MBA"
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        border: '2px solid #e2e8f0',
-                        borderRadius: '0.5rem',
-                        fontSize: '1rem'
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#1e293b', fontSize: '0.9rem' }}>
-                      Duration *
-                    </label>
-                    <input
-                      type="text"
-                      value={program.duration}
-                      onChange={(e) => handleProgramChange(index, 'duration', e.target.value)}
-                      required
-                      placeholder="e.g., 2 Years"
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        border: '2px solid #e2e8f0',
-                        borderRadius: '0.5rem',
-                        fontSize: '1rem'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#1e293b', fontSize: '0.9rem' }}>
-                    Description
-                  </label>
-                  <textarea
-                    value={program.description}
-                    onChange={(e) => handleProgramChange(index, 'description', e.target.value)}
-                    rows={2}
-                    placeholder="Brief description of the program"
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem',
-                      border: '2px solid #e2e8f0',
-                      borderRadius: '0.5rem',
-                      fontSize: '1rem',
-                      resize: 'vertical'
-                    }}
-                  />
-                </div>
               </div>
             ))}
           </div>

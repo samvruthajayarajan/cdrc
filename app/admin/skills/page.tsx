@@ -2,21 +2,38 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Plus, Trash2, Edit } from '@/components/Icon';
+import ConfirmModal from '@/components/ConfirmModal';
 
 interface Skill { _id: string; name: string; category: string; level: string; duration: string; courses: { name: string }[]; }
 
 export default function AdminSkillsPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: '', name: '' });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetch('/api/skills').then(r => r.json()).then(d => { if (d.success) setSkills(d.data); setLoading(false); }).catch(() => setLoading(false));
   }, []);
 
-  const deleteSkill = async (id: string) => {
-    if (!confirm('Delete this skill?')) return;
-    await fetch(`/api/skills/${id}`, { method: 'DELETE' });
-    setSkills(prev => prev.filter(s => s._id !== id));
+  const deleteSkill = (id: string, name: string) => {
+    setDeleteModal({ isOpen: true, id, name });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.id) return;
+    
+    setIsDeleting(true);
+    try {
+      await fetch(`/api/skills/${deleteModal.id}`, { method: 'DELETE' });
+      setSkills(prev => prev.filter(s => s._id !== deleteModal.id));
+      setDeleteModal({ isOpen: false, id: '', name: '' });
+    } catch (error) {
+      console.error('Error deleting skill:', error);
+      alert('Error deleting skill');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -61,7 +78,7 @@ export default function AdminSkillsPage() {
                       <Link href={`/admin/skills/edit/${s._id}`} style={{ display: 'flex', alignItems: 'center', padding: '6px 12px', background: '#eef2ff', color: '#4361EE', borderRadius: 7, textDecoration: 'none', fontSize: '0.8rem', fontWeight: 600, gap: 4 }}>
                         <Edit size={14} /> Edit
                       </Link>
-                      <button onClick={() => deleteSkill(s._id)} style={{ display: 'flex', alignItems: 'center', padding: '6px 12px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, gap: 4, fontFamily: 'inherit' }}>
+                      <button onClick={() => deleteSkill(s._id, s.name)} style={{ display: 'flex', alignItems: 'center', padding: '6px 12px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, gap: 4, fontFamily: 'inherit' }}>
                         <Trash2 size={14} /> Delete
                       </button>
                     </div>
@@ -72,6 +89,16 @@ export default function AdminSkillsPage() {
           </table>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        title="Delete Skill?"
+        message={`Are you sure you want to delete the skill program "${deleteModal.name}"? This action cannot be undone.`}
+        confirmLabel="Delete Skill"
+        isLoading={isDeleting}
+        onConfirm={confirmDelete}
+        onClose={() => !isDeleting && setDeleteModal({ ...deleteModal, isOpen: false })}
+      />
     </div>
   );
 }

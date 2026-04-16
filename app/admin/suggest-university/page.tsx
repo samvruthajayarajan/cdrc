@@ -1,216 +1,239 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowLeft, Plus, Edit, Trash2, Search, CheckCircle, X } from '@/components/Icon';
+import ConfirmModal from '@/components/ConfirmModal';
 
+const RBL = '#0a192f'; // Dark Blue
 const BLANK_OPTION = { label: '' };
-const BLANK_Q = { question: '', options: [{ label: '' }] };
-
-function FormField({ label, children }: { label: string; children: React.ReactNode }) {
-  return <div><label style={labelStyle}>{label}</label>{children}</div>;
-}
-
-const labelStyle: React.CSSProperties = { display: 'block', fontWeight: 600, color: '#334155', fontSize: '0.9rem', marginBottom: '6px' };
-const inputStyle: React.CSSProperties = { width: '100%', padding: '12px 14px', border: '2px solid #E2E8F0', borderRadius: '10px', fontSize: '0.95rem', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' };
-const btnStyle = (color: string): React.CSSProperties => ({ padding: '10px 20px', background: color, color: '#fff', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: '8px' });
-const iconBtn = (color: string): React.CSSProperties => ({ width: '36px', height: '36px', background: color + '22', color, border: 'none', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem' });
-
-const RBL = '#1a237e'; // Royal Blue
-
-
+const BLANK_Q = { question: '', options: [{ label: '' }], field: '', order: 0, isActive: true };
 
 export default function SuggestUniversityAdminPage() {
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<any>(null);
   const [saving, setSaving] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
+  
+  // Delete modal state
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: '', text: '' });
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    loadQuestions();
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ msg, type });
-    setTimeout(() => setToast(null), 3500);
+    setTimeout(() => setToast(null), 3000);
   };
 
-  const h = () => {
+  const getHeaders = () => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : '';
     return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
   };
 
-
-
   const loadQuestions = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/suggest-university-questions', { headers: h() });
+      const res = await fetch('/api/admin/suggest-university-questions', { headers: getHeaders() });
       const data = await res.json();
-      setQuestions(Array.isArray(data) ? data : []);
+      setQuestions(Array.isArray(data) ? data.sort((a,b) => (a.order || 0) - (b.order || 0)) : []);
     } catch { showToast('Failed to load questions', 'error'); }
     finally { setLoading(false); }
   };
 
-  useEffect(() => {
-    loadQuestions();
-  }, []);
-
-  // Question Actions
-  const openAdd = () => setModal({ mode: 'add', data: { ...BLANK_Q, options: [{ ...BLANK_OPTION }] } });
+  const openAdd = () => setModal({ mode: 'add', data: { ...BLANK_Q, order: questions.length + 1 } });
   const openEdit = (q: any) => setModal({ mode: 'edit', data: JSON.parse(JSON.stringify(q)) });
 
   const saveQuestion = async () => {
     const { data, mode } = modal;
     if (!data.question.trim() || data.options.length === 0 || data.options.some((o: any) => !o.label.trim())) {
-      showToast('Question and all option labels are required', 'error'); return;
+      showToast('Question and all options are required', 'error'); return;
     }
     setSaving(true);
     try {
       const url = mode === 'add' ? '/api/admin/suggest-university-questions' : `/api/admin/suggest-university-questions/${data._id}`;
       const method = mode === 'add' ? 'POST' : 'PUT';
-      const autoField = data.field || data.question.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 30);
-      const cleanOptions = data.options.map((o: any) => ({
-        label: o.label,
-        value: o.value || o.label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, ''),
-        icon: 'fa-circle',
-      }));
-      const autoOrder = mode === 'add' ? questions.length + 1 : data.order;
-      const res = await fetch(url, { method, headers: h(), body: JSON.stringify({ ...data, field: autoField, order: autoOrder, isActive: true, options: cleanOptions }) });
-      if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
+      
+      const payload = {
+        ...data,
+        field: data.field || data.question.toLowerCase().replace(/[^a-z0-9]+/g, '_').slice(0, 30),
+        options: data.options.map((o: any) => ({
+          label: o.label,
+          value: o.value || o.label.toLowerCase().replace(/[^a-z0-9]+/g, '_'),
+          icon: 'fa-circle'
+        }))
+      };
+
+      const res = await fetch(url, { method, headers: getHeaders(), body: JSON.stringify(payload) });
+      if (!res.ok) throw new Error('Save failed');
       showToast(mode === 'add' ? 'Question added!' : 'Question updated!');
-      setModal(null); loadQuestions();
-    } catch (err: any) { showToast(err.message || 'Save failed', 'error'); }
+      setModal(null);
+      loadQuestions();
+    } catch { showToast('Error saving question', 'error'); }
     finally { setSaving(false); }
   };
 
-  const deleteQ = async (id: string, question: string) => {
-    if (!window.confirm(`Delete question: "${question}"?`)) return;
+  const deleteQ = (id: string, text: string) => {
+    setDeleteModal({ isOpen: true, id, text });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.id) return;
+    setIsDeleting(true);
     try {
-      showToast('Deleting...');
-      const res = await fetch(`/api/admin/suggest-university-questions/${id}`, { method: 'DELETE', headers: h() });
-      if (!res.ok) throw new Error('Failed to delete');
-      setQuestions(prev => prev.filter(q => q._id !== id));
-      showToast('Question deleted');
+      const res = await fetch(`/api/admin/suggest-university-questions/${deleteModal.id}`, { method: 'DELETE', headers: getHeaders() });
+      if (!res.ok) throw new Error();
+      showToast('Deleted successfully');
+      setDeleteModal({ isOpen: false, id: '', text: '' });
+      loadQuestions();
     } catch { showToast('Delete failed', 'error'); }
+    finally { setIsDeleting(false); }
   };
 
-  const toggleActive = async (q: any) => {
-    try {
-      await fetch(`/api/admin/suggest-university-questions/${q._id}`, { method: 'PUT', headers: h(), body: JSON.stringify({ isActive: !q.isActive }) });
-      showToast('Status updated'); loadQuestions();
-    } catch { showToast('Failed', 'error'); }
-  };
-
-
-
-  const setField = (key: string, val: any) => setModal((m: any) => ({ ...m, data: { ...m.data, [key]: val } }));
-  const setOption = (i: number, key: string, val: any) => setModal((m: any) => {
-    const opts = [...m.data.options]; opts[i] = { ...opts[i], [key]: val };
-    return { ...m, data: { ...m.data, options: opts } };
-  });
-  const addOption = () => setModal((m: any) => ({ ...m, data: { ...m.data, options: [...m.data.options, { ...BLANK_OPTION }] } }));
-  const removeOption = (i: number) => setModal((m: any) => ({ ...m, data: { ...m.data, options: m.data.options.filter((_: any, idx: number) => idx !== i) } }));
-
-
+  const filtered = questions.filter(q => 
+    q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (q.field || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div style={{ padding: 'clamp(1rem, 4vw, 2.5rem)', background: '#f8fafc', minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh', background: '#fff' }}>
       {toast && (
-        <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 99999, padding: '14px 22px', borderRadius: '12px', background: toast.type === 'error' ? '#DC2626' : '#16A34A', color: '#fff', fontWeight: 600, boxShadow: '0 8px 24px rgba(0,0,0,0.15)', fontSize: '0.95rem' }}>
+        <div style={{ position: 'fixed', top: 20, right: 20, zIndex: 10000, padding: '12px 24px', background: toast.type === 'error' ? '#ef4444' : '#10b981', color: '#fff', borderRadius: 12, fontWeight: 600, boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
           {toast.msg}
         </div>
       )}
 
-      {/* Header & Tabs */}
-      <div style={{ background: '#fff', borderRadius: '16px', padding: '25px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', marginBottom: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
-          <div>
-            <h1 style={{ margin: '0 0 6px', fontSize: '1.3rem', fontWeight: 500, color: '#0F172A' }}>🏛️ Suggest University</h1>
-            <p style={{ margin: 0, color: '#64748B', fontSize: '0.9rem' }}>Manage questions and view user suggestions.</p>
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={openAdd} style={btnStyle(RBL)}>+ Add Question</button>
+      {/* Modern Header */}
+      <div style={{ background: '#fff', padding: 'clamp(1rem, 4vw, 2rem)', borderBottom: '1px solid #e5e7eb' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <Link href="/admin" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#6b7280', textDecoration: 'none', marginBottom: 16, fontSize: '0.9rem' }}>
+            <ArrowLeft size={18} /> Back to Dashboard
+          </Link>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20 }}>
+            <div>
+              <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.25rem)', fontWeight: 700, margin: '0 0 6px', color: '#111827' }}>Suggest University</h1>
+              <p style={{ color: '#6b7280', margin: 0 }}>{questions.length} assessment questions configured</p>
+            </div>
+            <button onClick={openAdd} style={{ padding: '12px 24px', background: RBL, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s' }}>
+              <Plus size={20} color="#fff" /> Add Question
+            </button>
           </div>
         </div>
       </div>
 
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: '#64748B' }}>Loading questions...</div>
-      ) : (
-        /* QUESTIONS VIEW */
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          {questions.length === 0 ? (
-            <div style={{ background: '#fff', borderRadius: '16px', padding: '60px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-              <h3 style={{ color: '#334155', margin: '0 0 10px' }}>No questions yet</h3>
-              <p style={{ color: '#64748B', margin: '0 0 20px' }}>Click "+ Add Question" to get started.</p>
-            </div>
-          ) : (
-            questions.map((q, idx) => (
-              <div key={q._id} style={{ background: '#fff', borderRadius: '16px', padding: '25px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', borderLeft: `4px solid ${q.isActive ? RBL : '#CBD5E1'}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '15px', flexWrap: 'wrap' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px', flexWrap: 'wrap' }}>
-                      <span style={{ background: '#EFF6FF', color: RBL, padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 500 }}>Q{idx + 1}</span>
-                      <span style={{ background: '#F1F5F9', color: '#64748B', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>field: {q.field}</span>
-                      <span style={{ background: '#F1F5F9', color: '#64748B', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem' }}>order: {q.order}</span>
-                      <span style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600, background: q.isActive ? '#DCFCE7' : '#FEE2E2', color: q.isActive ? '#16A34A' : '#DC2626' }}>{q.isActive ? 'Active' : 'Inactive'}</span>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(1rem, 4vw, 2rem)' }}>
+        {/* Search */}
+        <div style={{ background: '#fff', borderRadius: 12, padding: 16, marginBottom: 24, boxShadow: '0 4px 20px rgba(0,0,0,0.06)', position: 'relative' }}>
+          <Search size={20} color="#94a3b8" style={{ position: 'absolute', left: 28, top: '50%', transform: 'translateY(-50%)' }} />
+          <input placeholder="Search questions..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={{ width: '100%', padding: '12px 12px 12px 42px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none', fontSize: '1rem', fontFamily: 'inherit' }} onFocus={e => e.target.style.borderColor = RBL} onBlur={e => e.target.style.borderColor = '#e2e8f0'} />
+        </div>
+
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '4rem', color: '#94a3b8' }}>Loading...</div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {filtered.length === 0 ? (
+              <div style={{ background: '#f8fafc', padding: '4rem', borderRadius: 12, textAlign: 'center', color: '#64748b', border: '2px dashed #e2e8f0' }}>No questions found.</div>
+            ) : (
+              filtered.map((q, i) => (
+                <div key={q._id} style={{ background: '#fff', borderRadius: 16, padding: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20 }}>
+                  <div style={{ flex: 1, minWidth: '250px' }}>
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                      <span style={{ padding: '4px 10px', background: '#eff6ff', color: RBL, borderRadius: 20, fontSize: '0.75rem', fontWeight: 600 }}>Step {q.order || i + 1}</span>
+                      <span style={{ padding: '4px 10px', background: q.isActive ? '#dcfce7' : '#fee2e2', color: q.isActive ? '#16a34a' : '#dc2626', borderRadius: 20, fontSize: '0.75rem', fontWeight: 600 }}>{q.isActive ? 'Active' : 'Inactive'}</span>
                     </div>
-                    <h3 style={{ margin: '0 0 12px', fontSize: '1.1rem', color: '#0F172A' }}>{q.question}</h3>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      {q.options.map((o: any, i: number) => (
-                        <span key={i} style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', padding: '6px 12px', borderRadius: '8px', fontSize: '0.85rem', color: '#334155' }}>{o.label}</span>
+                    <h3 style={{ margin: '0 0 12px', fontSize: '1.1rem', fontWeight: 600, color: '#1e293b', lineHeight: 1.4 }}>{q.question}</h3>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                      {q.options.map((o: any, idx: number) => (
+                        <span key={idx} style={{ padding: '6px 12px', background: '#f1f5f9', color: '#475569', borderRadius: 8, fontSize: '0.8rem', border: '1px solid #e2e8f0' }}>{o.label}</span>
                       ))}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
-                    <button onClick={() => toggleActive(q)} style={iconBtn(q.isActive ? '#D97706' : '#16A34A')} title={q.isActive ? 'Deactivate' : 'Activate'}>{q.isActive ? '⊘' : '✓'}</button>
-                    <button onClick={() => openEdit(q)} style={iconBtn('#3B82F6')} title="Edit">✎</button>
-                    <button onClick={() => deleteQ(q._id, q.question)} style={iconBtn('#DC2626')} title="Delete">✕</button>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button onClick={() => openEdit(q)} style={{ width: 40, height: 40, background: '#eff6ff', border: 'none', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Edit size={18} color={RBL} />
+                    </button>
+                    <button onClick={() => deleteQ(q._id, q.question)} style={{ width: 40, height: 40, background: '#fff1f2', border: 'none', borderRadius: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Trash2 size={18} color="#ef4444" />
+                    </button>
                   </div>
                 </div>
-              </div>
-            ))
-          )}
-        </div>
-      )}
+              ))
+            )}
+          </div>
+        )}
+      </div>
 
       {modal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
-          <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '520px', maxHeight: '90vh', overflow: 'auto', padding: '35px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
-              <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 500, color: '#0F172A' }}>{modal.mode === 'add' ? 'Add New Question' : 'Edit Question'}</h2>
-              <button onClick={() => setModal(null)} style={{ background: '#F1F5F9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', fontSize: '1rem', color: '#64748B' }}>✕</button>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9000, padding: 20 }}>
+          <div style={{ background: '#fff', width: '100%', maxWidth: 500, borderRadius: 24, padding: '32px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+              <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>{modal.mode === 'add' ? 'New Question' : 'Edit Question'}</h2>
+              <button onClick={() => setModal(null)} style={{ background: '#f1f5f9', border: 'none', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={16} color="#64748b" /></button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <FormField label="Question *">
-                <input value={modal.data.question} onChange={e => setField('question', e.target.value)} placeholder="e.g. What type of course are you looking for?" style={inputStyle} />
-              </FormField>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <label style={labelStyle}>Options *</label>
-                  <button onClick={addOption} style={{ ...btnStyle('#10B981'), padding: '6px 14px', fontSize: '0.85rem' }}>+ Add Option</button>
+                <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, marginBottom: 8 }}>Question Text</label>
+                <input value={modal.data.question} onChange={e => setModal({...modal, data: {...modal.data, question: e.target.value}})} style={{ width: '100%', padding: '12px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none', fontFamily: 'inherit' }} onFocus={e => e.target.style.borderColor = RBL} onBlur={e => e.target.style.borderColor = '#e2e8f0'} />
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                 <div>
+                    <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, marginBottom: 8 }}>Step Order</label>
+                    <input type="number" value={modal.data.order} onChange={e => setModal({...modal, data: {...modal.data, order: e.target.value === '' ? '' : parseInt(e.target.value)}})} style={{ width: '100%', padding: '12px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none' }} />
+                 </div>
+                 <div>
+                    <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: 600, marginBottom: 8 }}>Internal Field</label>
+                    <input value={modal.data.field} onChange={e => setModal({...modal, data: {...modal.data, field: e.target.value}})} placeholder="Auto-generated if empty" style={{ width: '100%', padding: '12px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none' }} />
+                 </div>
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <label style={{ fontSize: '0.9rem', fontWeight: 600 }}>Options</label>
+                  <button onClick={() => setModal({...modal, data: {...modal.data, options: [...modal.data.options, {label:''}]}})} style={{ background: '#eff6ff', color: RBL, border: 'none', padding: '6px 12px', borderRadius: 8, fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}>+ Add Option</button>
                 </div>
-                {modal.data.options.map((opt: any, i: number) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                    <span style={{ color: '#94A3B8', fontSize: '0.85rem', fontWeight: 600, minWidth: '24px' }}>{i + 1}.</span>
-                    <input
-                      value={opt.label}
-                      onChange={e => setOption(i, 'label', e.target.value)}
-                      placeholder={`Option ${i + 1} label`}
-                      style={{ ...inputStyle, margin: 0 }}
-                    />
-                    {modal.data.options.length > 1 && (
-                      <button onClick={() => removeOption(i)} style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', borderRadius: '8px', padding: '8px 12px', cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>✕</button>
-                    )}
+                {modal.data.options.map((o: any, idx: number) => (
+                  <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+                    <input value={o.label} onChange={e => {
+                      const opts = [...modal.data.options]; opts[idx].label = e.target.value;
+                      setModal({...modal, data: {...modal.data, options: opts}});
+                    }} placeholder={`Option ${idx+1}`} style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1px solid #e2e8f0', outline: 'none' }} />
+                    <button onClick={() => {
+                      const opts = modal.data.options.filter((_:any, i:number) => i !== idx);
+                      setModal({...modal, data: {...modal.data, options: opts}});
+                    }} style={{ background: '#fff1f2', border: 'none', padding: '8px', borderRadius: 8, cursor: 'pointer' }}><X size={14} color="#ef4444" /></button>
                   </div>
                 ))}
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '25px', paddingTop: '20px', borderTop: '1px solid #E2E8F0' }}>
-              <button onClick={() => setModal(null)} style={{ padding: '12px 24px', background: '#F1F5F9', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 600, fontFamily: 'inherit', color: '#64748B' }}>Cancel</button>
-              <button onClick={saveQuestion} disabled={saving} style={{ ...btnStyle(RBL), padding: '12px 28px', opacity: saving ? 0.7 : 1 }}>
-                {saving ? 'Saving...' : modal.mode === 'add' ? 'Add Question' : 'Save Changes'}
-              </button>
+
+            <div style={{ marginTop: 32, display: 'flex', gap: 12 }}>
+               <button onClick={() => setModal(null)} style={{ flex: 1, padding: '12px', background: '#f1f5f9', border: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
+               <button onClick={saveQuestion} disabled={saving} style={{ flex: 2, padding: '12px', background: RBL, color: '#fff', border: 'none', borderRadius: 12, fontWeight: 600, cursor: 'pointer' }}>{saving ? 'Saving...' : 'Save Question'}</button>
             </div>
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        title="Delete Question?"
+        message={`Are you sure you want to delete "${deleteModal.text}"? This action cannot be undone.`}
+        confirmLabel="Delete"
+        isLoading={isDeleting}
+        onConfirm={confirmDelete}
+        onClose={() => !isDeleting && setDeleteModal({ ...deleteModal, isOpen: false })}
+      />
     </div>
   );
 }

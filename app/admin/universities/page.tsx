@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Plus, Edit, Trash2, Search } from '@/components/Icon';
+import ConfirmModal from '@/components/ConfirmModal';
 
 interface University {
   _id?: string;
@@ -20,6 +21,8 @@ export default function UniversitiesManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: '', name: '' });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetchUniversities();
@@ -45,16 +48,21 @@ export default function UniversitiesManagement() {
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete ${name}?`)) return;
+  const handleDelete = (id: string, name: string) => {
+    setDeleteModal({ isOpen: true, id, name });
+  };
 
+  const confirmDelete = async () => {
+    if (!deleteModal.id) return;
+
+    setIsDeleting(true);
     try {
-      const response = await fetch(`/api/universities/${id}`, {
+      const response = await fetch(`/api/universities/${deleteModal.id}`, {
         method: 'DELETE',
       });
       
       if (response.ok) {
-        alert('University deleted successfully!');
+        setDeleteModal({ isOpen: false, id: '', name: '' });
         fetchUniversities();
       } else {
         alert('Failed to delete university');
@@ -62,6 +70,8 @@ export default function UniversitiesManagement() {
     } catch (error) {
       console.error('Error deleting university:', error);
       alert('Error deleting university');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -503,6 +513,16 @@ export default function UniversitiesManagement() {
           </>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        title="Delete University?"
+        message={`Are you sure you want to delete "${deleteModal.name}"? All programs associated with this university will remain, but their university link may be broken. This action cannot be undone.`}
+        confirmLabel="Delete University"
+        isLoading={isDeleting}
+        onConfirm={confirmDelete}
+        onClose={() => !isDeleting && setDeleteModal({ ...deleteModal, isOpen: false })}
+      />
     </div>
   );
 }

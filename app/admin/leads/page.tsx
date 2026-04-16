@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Search, Mail, Phone, Users } from '@/components/Icon';
+import ConfirmModal from '@/components/ConfirmModal';
 
 interface Lead {
   _id: string;
@@ -26,6 +27,8 @@ export default function LeadsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [sourceFilter, setSourceFilter] = useState('All');
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: '', name: '' });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     fetch('/api/leads').then(r => r.json()).then(d => {
@@ -43,10 +46,24 @@ export default function LeadsPage() {
     setLeads(prev => prev.map(l => l._id === id ? { ...l, status: status as Lead['status'] } : l));
   };
 
-  const deleteLead = async (id: string) => {
-    if (!confirm('Delete this lead?')) return;
-    await fetch(`/api/leads/${id}`, { method: 'DELETE' });
-    setLeads(prev => prev.filter(l => l._id !== id));
+  const deleteLead = (id: string, name: string) => {
+    setDeleteModal({ isOpen: true, id, name });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.id) return;
+    
+    setIsDeleting(true);
+    try {
+      await fetch(`/api/leads/${deleteModal.id}`, { method: 'DELETE' });
+      setLeads(prev => prev.filter(l => l._id !== deleteModal.id));
+      setDeleteModal({ isOpen: false, id: '', name: '' });
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+      alert('Error deleting lead');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const filtered = leads.filter(l => {
@@ -205,7 +222,7 @@ export default function LeadsPage() {
                           {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
                         </td>
                         <td style={{ padding: '13px 16px' }}>
-                          <button onClick={() => deleteLead(lead._id)}
+                          <button onClick={() => deleteLead(lead._id, lead.name)}
                             style={{ padding: '5px 12px', background: '#fef2f2', color: '#dc2626', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: '0.77rem', fontWeight: 600, fontFamily: 'inherit' }}>
                             Delete
                           </button>
@@ -253,7 +270,7 @@ export default function LeadsPage() {
                     <span style={{ background: '#eef2ff', color: '#4361EE', fontSize: '0.68rem', fontWeight: 500, padding: '3px 10px', borderRadius: 50 }}>
                       {lead.source || 'Brochure'}
                     </span>
-                    <button onClick={() => deleteLead(lead._id)}
+                    <button onClick={() => deleteLead(lead._id, lead.name)}
                       style={{ padding: '5px 14px', background: '#fef2f2', color: '#dc2626', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: '0.78rem', fontWeight: 600, fontFamily: 'inherit' }}>
                       Delete
                     </button>
@@ -264,6 +281,16 @@ export default function LeadsPage() {
           </>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        title="Delete Lead?"
+        message={`Are you sure you want to delete the lead for "${deleteModal.name}"? This action cannot be undone.`}
+        confirmLabel="Delete Lead"
+        isLoading={isDeleting}
+        onConfirm={confirmDelete}
+        onClose={() => !isDeleting && setDeleteModal({ ...deleteModal, isOpen: false })}
+      />
     </div>
   );
 }

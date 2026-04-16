@@ -99,17 +99,12 @@ export default function CreateUniversity() {
     featured: false, active: true,
     logoInitial: '', accreditation: '', image: '',
   });
-  const [programs, setPrograms] = useState<Program[]>([{ name: '', duration: '', description: '' }]);
 
   const set = (field: string, value: string | boolean) => setForm(p => ({ ...p, [field]: value }));
 
   const handleName = (v: string) => {
     const slug = v.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     setForm(p => ({ ...p, name: v, slug, logoInitial: v[0]?.toUpperCase() || '' }));
-  };
-
-  const handleProgramChange = (i: number, f: keyof Program, v: string) => {
-    const p = [...programs]; p[i][f] = v; setPrograms(p);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -129,7 +124,7 @@ export default function CreateUniversity() {
         ranking: form.ranking, 
         image: form.bannerUrl || form.logoUrl || '',
         logo: form.logoUrl || '',
-        programs: programs.filter(p => p.name.trim()),
+        programs: [],
         type: form.type, established: form.established,
         ugcApproved: form.ugcApproved, aicteApproved: form.aicteApproved,
         city: form.city, state: form.state,
@@ -318,47 +313,6 @@ export default function CreateUniversity() {
                   </label>
                 ))}
               </div>
-            </div>
-
-            {/* Programs */}
-            <div style={S.section}>
-              <SectionHeader icon={<GraduationCap size={18} color="#fff" />} title="Programs Offered" desc="Add the programs offered by this university" />
-              {programs.map((prog, i) => (
-                <div key={i} style={{ background: '#f8fafc', borderRadius: 12, padding: '18px 20px', marginBottom: 14, border: '1px solid #e2e8f0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                    <span style={{ fontWeight: 500, color: '#374151', fontSize: '0.88rem' }}>Program {i + 1}</span>
-                    {programs.length > 1 && (
-                      <button type="button" onClick={() => setPrograms(programs.filter((_, j) => j !== i))} style={{ padding: '5px 10px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 7, cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600 }}>
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                  <div style={S.grid2}>
-                    <div>
-                      <label style={S.label}>Program Name <span style={{ color: '#ef4444' }}>*</span></label>
-                      <input style={S.input} value={prog.name} onChange={e => handleProgramChange(i, 'name', e.target.value)} required placeholder="e.g., MBA"
-                        onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
-                        onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
-                    </div>
-                    <div>
-                      <label style={S.label}>Duration <span style={{ color: '#ef4444' }}>*</span></label>
-                      <input style={S.input} value={prog.duration} onChange={e => handleProgramChange(i, 'duration', e.target.value)} required placeholder="e.g., 2 Years"
-                        onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
-                        onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
-                    </div>
-                  </div>
-                  <div style={{ marginTop: 12 }}>
-                    <label style={S.label}>Description</label>
-                    <textarea style={{ ...S.input, resize: 'vertical' }} rows={2} value={prog.description} onChange={e => handleProgramChange(i, 'description', e.target.value)} placeholder="Brief description..."
-                      onFocus={e => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.background = '#fff'; }}
-                      onBlur={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }} />
-                  </div>
-                </div>
-              ))}
-              <button type="button" onClick={() => setPrograms([...programs, { name: '', duration: '', description: '' }])}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '9px 20px', background: ACCENT_LIGHT, color: ACCENT, border: `1.5px solid ${ACCENT_BORDER}`, borderRadius: 9, fontWeight: 500, cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'inherit' }}>
-                <Plus size={14} color={ACCENT} /> Add Program
-              </button>
             </div>
 
             {/* Actions */}

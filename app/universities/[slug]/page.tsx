@@ -94,11 +94,35 @@ export default function UniversityDetailPage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const match = (uni: any) => uni.slug === slug || uni.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === slug;
 
-    fetch('/api/universities').then(r => r.json()).then(d => {
-      if (d.success && d.data?.length) {
-        const found = d.data.find(match);
-        if (found) setUniversity(resolve(found)); else setError('not found');
-      } else setError('not found');
+    Promise.all([
+      fetch('/api/universities').then(r => r.json()),
+      fetch('/api/public/programs').then(r => r.json())
+    ]).then(([uniData, progData]) => {
+      if (uniData.success && uniData.data?.length) {
+        const found = uniData.data.find(match);
+        if (found) {
+          const progs = Array.isArray(progData) ? progData : progData?.data || [];
+          const foundNamespace = found.name.toLowerCase().replace(/[\s.\-]/g, '');
+          
+          const uniPrograms = progs.filter((p: any) => {
+             const pUni = (p.university || '').toLowerCase().replace(/[\s.\-]/g, '');
+             return pUni && (pUni === foundNamespace || pUni.includes(foundNamespace) || foundNamespace.includes(pUni));
+          });
+
+          setUniversity({
+            ...resolve(found),
+            programs: uniPrograms.map((p: any) => ({
+               name: p.name,
+               duration: p.duration || '2 Years',
+               description: p.description || (p.fee ? `Total Fee: ${p.fee}` : undefined)
+            }))
+          });
+        } else {
+          setError('not found');
+        }
+      } else {
+        setError('not found');
+      }
       setLoading(false);
     }).catch(() => { setError('error'); setLoading(false); });
   }, [slug]);

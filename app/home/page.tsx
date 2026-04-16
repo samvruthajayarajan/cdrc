@@ -313,10 +313,11 @@ function HomePageContent() {
           .sg{grid-template-columns:1fr 1fr !important}
           .h-btns{flex-direction:column !important; align-items:stretch !important;}
           .h-btns a, .h-btns button{width:100% !important; justify-content:center !important;}
-          .hero-badges{flex-direction:column !important; align-items:flex-start !important;}
+          .hero-badges{flex-direction:column !important; align-items:center !important; gap: 1rem !important;}
         }
         @media(max-width:480px){
           .sg{grid-template-columns:1fr 1fr !important}
+          .hero-right-img { border-radius: 20px !important; height: 320px !important; }
         }
         @keyframes shimmer { 0%{transform:scaleX(0);transform-origin:left} 100%{transform:scaleX(1);transform-origin:left} }
         .benefit-divider { animation: shimmer 0.6s ease forwards; }
@@ -347,10 +348,12 @@ function HomePageContent() {
           @keyframes heroPulse { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
           @keyframes heroRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
           @media (max-width: 991px) {
-            .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
+            .hero-grid { grid-template-columns: 1fr !important; text-align: center; gap: 2.5rem !important; min-height: auto !important; padding-bottom: 2rem; }
             .hero-left { display: flex; flex-direction: column; align-items: center; }
-            .hero-right { height: auto !important; padding: 40px 0; }
-            .hero-card { position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; margin: 10px auto !important; width: 100% !important; max-width: 280px !important; transform: none !important; }
+            .h-btns { justify-content: center; }
+            .hero-badges { justify-content: center; }
+            .hero-right { height: auto !important; padding: 20px 0 40px; flex-direction: column !important; justify-content: flex-start !important; gap: 1rem; }
+            .hero-card { position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; margin: 0 auto !important; width: 100% !important; max-width: 280px !important; transform: none !important; box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important; z-index: 5 !important; }
           }
         `}</style>
         <div style={{ position: 'absolute', top: '10%', right: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(100,160,255,0.3) 0%, transparent 70%)', animation: 'heroFloat1 8s ease-in-out infinite', pointerEvents: 'none' }} />
@@ -396,7 +399,7 @@ function HomePageContent() {
                   Find My Course
                 </button>
               </div>
-              <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+              <div className="hero-badges" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
                 {[['UGC Approved', '#4ade80'], ['NAAC Accredited', '#90e0ef'], ['WES Recognized', '#c084fc']].map(([lbl, clr]) => (
                   <div key={lbl} style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem', fontWeight: 500 }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={clr} strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
@@ -411,7 +414,7 @@ function HomePageContent() {
               <DotGrid style={{ position: 'absolute', top: -30, right: -40, zIndex: 0 }} />
               <PlusSymbol style={{ top: '15%', left: '0' }} />
               
-              <div style={{ position: 'relative', width: '100%', maxWidth: 460, height: 440, borderRadius: 32, overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.4)', zIndex: 2 }}>
+              <div className="hero-right-img" style={{ position: 'relative', width: '100%', maxWidth: 460, height: 440, borderRadius: 32, overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.4)', zIndex: 2 }}>
                 <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80" alt="Students" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,0.4) 0%, transparent 60%)' }} />
               </div>

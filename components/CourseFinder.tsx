@@ -267,56 +267,74 @@ export default function CourseFinder() {
         'pg': ['postgraduate', 'pg'],
       };
 
-      // Collect all selected labels and expand them with synonyms
-      const selectedLabels = questions
-        .map(q => q.options.find((o: any) => o.value === answers[q.field])?.label || '')
-        .filter(Boolean);
+      // 1. Identify Field Terms (Required if selected)
+      const fieldQuestion = questions.find(q => q.field === 'field');
+      const selectedFieldValue = fieldQuestion ? answers[fieldQuestion.field] : null;
+      let fieldTerms: string[] = [];
+      if (selectedFieldValue) {
+        const fieldOpt = fieldQuestion.options.find((o: any) => o.value === selectedFieldValue);
+        if (fieldOpt) {
+          fieldTerms.push(normalize(fieldOpt.label));
+          const words = fieldOpt.label.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+          words.forEach(word => {
+            const mapped = KEYWORD_MAP[word] || KEYWORD_MAP[normalize(word)];
+            if (mapped) fieldTerms.push(...mapped);
+          });
+        }
+      }
 
-      const expandedTerms: string[] = [];
-      selectedLabels.forEach((label: string) => {
-        const norm = normalize(label);
-        expandedTerms.push(norm);
-        // Check each word in the label against the keyword map
-        const words = label.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
-        words.forEach(word => {
-          const mapped = KEYWORD_MAP[word] || KEYWORD_MAP[normalize(word)];
-          if (mapped) expandedTerms.push(...mapped);
-        });
-        // Also check the full normalized label
-        const mapped = KEYWORD_MAP[norm];
-        if (mapped) expandedTerms.push(...mapped);
+      // 2. Identify Level/Other Terms (Bonus/Ranking)
+      const otherTerms: string[] = [];
+      questions.filter(q => q.field !== 'field').forEach(q => {
+        const val = answers[q.field];
+        const opt = q.options.find((o: any) => o.value === val);
+        if (opt) {
+          otherTerms.push(normalize(opt.label));
+          const words = opt.label.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+          words.forEach(word => {
+            const mapped = KEYWORD_MAP[word] || KEYWORD_MAP[normalize(word)];
+            if (mapped) otherTerms.push(...mapped);
+          });
+        }
       });
 
-      const uniqueTerms = [...new Set(expandedTerms)];
+      const uniqueFieldTerms = [...new Set(fieldTerms)];
+      const uniqueOtherTerms = [...new Set(otherTerms)];
 
-      const matchesAny = (program: any) => {
-        const pName = normalize(program.name);
-        const pCat = normalize(program.category);
-        const pLevel = normalize(program.level);
-        const pMode = normalize(program.mode);
-        const pCourseType = normalize(program.courseType);
-        const pSpecs = (program.specializations || []).map(normalize);
-        const pAll = [pName, pCat, pLevel, pMode, pCourseType, ...pSpecs];
-
-        return uniqueTerms.some(term =>
-          pAll.some(field => field.includes(term) || term.includes(field))
-        );
-      };
-
-      // Score programs: more term matches = higher score
+      // 3. Score and Filter
       const scored = allPrograms.map(p => {
         const pName = normalize(p.name);
         const pCat = normalize(p.category);
         const pLevel = normalize(p.level);
         const pMode = normalize(p.mode);
-        const pCourseType = normalize(p.courseType);
         const pSpecs = (p.specializations || []).map(normalize);
-        const pAll = [pName, pCat, pLevel, pMode, pCourseType, ...pSpecs];
+        const pAll = [pName, pCat, pLevel, pMode, ...pSpecs];
 
+        // Field match: strict comparison to avoid false positives
+        let fieldMatch = false;
+        if (selectedFieldValue && uniqueFieldTerms.length > 0) {
+          fieldMatch = uniqueFieldTerms.some(term => {
+            return pAll.some(field => {
+              // Exact match or significant prefix/suffix match (e.g. "business" and "businessmanagement")
+              const f = field.toLowerCase();
+              const t = term.toLowerCase();
+              if (f === t) return true;
+              if (t.length >= 4 && (f.startsWith(t) || f.endsWith(t))) return true;
+              return false;
+            });
+          });
+        }
+        
         let score = 0;
-        uniqueTerms.forEach(term => {
-          if (pAll.some(field => field.includes(term) || term.includes(field))) score++;
+        if (fieldMatch) {
+          score += 10;
+        }
+
+        // Other terms (level, mode, etc.) - standard scoring
+        uniqueOtherTerms.forEach(term => {
+          if (pAll.some(f => f === term || (term.length > 3 && f.includes(term)))) score += 1;
         });
+
         return { ...p, _score: score };
       });
 
@@ -324,22 +342,17 @@ export default function CourseFinder() {
       matched.sort((a, b) => b._score - a._score || (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
       if (matched.length > 0) {
-        // Top matches (score >= half of max score) are "exact", rest are fallback
-        const maxScore = matched[0]._score;
-        const threshold = Math.max(1, Math.floor(maxScore * 0.5));
-        const exact = matched.filter(p => p._score >= threshold);
-        const fallback = matched.filter(p => p._score < threshold);
+        // Only show as Recommended if score is high (indicates at least field match + qualification match)
+        // If field was selected, we require score >= 10
+        const minExactScore = selectedFieldValue ? 10 : 1;
+        const exact = matched.filter(p => p._score >= minExactScore);
+        const fallback = matched.filter(p => p._score < minExactScore);
 
-        if (exact.length > 0) {
-          setResults(exact.slice(0, 6));
-          setFallbackResults(fallback.slice(0, 4));
-        } else {
-          setResults([]);
-          setFallbackResults(matched.slice(0, 6));
-        }
+        setResults(exact.slice(0, 6));
+        setFallbackResults(fallback.slice(0, 4));
       } else {
         setResults([]);
-        setFallbackResults(allPrograms.slice(0, 6));
+        setFallbackResults([]);
       }
 
       setShowResults(true);
@@ -464,7 +477,9 @@ export default function CourseFinder() {
                 <div className="cf-results-header">
                   <div className="cf-results-icon"><IconStar /></div>
                   <h2 className="cf-results-title">
-                    {results.length > 0 ? 'Recommended Courses For You!' : fallbackResults.length > 0 ? 'Similar Courses You May Like' : 'No Matches Found'}
+                    {results.length > 0 
+                      ? 'Recommended Courses For You!' 
+                      : (fallbackResults.length > 0 ? 'Similar Courses you may like' : 'No Matches Found')}
                   </h2>
                   <p className="cf-results-subtitle">
                     {results.length > 0
