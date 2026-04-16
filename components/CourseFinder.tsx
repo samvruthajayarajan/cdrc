@@ -276,7 +276,7 @@ export default function CourseFinder() {
         if (fieldOpt) {
           fieldTerms.push(normalize(fieldOpt.label));
           const words = fieldOpt.label.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
-          words.forEach(word => {
+          words.forEach((word: string) => {
             const mapped = KEYWORD_MAP[word] || KEYWORD_MAP[normalize(word)];
             if (mapped) fieldTerms.push(...mapped);
           });
