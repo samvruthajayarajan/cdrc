@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Search, Mail, Phone, Users } from '@/components/Icon';
+import { Search, Mail, Phone, Users, MapPin } from '@/components/Icon';
 import ConfirmModal from '@/components/ConfirmModal';
 
 interface Lead {
@@ -12,6 +12,9 @@ interface Lead {
   source: string;
   status: 'New' | 'Contacted' | 'Converted' | 'Lost';
   createdAt: string;
+  message?: string;
+  details?: string;
+  helpText?: string;
 }
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
@@ -70,13 +73,15 @@ export default function LeadsPage() {
     const matchSearch = l.name.toLowerCase().includes(search.toLowerCase()) ||
       l.email.toLowerCase().includes(search.toLowerCase()) ||
       l.phone.includes(search) ||
-      l.course?.toLowerCase().includes(search.toLowerCase());
+      (l.course || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.message || '').toLowerCase().includes(search.toLowerCase()) ||
+      (l.details || '').toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'All' || l.status === statusFilter;
     const isCF = l.source && l.source.startsWith('Course Finder');
     const matchSource = sourceFilter === 'All' ||
       (sourceFilter === 'Course Finder' ? isCF :
-       sourceFilter === 'Suggest University' ? l.source === 'Suggest University' :
-       (!isCF && l.source !== 'Suggest University')); // Brochure Download
+       sourceFilter === 'Suggest University' ? (l.source === 'Suggest University' || l.source === 'Suggest University Quiz') :
+       (!isCF && l.source !== 'Suggest University' && l.source !== 'Suggest University Quiz')); // Brochure Download
     return matchSearch && matchStatus && matchSource;
   });
 
@@ -101,7 +106,7 @@ export default function LeadsPage() {
         }
       `}</style>
 
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         {/* Header */}
         <div style={{ marginBottom: 24, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
@@ -115,7 +120,7 @@ export default function LeadsPage() {
               const r = await fetch('/api/leads/migrate', { method: 'POST' });
               const d = await r.json();
               if (d.success) {
-                alert(`Fixed: ${d.courseFinderFixed} Course Finder + ${d.brochureFixed} Brochure leads`);
+                alert(`Fixed: ${d.courseFinderFixed} Course Finder + ${d.suggestUniFixed} Suggest University leads`);
                 window.location.reload();
               }
             }}
@@ -129,9 +134,9 @@ export default function LeadsPage() {
         <div style={{ display: 'flex', gap: '.5rem', marginBottom: 16, flexWrap: 'wrap' }}>
           {[
             { key: 'All', label: '📋 All Leads', count: leads.length },
-            { key: 'Brochure Download', label: '📄 Brochure Download', count: leads.filter(l => !(l.source && l.source.startsWith('Course Finder')) && l.source !== 'Suggest University').length },
+            { key: 'Brochure Download', label: '📄 Brochure Download', count: leads.filter(l => !(l.source && l.source.startsWith('Course Finder')) && l.source !== 'Suggest University' && l.source !== 'Suggest University Quiz').length },
             { key: 'Course Finder', label: '🔍 Course Finder', count: leads.filter(l => l.source && l.source.startsWith('Course Finder')).length },
-            { key: 'Suggest University', label: '🏛️ Suggest University', count: leads.filter(l => l.source === 'Suggest University').length },
+            { key: 'Suggest University', label: '🏛️ Suggest University', count: leads.filter(l => l.source === 'Suggest University' || l.source === 'Suggest University Quiz').length },
           ].map(({ key, label, count }) => (
             <button key={key} onClick={() => setSourceFilter(key)}
               style={{ padding: '7px 16px', borderRadius: 50, border: `2px solid ${sourceFilter === key ? '#4361EE' : '#e2e8f0'}`, background: sourceFilter === key ? '#4361EE' : '#fff', color: sourceFilter === key ? '#fff' : '#64748b', fontWeight: 500, fontSize: '.78rem', cursor: 'pointer', fontFamily: 'inherit', transition: 'all .15s', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -158,7 +163,7 @@ export default function LeadsPage() {
           <Search size={15} color="#94a3b8" />
           <input
             type="text"
-            placeholder="Search by name, email, phone or course..."
+            placeholder="Search by name, email, phone, course or matches..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             style={{ flex: 1, border: 'none', outline: 'none', fontSize: '0.88rem', color: '#0f172a', background: 'transparent', fontFamily: 'inherit' }}
@@ -178,10 +183,10 @@ export default function LeadsPage() {
             {/* Desktop Table */}
             <div className="leads-table" style={{ background: '#fff', borderRadius: 16, border: '1px solid #f1f5f9', overflow: 'hidden', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
               <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 850 }}>
                   <thead>
                     <tr style={{ background: '#f8fafc', borderBottom: '1px solid #f1f5f9' }}>
-                      {['Name', 'Contact', 'Course', 'Source', 'Status', 'Date', 'Actions'].map(h => (
+                      {['Name', 'Contact', 'Course & Matches', 'Source', 'Status', 'Date', 'Actions'].map(h => (
                         <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '0.7rem', fontWeight: 500, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
                       ))}
                     </tr>
@@ -204,8 +209,21 @@ export default function LeadsPage() {
                             </a>
                           </div>
                         </td>
-                        <td style={{ padding: '13px 16px', fontSize: '0.81rem', color: '#374151', maxWidth: 180 }}>
-                          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{lead.course || '—'}</div>
+                        <td style={{ padding: '13px 16px', fontSize: '0.81rem', color: '#374151', maxWidth: 280 }}>
+                          <div style={{ fontWeight: 600, color: '#0f172a' }}>{lead.course || '—'}</div>
+                          {lead.details && (
+                            <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: 3, display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <MapPin size={10} color="#94a3b8" />
+                              <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={lead.details}>
+                                {lead.details}
+                              </div>
+                            </div>
+                          )}
+                          {lead.message && (
+                            <div style={{ fontSize: '0.68rem', color: '#4361EE', marginTop: 2, fontStyle: 'italic' }}>
+                              💬 {lead.message}
+                            </div>
+                          )}
                         </td>
                         <td style={{ padding: '13px 16px' }}>
                           <span style={{ background: '#eef2ff', color: '#4361EE', fontSize: '0.7rem', fontWeight: 500, padding: '3px 10px', borderRadius: 50 }}>
@@ -251,7 +269,7 @@ export default function LeadsPage() {
                     </select>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 10 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
                     <a href={`tel:${lead.phone}`} style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#1e40af', fontSize: '0.83rem', textDecoration: 'none', fontWeight: 500 }}>
                       <Phone size={13} color="#1e40af" /> {lead.phone}
                     </a>
@@ -260,11 +278,19 @@ export default function LeadsPage() {
                     </a>
                   </div>
 
-                  {lead.course && (
-                    <div style={{ fontSize: '0.78rem', color: '#374151', background: '#f8fafc', padding: '5px 10px', borderRadius: 7, marginBottom: 10 }}>
-                      📚 {lead.course}
-                    </div>
-                  )}
+                  <div style={{ background: '#f8fafc', padding: '10px', borderRadius: 10, marginBottom: 12 }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#1e293b' }}>📚 {lead.course || 'No course'}</div>
+                    {lead.details && (
+                      <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: 4 }}>
+                        📍 {lead.details}
+                      </div>
+                    )}
+                    {lead.message && (
+                      <div style={{ fontSize: '0.7rem', color: '#4361EE', marginTop: 4, fontStyle: 'italic' }}>
+                        💬 {lead.message}
+                      </div>
+                    )}
+                  </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ background: '#eef2ff', color: '#4361EE', fontSize: '0.68rem', fontWeight: 500, padding: '3px 10px', borderRadius: 50 }}>
