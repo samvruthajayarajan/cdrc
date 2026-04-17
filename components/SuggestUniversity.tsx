@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react'; // v2.1.2 
 import Link from 'next/link';
 
 const ACCENT = '#ffffff'; // White
