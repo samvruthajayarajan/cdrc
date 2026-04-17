@@ -243,31 +243,23 @@ export default function SuggestUniversityAdminPage() {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-                    {['Student', 'Course', 'University', 'how_can_we_help_you_join_:', 'Status', 'Actions'].map(h => (
+                    {['Student', 'Course / University / Assistance Request', 'Status', 'Actions'].map(h => (
                       <th key={h} style={{ padding: '16px', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {filteredLeads.length === 0 ? (
-                    <tr><td colSpan={6} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>No leads found for Suggest University.</td></tr>
+                    <tr><td colSpan={4} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>No leads found for Suggest University.</td></tr>
                   ) : (
                     filteredLeads.map(l => (
                       <tr key={l._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                        <td style={{ padding: '16px' }}>
+                        <td style={{ padding: '16px', minWidth: 200 }}>
                           <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#1e293b' }}>{l.name}</div>
                           <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{l.email} | {l.phone}</div>
                         </td>
-                        <td style={{ padding: '16px', fontSize: '0.85rem', color: '#111827', fontWeight: 500 }}>
-                          {l.course}
-                        </td>
-                        <td style={{ padding: '16px', fontSize: '0.81rem', color: '#475569', maxWidth: 200 }}>
-                          <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={l.details}>
-                            {l.details ? l.details.replace('Matched: ', '') : '—'}
-                          </div>
-                        </td>
-                        <td style={{ padding: '16px', fontSize: '0.81rem', color: RBL, maxWidth: 300, fontWeight: 500 }}>
-                          {l.message || l.helpText || '—'}
+                        <td style={{ padding: '16px', fontSize: '0.85rem', color: '#334155', lineHeight: 1.6 }}>
+                           {l.course}
                         </td>
                         <td style={{ padding: '16px' }}>
                           <select 

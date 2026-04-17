@@ -123,10 +123,8 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
           name: lead.name,
           email: lead.email,
           phone: lead.phone || 'N/A',
+          course: `Course: ${selectedCourseLabel} | University: ${matchedU.map(u => u.name).join(', ') || 'None'} | how_can_we_help_you_join_: ${lead.helpText || 'None'}`,
           source: 'Suggest University',
-          course: selectedCourseLabel, // Primary field shows the course
-          message: lead.helpText, // Capture the "How can we help you" text here
-          details: `Matched: ${matchedU.map(u => u.name).join(', ') || 'None'} | Prefs: ${prefSummary}`, // Store matches in details
         }),
       });
     } catch (err) { console.error('Lead submission failed', err); }
