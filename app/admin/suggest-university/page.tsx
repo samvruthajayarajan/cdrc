@@ -243,7 +243,7 @@ export default function SuggestUniversityAdminPage() {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-                    {['Name', 'Email', 'Phone', 'Matched / Prefs', 'Status', 'Actions'].map(h => (
+                    {['Name', 'Email', 'Phone', 'Course', 'Message / Matches', 'Status', 'Actions'].map(h => (
                       <th key={h} style={{ padding: '16px', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>{h}</th>
                     ))}
                   </tr>
@@ -257,13 +257,13 @@ export default function SuggestUniversityAdminPage() {
                         <td style={{ padding: '16px', fontSize: '0.9rem', fontWeight: 500, color: '#1e293b' }}>{l.name}</td>
                         <td style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b' }}>{l.email}</td>
                         <td style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b' }}>{l.phone}</td>
-                        <td style={{ padding: '16px', fontSize: '0.85rem', color: '#1e293b', maxWidth: 350 }}>
+                        <td style={{ padding: '16px', fontSize: '0.81rem', color: '#1e293b', maxWidth: 250 }}>
                           <div style={{ fontWeight: 600 }}>{l.course}</div>
-                          <div style={{ fontSize: '0.8rem', color: RBL, fontWeight: 500, marginTop: 4 }}>
-                            Help: {l.message || 'No specific request'}
-                          </div>
-                          <div style={{ fontSize: '0.7rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }} title={l.details}>
-                            Matches: {l.details || 'No matching details'}
+                        </td>
+                        <td style={{ padding: '16px', fontSize: '0.81rem', color: '#475569', maxWidth: 300 }}>
+                          <div style={{ fontWeight: 500, color: RBL, marginBottom: 4 }}>{l.message || l.helpText || '—'}</div>
+                          <div style={{ fontSize: '0.72rem', color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={l.details}>
+                            {l.details || 'No matching details'}
                           </div>
                         </td>
                         <td style={{ padding: '16px' }}>

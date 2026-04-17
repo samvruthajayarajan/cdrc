@@ -14,6 +14,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    console.log('Incoming Lead:', body);
     const { name, phone, email, course, programName, source } = body;
 
     if (!name || !phone || !email) {
