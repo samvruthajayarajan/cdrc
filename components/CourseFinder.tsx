@@ -227,10 +227,64 @@ export default function CourseFinder() {
   const findCourses = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/public/programs');
-      const allPrograms: any[] = await res.json();
-
       const normalize = (s: string) => (s || '').toLowerCase().replace(/[\s.\-&]/g, '');
+
+      // 1. Identify Field Terms & Type (Skill/OpenSchool)
+      const fieldQuestion = questions.find(q => q.field === 'field');
+      let selectedFieldValue = fieldQuestion ? answers[fieldQuestion.field] : null;      
+
+      // Check if ANY answer points directly to skill or openschool 
+      Object.values(answers).forEach((val: any) => {
+         const vstr = String(val).toLowerCase().replace(/[^a-z0-9]/g, '');
+         // Use substring matching instead of exact array includes
+         if (vstr.includes('skill') || vstr.includes('vocational')) {
+             selectedFieldValue = 'skill';
+         }
+         else if ((vstr.includes('openschool') || vstr === 'open' || vstr === 'nios' || vstr === 'school') && selectedFieldValue !== 'skill') {
+             selectedFieldValue = 'openschool';
+         }
+      });
+
+      let endpoint = '/api/public/programs';
+      if (selectedFieldValue === 'skill') endpoint = '/api/skills';
+      else if (selectedFieldValue === 'openschool') endpoint = '/api/open-school';
+
+      const res = await fetch(endpoint);
+      const data = await res.json();
+      let allPrograms: any[] = [];
+      
+      if (selectedFieldValue === 'skill') {
+        const skillsArray = Array.isArray(data) ? data : (data.data || []);
+        allPrograms = skillsArray.map((s: any) => ({
+          ...s,
+          name: s.name,
+          university: s.university || 'CRDC Skill Center',
+          category: s.category || 'Skill',
+          level: 'Skill',
+          mode: s.mode || 'Online',
+          duration: s.duration || 'Flexible',
+          fee: s.fee || s.price || 0,
+        }));
+      } else if (selectedFieldValue === 'openschool') {
+        const osArray = Array.isArray(data) ? data : (data.data || []);
+        osArray.forEach((board: any) => {
+          (board.programs || []).forEach((p: any) => {
+             allPrograms.push({
+               ...p,
+               _id: p._id || Math.random().toString(),
+               name: p.name,
+               university: board.name,
+               category: 'Open School',
+               level: p.level || 'School',
+               mode: p.mode || 'Online',
+               duration: p.duration || '1-2 Years',
+               fee: p.fee || 0,
+             });
+          });
+        });
+      } else {
+        allPrograms = Array.isArray(data) ? data : (data.data || []);
+      }
 
       // Semantic keyword map: label keyword → related program terms
       const KEYWORD_MAP: Record<string, string[]> = {
@@ -265,14 +319,16 @@ export default function CourseFinder() {
         'undergraduate': ['undergraduate', 'ug'],
         'ug': ['undergraduate', 'ug'],
         'pg': ['postgraduate', 'pg'],
+        'skill': ['skill', 'certificate', 'diploma', 'vocational'],
+        'openschool': ['open', 'school', 'nios', '10th', '12th', 'open school'],
       };
 
-      // 1. Identify Field Terms (Required if selected)
-      const fieldQuestion = questions.find(q => q.field === 'field');
-      const selectedFieldValue = fieldQuestion ? answers[fieldQuestion.field] : null;
       let fieldTerms: string[] = [];
       if (selectedFieldValue) {
-        const fieldOpt = fieldQuestion.options.find((o: any) => o.value === selectedFieldValue);
+        let fieldOpt = fieldQuestion.options.find((o: any) => o.value === selectedFieldValue);
+        if (selectedFieldValue === 'skill') fieldOpt = { label: 'Skill Program', value: 'skill' };
+        if (selectedFieldValue === 'openschool') fieldOpt = { label: 'Open School', value: 'openschool' };
+
         if (fieldOpt) {
           fieldTerms.push(normalize(fieldOpt.label));
           const words = fieldOpt.label.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
@@ -301,6 +357,43 @@ export default function CourseFinder() {
       const uniqueFieldTerms = [...new Set(fieldTerms)];
       const uniqueOtherTerms = [...new Set(otherTerms)];
 
+      // Find budget constraints
+      const budgetQuestion = questions.find(q => q.field === 'budget' || (q.question || '').toLowerCase().includes('fee') || (q.question || '').toLowerCase().includes('budget'));
+      let minBudget = 0;
+      let maxBudget = Infinity;
+      if (budgetQuestion && answers[budgetQuestion.field]) {
+         const opt = budgetQuestion.options.find((o: any) => o.value === answers[budgetQuestion.field]);
+         if (opt && opt.value !== 'any') {
+            minBudget = opt.min ?? 0;
+            maxBudget = opt.max ?? Infinity;
+            // Best effort parse if missing
+            if (minBudget === 0 && maxBudget === Infinity) {
+               const str = (opt.label || opt.value || '').toLowerCase().replace(/,/g, '').replace(/_/g, '-');
+               
+               const extractNum = (nStr: string, unit: string) => {
+                 let n = parseInt(nStr);
+                 if (unit && (unit.includes('k') || unit === 'l' || unit.includes('lakh'))) {
+                   if (unit.includes('k')) n *= 1000;
+                   if (unit.includes('l') || unit.includes('lakh')) n *= 100000;
+                 }
+                 return n;
+               };
+
+               const rangeMatch = str.match(/(\d+)(k|lakh|l)?\s*-\s*(\d+)(k|lakh|l)?/);
+               if (rangeMatch) {
+                  minBudget = extractNum(rangeMatch[1], rangeMatch[2]);
+                  maxBudget = extractNum(rangeMatch[3], rangeMatch[4]);
+               } else if (str.includes('under') || str.includes('below') || str.includes('<')) {
+                  const num = str.match(/(\d+)(k|lakh|l)?/);
+                  if (num) maxBudget = extractNum(num[1], num[2]);
+               } else if (str.includes('above') || str.includes('over') || str.includes('>')) {
+                  const num = str.match(/(\d+)(k|lakh|l)?/);
+                  if (num) minBudget = extractNum(num[1], num[2]);
+               }
+            }
+         }
+      }
+
       // 3. Score and Filter
       const scored = allPrograms.map(p => {
         const pName = normalize(p.name);
@@ -310,16 +403,25 @@ export default function CourseFinder() {
         const pSpecs = (p.specializations || []).map(normalize);
         const pAll = [pName, pCat, pLevel, pMode, ...pSpecs];
 
+        const pNameTokens = String(p.name || '').toLowerCase().replace(/[\.\-]/g, '').replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+        const pCatTokens = String(p.category || '').toLowerCase().replace(/[\.\-]/g, '').replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+        const pTokens = [...pNameTokens, ...pCatTokens];
+
         // Field match: strict comparison to avoid false positives
         let fieldMatch = false;
         if (selectedFieldValue && uniqueFieldTerms.length > 0) {
           fieldMatch = uniqueFieldTerms.some(term => {
+            const t = term.toLowerCase();
+            
+            // Check tokenized pure words for exact matches (catches 'ba', 'ma', 'bcom' etc)
+            if (pTokens.some(w => w === t)) return true;
+
+            // Then check the joined strings (pAll) for larger substring matches
             return pAll.some(field => {
               // Exact match or significant prefix/suffix match (e.g. "business" and "businessmanagement")
               const f = field.toLowerCase();
-              const t = term.toLowerCase();
               if (f === t) return true;
-              if (t.length >= 4 && (f.startsWith(t) || f.endsWith(t))) return true;
+              if (t.length >= 4 && (f.startsWith(t) || f.endsWith(t) || f.includes(t))) return true;
               return false;
             });
           });
@@ -335,25 +437,35 @@ export default function CourseFinder() {
           if (pAll.some(f => f === term || (term.length > 3 && f.includes(term)))) score += 1;
         });
 
-        return { ...p, _score: score };
+        // Strict Budget Check
+        let budgetMatch = true;
+        if (maxBudget !== Infinity || minBudget > 0) {
+           const pFee = parseInt(String(p.fee).replace(/,/g, '').replace(/[^0-9]/g, ''));
+           if (!isNaN(pFee) && pFee > 0) {
+              if (pFee < minBudget || pFee > maxBudget) budgetMatch = false;
+           } else {
+              // If fee is 0 or non-existent (e.g. open school), optionally we can pass it, or block it. 
+              // Usually we pass it if it's free/contact for info.
+              budgetMatch = true;
+           }
+        }
+        
+        return { ...p, _score: score, _budgetMatch: budgetMatch, _fieldMatch: fieldMatch };
       });
 
-      const matched = scored.filter(p => p._score > 0);
-      matched.sort((a, b) => b._score - a._score || (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+      // Sort by score
+      scored.sort((a, b) => b._score - a._score || (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
-      if (matched.length > 0) {
-        // Only show as Recommended if score is high (indicates at least field match + qualification match)
-        // If field was selected, we require score >= 10
-        const minExactScore = selectedFieldValue ? 10 : 1;
-        const exact = matched.filter(p => p._score >= minExactScore);
-        const fallback = matched.filter(p => p._score < minExactScore);
+      // Min score required to be considered an exact match (if field selected, we require 10 pts)
+      const minExactScore = selectedFieldValue ? 10 : 1;
+      
+      const exact = scored.filter(p => p._score >= minExactScore && p._budgetMatch);
+      // Fallback: It didn't make the exact list, but it still has some relevance 
+      // (e.g. matching field but over budget, or matching level/mode but not field)
+      const fallback = scored.filter(p => p._score > 0 && !(p._score >= minExactScore && p._budgetMatch));
 
-        setResults(exact.slice(0, 6));
-        setFallbackResults(fallback.slice(0, 4));
-      } else {
-        setResults([]);
-        setFallbackResults([]);
-      }
+      setResults(exact.slice(0, 6));
+      setFallbackResults(fallback.slice(0, 4));
 
       setShowResults(true);
 
@@ -382,6 +494,18 @@ export default function CourseFinder() {
   };
 
   const currentQ = questions[step - 1];
+  
+  let currentOptions = currentQ?.options || [];
+  if (step === 2 && questions[0]) {
+    const firstQAns = answers[questions[0].field];
+    if (firstQAns === 'below_12' || String(firstQAns).toLowerCase().includes('below 12')) {
+      currentOptions = [
+        { value: 'skill', label: 'Skill Program' },
+        { value: 'openschool', label: 'Open School' }
+      ];
+    }
+  }
+
   const allAnswered = currentQ && answers[currentQ.field];
 
   const trackCourseClick = async (program: any) => {
@@ -401,6 +525,9 @@ export default function CourseFinder() {
       // Fire and forget
     }
   };
+
+  const isOpenSchool = Object.values(answers).some(v => v === 'openschool' || String(v).toLowerCase().includes('open school'));
+
 
   return (
     <>
@@ -438,7 +565,7 @@ export default function CourseFinder() {
                 <div className={`cf-question-container ${animate ? 'animate' : ''}`}>
                   <h3 className="cf-question">{currentQ.question}</h3>
                   <div className="cf-options-grid">
-                    {currentQ.options.map((opt: any) => (
+                    {currentOptions.map((opt: any) => (
                       <button
                         key={opt.value}
                         className={`cf-option-btn ${answers[currentQ.field] === opt.value ? 'selected' : ''}`}
@@ -500,10 +627,12 @@ export default function CourseFinder() {
                           <span className="cf-result-badge"><IconMonitor /> {program.mode}</span>
                         </div>
                       </div>
-                      <div className="cf-result-price">
-                        <span className="cf-price-label">Fee</span>
-                        <span className="cf-price-value">Rs.{Number(program.fee).toLocaleString('en-IN')}</span>
-                      </div>
+                      {!isOpenSchool && (
+                        <div className="cf-result-price">
+                          <span className="cf-price-label">Fee</span>
+                          <span className="cf-price-value">Rs.{Number(program.fee).toLocaleString('en-IN')}</span>
+                        </div>
+                      )}
                     </Link>
                   )) : (
                     <div className="cf-no-results">

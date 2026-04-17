@@ -302,6 +302,12 @@ function HomePageContent() {
         .fc1{animation:float1 4s ease-in-out infinite}
         .fc2{animation:float2 5s ease-in-out infinite}
         @media(max-width:900px){
+          .hero-grid { grid-template-columns: 1fr !important; text-align: center; gap: 2.5rem !important; min-height: auto !important; padding-bottom: 2rem; }
+          .hero-left { display: flex; flex-direction: column; align-items: center; }
+          .h-btns { justify-content: center; width: 100%; }
+          .hero-badges { justify-content: center; }
+          .hero-right { height: auto !important; padding: 20px 0 40px; }
+          .fc1, .fc2 { display: none !important; }
           .hg{grid-template-columns:1fr !important}
           .hr{display:none !important}
           .ag{grid-template-columns:1fr !important}
@@ -311,13 +317,18 @@ function HomePageContent() {
         }
         @media(max-width:640px){
           .sg{grid-template-columns:1fr 1fr !important}
-          .h-btns{flex-direction:column !important; align-items:stretch !important;}
-          .h-btns a, .h-btns button{width:100% !important; justify-content:center !important;}
-          .hero-badges{flex-direction:column !important; align-items:center !important; gap: 1rem !important;}
+          .h-btns{flex-direction:column !important; align-items:stretch !important; gap: 0.75rem !important; width: 100%; }
+          .h-btns a, .h-btns button { width: 100% !important; justify-content: center !important; }
+          .hero-badges { justify-content: center !important; gap: 1rem !important; flex-wrap: wrap !important; }
+          .h-title { font-size: 2.2rem !important; }
+          .h-sub { font-size: 1rem !important; margin-bottom: 2rem !important; }
+          .hero-right-img { border-radius: 20px !important; height: 280px !important; }
         }
         @media(max-width:480px){
-          .sg{grid-template-columns:1fr 1fr !important}
-          .hero-right-img { border-radius: 20px !important; height: 320px !important; }
+          .sg{grid-template-columns:1fr !important}
+          .hero-right-img { height: 220px !important; }
+          .about-img-col{flex-direction:column !important;}
+          section { padding: 3.5rem 1rem !important; }
         }
         @keyframes shimmer { 0%{transform:scaleX(0);transform-origin:left} 100%{transform:scaleX(1);transform-origin:left} }
         .benefit-divider { animation: shimmer 0.6s ease forwards; }
@@ -345,16 +356,7 @@ function HomePageContent() {
           @keyframes heroFloat1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-40px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
           @keyframes heroFloat2 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(-40px,30px) scale(1.08)} 66%{transform:translate(25px,-25px) scale(0.92)} }
           @keyframes heroFloat3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-30px)} }
-          @keyframes heroPulse { 0%,100%{opacity:0.3} 50%{opacity:0.6} }
           @keyframes heroRotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-          @media (max-width: 991px) {
-            .hero-grid { grid-template-columns: 1fr !important; text-align: center; gap: 2.5rem !important; min-height: auto !important; padding-bottom: 2rem; }
-            .hero-left { display: flex; flex-direction: column; align-items: center; }
-            .h-btns { justify-content: center; }
-            .hero-badges { justify-content: center; }
-            .hero-right { height: auto !important; padding: 20px 0 40px; flex-direction: column !important; justify-content: flex-start !important; gap: 1rem; }
-            .hero-card { position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; margin: 0 auto !important; width: 100% !important; max-width: 280px !important; transform: none !important; box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important; z-index: 5 !important; }
-          }
         `}</style>
         <div style={{ position: 'absolute', top: '10%', right: '10%', width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(100,160,255,0.3) 0%, transparent 70%)', animation: 'heroFloat1 8s ease-in-out infinite', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '15%', left: '5%', width: 250, height: 250, borderRadius: '50%', background: 'radial-gradient(circle, rgba(60,120,220,0.35) 0%, transparent 70%)', animation: 'heroFloat2 10s ease-in-out infinite', pointerEvents: 'none' }} />
@@ -451,7 +453,7 @@ function HomePageContent() {
               <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: 460, margin: '0 auto', lineHeight: 1.75 }}>Everything you need � from expert guidance to UGC-approved degrees � all in one place.</p>
             </div>
           </AnimateOnScroll>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: '1.25rem' }}>
             {features.map((f, i) => (
               <AnimateOnScroll key={i} animation="fadeUp" delay={i * 55}>
                 <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', border: '1.5px solid #f1f5f9', transition: 'all 0.25s ease', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
@@ -716,11 +718,11 @@ function HomePageContent() {
             <p style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: 1.8, maxWidth: 500, margin: '0 auto 2.5rem' }}>
               Join 10,000+ students who have advanced their careers with CDRC. Get free expert guidance and find the perfect program.
             </p>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link href="/contact" style={{ background: '#4361EE', color: '#fff', padding: '13px 28px', borderRadius: 10, fontWeight: 500, textDecoration: 'none', fontSize: '0.93rem', boxShadow: '0 4px 18px rgba(37,99,235,0.4)' }}>
+            <div className="h-btns" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link href="/contact" style={{ background: '#4361EE', color: '#fff', padding: '13px 28px', borderRadius: 10, fontWeight: 500, textDecoration: 'none', fontSize: '0.93rem', boxShadow: '0 4px 18px rgba(37,99,235,0.4)', textAlign: 'center' }}>
                 Free Consultation
               </Link>
-              <Link href="/universities" style={{ background: 'rgba(255,255,255,0.07)', color: '#e2e8f0', padding: '13px 28px', borderRadius: 10, fontWeight: 600, textDecoration: 'none', fontSize: '0.93rem', border: '1px solid rgba(255,255,255,0.15)' }}>
+              <Link href="/universities" style={{ background: 'rgba(255,255,255,0.07)', color: '#e2e8f0', padding: '13px 28px', borderRadius: 10, fontWeight: 600, textDecoration: 'none', fontSize: '0.93rem', border: '1px solid rgba(255,255,255,0.15)', textAlign: 'center' }}>
                 Explore Universities
               </Link>
             </div>

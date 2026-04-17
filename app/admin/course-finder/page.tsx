@@ -136,7 +136,10 @@ export default function CourseFinderPage() {
       ) : questions.length === 0 ? (
         <div style={{ background: '#fff', borderRadius: '16px', padding: '60px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
           <h3 style={{ color: '#334155', margin: '0 0 10px' }}>No questions yet</h3>
-          <p style={{ color: '#64748B', margin: '0 0 20px' }}>Click "Seed Default Questions" to add the standard quiz, or add your own.</p>
+          <p style={{ color: '#64748B', margin: '0 0 20px' }}>Click below to populate the database with the standard quiz, or add your own.</p>
+          <button onClick={seed} disabled={seeding} style={btnStyle('#10B981')}>
+            {seeding ? 'Seeding...' : 'Seed Default Questions'}
+          </button>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
