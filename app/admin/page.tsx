@@ -59,7 +59,8 @@ export default function AdminDashboard() {
         totalEnrollments: 0,
         totalContacts: 0,
         totalOpenSchool: 0,
-        totalSkills: 0
+        totalSkills: 0,
+        totalLeads: 0
       });
     }
   };
