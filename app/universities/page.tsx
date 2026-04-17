@@ -248,7 +248,7 @@ export default function UniversitiesPage() {
       </section>
       <style>{`
         @media (max-width: 640px) {
-          .grid-card-container { grid-template-columns: repeat(2, 1fr) !important; gap: 0.75rem !important; }
+          .grid-card-container { grid-template-columns: 1fr !important; gap: 1rem !important; }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>

@@ -323,6 +323,7 @@ function HomePageContent() {
           .h-title { font-size: 2.2rem !important; }
           .h-sub { font-size: 1rem !important; margin-bottom: 2rem !important; }
           .hero-right-img { border-radius: 20px !important; height: 280px !important; }
+          .grid-card-container { grid-template-columns: 1fr !important; }
         }
         @media(max-width:480px){
           .sg{grid-template-columns:1fr !important}
