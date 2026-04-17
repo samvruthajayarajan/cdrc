@@ -220,7 +220,7 @@ export default function Footer() {
               textShadow: '0 1px 5px rgba(0,0,0,0.2)'
             }}>
               <div style={{ marginBottom: '0.75rem', fontWeight: 600 }}>Monday - Saturday</div>
-              <div style={{ marginBottom: '1rem' }}>9:00 AM - 6:00 PM</div>
+              <div style={{ marginBottom: '1rem' }}>9:30 AM - 5:30 PM</div>
               <div style={{ marginBottom: '1.5rem' }}>Sunday: Closed</div>
             </div>
             <div style={{ 

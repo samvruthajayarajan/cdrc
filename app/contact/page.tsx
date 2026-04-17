@@ -136,7 +136,7 @@ export default function ContactPage() {
                 Get in Touch <br/> <span style={{ color: '#90e0ef' }}>With Our Team</span>
               </h1>
               <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: 650, lineHeight: 1.7 }}>
-                Have questions about admissions, fees, or programs? Our counselors are ready <br/> to guide you — Monday to Saturday, 9 AM to 6 PM.
+                Have questions about admissions, fees, or programs? Our counselors are ready <br/> to guide you — Monday to Saturday, 9:30 AM to 5:30 PM.
               </p>
             </div>
           </AnimateOnScroll>
@@ -190,7 +190,7 @@ export default function ContactPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2.5rem' }}>
                 {[
-                  { day: 'Monday – Saturday', time: '9:00 AM – 6:00 PM', open: true },
+                  { day: 'Monday – Saturday', time: '9:30 AM – 5:30 PM', open: true },
                   { day: 'Sunday', time: 'Closed', open: false },
                 ].map(row => (
                   <div key={row.day} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.875rem 1.25rem', borderRadius: 12, background: '#fff', border: '1.5px solid #f1f5f9' }}>
