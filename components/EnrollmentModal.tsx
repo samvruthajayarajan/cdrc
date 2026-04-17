@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 const RB = '#4169e1';
 const RBD = '#2a4db5';
@@ -8,9 +9,18 @@ const RBL = '#e8eef9';
 interface Props { university: string; program: string; onClose: () => void; }
 
 export default function EnrollmentModal({ university, program, onClose }: Props) {
+  const [mounted, setMounted] = useState(false);
   const [form, setForm] = useState({ studentName: '', email: '', phone: '', message: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    setMounted(true);
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = 'unset'; };
+  }, []);
+
+  if (!mounted) return null;
 
   function validate() {
     const e: Record<string, string> = {};
@@ -46,9 +56,9 @@ export default function EnrollmentModal({ university, program, onClose }: Props)
     boxSizing: 'border-box' as const, transition: 'border-color 0.2s, background 0.2s',
   });
 
-  return (
+  const modalContent = (
     <div
-      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(6px)' }}
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(6px)' }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}
     >
       <style>{`@media(max-width:480px){.enrollment-grid-2{grid-template-columns:1fr !important;}}`}</style>
@@ -75,7 +85,6 @@ export default function EnrollmentModal({ university, program, onClose }: Props)
           {status === 'success' ? (
             /* ── SUCCESS STATE ── */
             <div style={{ textAlign: 'center', padding: '1.5rem 1rem 2rem' }}>
-              {/* animated checkmark circle */}
               <div style={{ width: 80, height: 80, borderRadius: '50%', background: `linear-gradient(135deg, ${RB}, ${RBD})`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', boxShadow: `0 8px 24px rgba(65,105,225,0.35)` }}>
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
@@ -172,4 +181,6 @@ export default function EnrollmentModal({ university, program, onClose }: Props)
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
