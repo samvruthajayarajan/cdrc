@@ -11,7 +11,8 @@ export default function AdminDashboard() {
     totalEnrollments: 0,
     totalContacts: 0,
     totalOpenSchool: 0,
-    totalSkills: 0
+    totalSkills: 0,
+    totalLeads: 0
   });
   const [migrating, setMigrating] = useState(false);
   const [migrateMessage, setMigrateMessage] = useState('');
@@ -23,13 +24,14 @@ export default function AdminDashboard() {
   const fetchStats = async () => {
     try {
       // Fetch real data from APIs
-      const [universitiesRes, enrollmentsRes, contactsRes, programsRes, openSchoolRes, skillsRes] = await Promise.all([
+      const [universitiesRes, enrollmentsRes, contactsRes, programsRes, openSchoolRes, skillsRes, leadsRes] = await Promise.all([
         fetch('/api/universities'),
         fetch('/api/enrollments'),
         fetch('/api/contact'),
         fetch('/api/programs'),
         fetch('/api/open-school'),
         fetch('/api/skills'),
+        fetch('/api/leads'),
       ]);
 
       const universitiesData = await universitiesRes.json();
@@ -38,6 +40,7 @@ export default function AdminDashboard() {
       const programsData = await programsRes.json();
       const openSchoolData = await openSchoolRes.json();
       const skillsData = await skillsRes.json();
+      const leadsData = await leadsRes.json();
 
       setStats({
         totalUniversities: universitiesData.success ? universitiesData.data.length : 0,
@@ -46,6 +49,7 @@ export default function AdminDashboard() {
         totalContacts: contactsData.success ? contactsData.data.length : 0,
         totalOpenSchool: Array.isArray(openSchoolData) ? openSchoolData.reduce((acc: number, board: any) => acc + (board.programs?.length || 0), 0) : 0,
         totalSkills: skillsData.success ? skillsData.data.length : 0,
+        totalLeads: leadsData.success ? leadsData.data.length : 0,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -303,6 +307,38 @@ export default function AdminDashboard() {
           </div>
           <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 500, color: '#1f2937' }}>
             {stats.totalContacts}
+          </div>
+        </Link>
+        <Link
+          href="/admin/leads"
+          style={{
+            textDecoration: 'none',
+            background: '#fff',
+            borderRadius: 'clamp(8px, 2vw, 12px)',
+            padding: 'clamp(1.25rem, 3vw, 1.75rem)',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+            border: '1px solid #e2e8f0',
+            transition: 'all 0.2s ease',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'clamp(0.5rem, 2vw, 0.75rem)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#6b7280', fontWeight: 500 }}>Total Leads</span>
+            <div style={{ width: 'clamp(28px, 6vw, 32px)', height: 'clamp(28px, 6vw, 32px)', background: '#dcfce7', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Users size={18} color="#16a34a" />
+            </div>
+          </div>
+          <div style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: 500, color: '#1f2937' }}>
+            {stats.totalLeads}
           </div>
         </Link>
       </div>

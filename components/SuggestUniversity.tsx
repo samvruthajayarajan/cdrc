@@ -98,12 +98,15 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
     if (!lead.name || !lead.email) return;
     setSubmitting(true);
     
+    let prefSummary = '';
+    let matchedU: any[] = [];
     try {
-      // 1. Calculate matches locally so we can submit them with the lead
-      const matchedLocal = await getMatches(answers);
-      setResults(matchedLocal);
+      prefSummary = Object.entries(answers).map(([k, v]) => `${k}: ${v}`).join(' | ');
+      matchedU = await getMatches(answers);
+      setResults(matchedU);
+    } catch (e) { console.error('Matching failed', e); }
 
-      const prefSummary = Object.entries(answers).map(([k, v]) => `${k}: ${v}`).join(' | ');
+    try {
       await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -112,10 +115,10 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
           email: lead.email,
           phone: lead.phone || 'N/A',
           source: 'Suggest University',
-          course: `Matched: ${matchedLocal.map(u => u.name).join(', ')} | Prefs: ${prefSummary}`,
+          course: `Matched: ${matchedU.map(u => u.name).join(', ') || 'None'} | Prefs: ${prefSummary}`,
         }),
       });
-    } catch (err) {}
+    } catch (err) { console.error('Lead submission failed', err); }
     
     setSubmitting(false);
     setAnimate(false);
