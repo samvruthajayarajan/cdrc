@@ -451,7 +451,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                               <div style={{ fontWeight: 700, fontSize: '1.05rem', color: TEXT_PRIMARY }}>{u.name}</div>
                               <div style={{ fontSize: '0.85rem', color: TEXT_SECONDARY }}>{u.location}</div>
                            </div>
-                           <Link href={`/universities/${u.slug}`} style={{ background: ACCENT, color: '#000', padding: '10px 18px', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(255,255,255,0.1)' }}>View Details</Link>
+                           <Link href={`/universities/${u.slug}`} onClick={onClose} style={{ background: ACCENT, color: '#000', padding: '10px 18px', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(255,255,255,0.1)' }}>View Details</Link>
                          </div>
                        ))}
                      </div>
