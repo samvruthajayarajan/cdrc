@@ -50,7 +50,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
   const [animate, setAnimate] = useState(true);
 
   // Lead form state
-  const [lead, setLead] = useState({ name: '', email: '', phone: '' });
+  const [lead, setLead] = useState({ name: '', email: '', phone: '', helpText: '' });
   const [submitting, setSubmitting] = useState(false);
 
   const specRef = useRef<HTMLDivElement>(null);
@@ -125,7 +125,8 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
           phone: lead.phone || 'N/A',
           source: 'Suggest University',
           course: selectedCourseLabel, // Primary field shows the course
-          message: `Matched: ${matchedU.map(u => u.name).join(', ') || 'None'} | Prefs: ${prefSummary}`, // Use message field for details
+          message: lead.helpText, // Capture the "How can we help you" text here
+          details: `Matched: ${matchedU.map(u => u.name).join(', ') || 'None'} | Prefs: ${prefSummary}`, // Store matches in details
         }),
       });
     } catch (err) { console.error('Lead submission failed', err); }
@@ -481,6 +482,16 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                 <div style={{ position: 'relative' }}>
                   <svg style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: TEXT_SECONDARY }} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                   <input type="tel" placeholder="Phone Number (Optional)" value={lead.phone} onChange={e => setLead({...lead, phone: e.target.value})} style={{ width: '100%', padding: '16px 16px 16px 48px', background: INPUT_BG, border: '1.5px solid rgba(255,255,255,0.1)', borderRadius: 14, color: TEXT_PRIMARY, outline: 'none', fontSize: '1rem', fontFamily: 'inherit', transition: 'border-color 0.2s' }} onFocus={e => e.target.style.borderColor=ACCENT} onBlur={e => e.target.style.borderColor='rgba(255,255,255,0.1)'} />
+                </div>
+                <div style={{ position: 'relative' }}>
+                  <textarea 
+                    placeholder="How can we help you join this selected option?" 
+                    value={lead.helpText} 
+                    onChange={e => setLead({...lead, helpText: e.target.value})} 
+                    style={{ width: '100%', padding: '16px', background: INPUT_BG, border: '1.5px solid rgba(255,255,255,0.1)', borderRadius: 14, color: TEXT_PRIMARY, outline: 'none', fontSize: '1rem', fontFamily: 'inherit', transition: 'border-color 0.2s', minHeight: '100px', resize: 'vertical' }} 
+                    onFocus={e => e.target.style.borderColor=ACCENT} 
+                    onBlur={e => e.target.style.borderColor='rgba(255,255,255,0.1)'} 
+                  />
                 </div>
                 
                 <button type="submit" disabled={submitting} style={{ width: '100%', padding: '18px', marginTop: 12, background: ACCENT, color: '#000', border: 'none', borderRadius: 14, fontWeight: 800, fontSize: '1.05rem', cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 10px 25px rgba(0,0,0,0.3)', transition: 'transform 0.2s' }}>

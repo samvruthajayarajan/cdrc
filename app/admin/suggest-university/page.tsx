@@ -257,10 +257,13 @@ export default function SuggestUniversityAdminPage() {
                         <td style={{ padding: '16px', fontSize: '0.9rem', fontWeight: 500, color: '#1e293b' }}>{l.name}</td>
                         <td style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b' }}>{l.email}</td>
                         <td style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b' }}>{l.phone}</td>
-                        <td style={{ padding: '16px', fontSize: '0.85rem', color: '#1e293b', maxWidth: 300 }}>
+                        <td style={{ padding: '16px', fontSize: '0.85rem', color: '#1e293b', maxWidth: 350 }}>
                           <div style={{ fontWeight: 600 }}>{l.course}</div>
-                          <div style={{ fontSize: '0.75rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={l.message || l.details}>
-                            {l.message || l.details || 'No matching details'}
+                          <div style={{ fontSize: '0.8rem', color: RBL, fontWeight: 500, marginTop: 4 }}>
+                            Help: {l.message || 'No specific request'}
+                          </div>
+                          <div style={{ fontSize: '0.7rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }} title={l.details}>
+                            Matches: {l.details || 'No matching details'}
                           </div>
                         </td>
                         <td style={{ padding: '16px' }}>
