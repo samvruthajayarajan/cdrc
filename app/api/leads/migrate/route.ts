@@ -27,11 +27,27 @@ export async function POST() {
       { $set: { source: 'Brochure Download' } }
     );
 
+    // Cleanup verbose Suggest University course strings
+    const allLeads = await db.collection('leads').find({ source: 'Suggest University' }).toArray();
+    let cleanedCount = 0;
+    for (const l of allLeads) {
+      if (l.course && l.course.includes('Prefs:')) {
+        const matched = l.course.match(/Matched: ([^|]+)/)?.[1]?.trim() || '';
+        const course = l.course.match(/course: ([^|]+)/)?.[1]?.trim() || '';
+        const help = l.course.match(/how_can_we_help_you_join_: ([^|]+)/)?.[1]?.trim() || '';
+        
+        const cleanCourse = `Course: ${course.toUpperCase()} | University: ${matched} | how_can_we_help_you_join_: ${help || 'None'}`;
+        await db.collection('leads').updateOne({ _id: l._id }, { $set: { course: cleanCourse } });
+        cleanedCount++;
+      }
+    }
+
     return NextResponse.json({
       success: true,
       courseFinderFixed: courseFinderResult.modifiedCount,
-      suggestUniFixed: suggestUniResult.modifiedCount,
+      suggestUniFixed: suggestUniResult.modifiedCount + cleanedCount,
       brochureFixed: brochureResult.modifiedCount,
+      cleanedCount
     });
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Migration failed' }, { status: 500 });

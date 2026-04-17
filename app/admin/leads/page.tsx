@@ -209,20 +209,21 @@ export default function LeadsPage() {
                             </a>
                           </div>
                         </td>
-                        <td style={{ padding: '13px 16px', fontSize: '0.81rem', color: '#374151', maxWidth: 280 }}>
-                          <div style={{ fontWeight: 600, color: '#0f172a' }}>{lead.course || '—'}</div>
-                          {lead.details && (
-                            <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: 3, display: 'flex', alignItems: 'center', gap: 4 }}>
-                              <MapPin size={10} color="#94a3b8" />
-                              <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={lead.details}>
-                                {lead.details}
-                              </div>
+                        <td style={{ padding: '13px 16px', fontSize: '0.81rem', color: '#1e293b', maxWidth: 300 }}>
+                          {lead.course && lead.course.includes('|') ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                              {lead.course.split('|').map((part, idx) => (
+                                <div key={idx} style={{ 
+                                  fontWeight: idx === 0 ? 600 : 400,
+                                  color: idx === 0 ? '#0f172a' : idx === 2 ? '#4361EE' : '#64748b',
+                                  fontSize: idx === 0 ? '0.85rem' : '0.72rem'
+                                }}>
+                                  {part.trim()}
+                                </div>
+                              ))}
                             </div>
-                          )}
-                          {lead.message && (
-                            <div style={{ fontSize: '0.68rem', color: '#4361EE', marginTop: 2, fontStyle: 'italic' }}>
-                              💬 {lead.message}
-                            </div>
+                          ) : (
+                            <div style={{ fontWeight: 500 }}>{lead.course || '—'}</div>
                           )}
                         </td>
                         <td style={{ padding: '13px 16px' }}>
