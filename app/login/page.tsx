@@ -188,7 +188,7 @@ export default function LoginPage() {
               </div>
               <input
                 type="email"
-                placeholder="admin@cdrc.edu.in"
+                placeholder="Enter your email here"
                 value={form.email}
                 autoComplete="email"
                 autoCapitalize="none"
