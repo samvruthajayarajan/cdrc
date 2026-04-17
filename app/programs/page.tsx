@@ -147,7 +147,7 @@ export default function ProgramsPage() {
               <p style={{ color: '#64748b', marginTop: '1rem' }}>No programs found.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.25rem' }}>
+            <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.25rem' }}>
               {filtered.map((p, i) => {
                 const cardId = p._id || `prog-${i}`;
                 const [c1, c2] = GRAD_COLORS[i % GRAD_COLORS.length];
@@ -260,9 +260,10 @@ export default function ProgramsPage() {
         />
       )}
       <style>{`
-        @media (max-width: 480px) {
+        @media (max-width: 640px) {
           .programs-action-btns { flex-wrap: wrap !important; }
           .programs-action-btns > * { flex: 1 1 calc(50% - 0.25rem) !important; min-width: 0 !important; }
+          .grid-card-container { grid-template-columns: 1fr !important; gap: 1rem !important; }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>

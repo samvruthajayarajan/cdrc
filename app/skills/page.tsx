@@ -132,7 +132,7 @@ export default function SkillsPage() {
               <Link href="/contact" style={{ display: 'inline-block', background: '#1e40af', color: '#fff', padding: '10px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600 }}>Contact Us</Link>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
+            <div className="grid-card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
               {filtered.map((skill, i) => {
                 const isExpanded = expandedCards.has(skill._id);
                 const words = skill.description.split(' ');
@@ -255,6 +255,12 @@ export default function SkillsPage() {
       {enrollModal.open && (
         <EnrollmentModal university="CDRC Skill Programs" program={enrollModal.course} onClose={() => setEnrollModal({ open: false, skill: '', course: '' })} />
       )}
+      <style>{`
+        @media (max-width: 640px) {
+          .grid-card-container { grid-template-columns: 1fr !important; gap: 1rem !important; }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 }
