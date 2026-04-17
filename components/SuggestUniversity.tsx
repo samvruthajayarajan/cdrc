@@ -100,8 +100,17 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
     
     let prefSummary = '';
     let matchedU: any[] = [];
+    let selectedCourseLabel = answers.course || '';
+    
     try {
       prefSummary = Object.entries(answers).map(([k, v]) => `${k}: ${v}`).join(' | ');
+      
+      // Get the readable label for the course
+      const courseQ = questions.find(q => q.field === 'course');
+      if (courseQ) {
+        selectedCourseLabel = courseQ.options.find((o: any) => o.value === answers.course)?.label || answers.course;
+      }
+      
       matchedU = await getMatches(answers);
       setResults(matchedU);
     } catch (e) { console.error('Matching failed', e); }
@@ -115,7 +124,8 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
           email: lead.email,
           phone: lead.phone || 'N/A',
           source: 'Suggest University',
-          course: `Matched: ${matchedU.map(u => u.name).join(', ') || 'None'} | Prefs: ${prefSummary}`,
+          course: selectedCourseLabel, // Primary field shows the course
+          message: `Matched: ${matchedU.map(u => u.name).join(', ') || 'None'} | Prefs: ${prefSummary}`, // Use message field for details
         }),
       });
     } catch (err) { console.error('Lead submission failed', err); }

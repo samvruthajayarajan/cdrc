@@ -257,8 +257,11 @@ export default function SuggestUniversityAdminPage() {
                         <td style={{ padding: '16px', fontSize: '0.9rem', fontWeight: 500, color: '#1e293b' }}>{l.name}</td>
                         <td style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b' }}>{l.email}</td>
                         <td style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b' }}>{l.phone}</td>
-                        <td style={{ padding: '16px', fontSize: '0.8rem', color: '#64748b', maxWidth: 300 }}>
-                          <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={l.course}>{l.course}</div>
+                        <td style={{ padding: '16px', fontSize: '0.85rem', color: '#1e293b', maxWidth: 300 }}>
+                          <div style={{ fontWeight: 600 }}>{l.course}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={l.message || l.details}>
+                            {l.message || l.details || 'No matching details'}
+                          </div>
                         </td>
                         <td style={{ padding: '16px' }}>
                           <select 

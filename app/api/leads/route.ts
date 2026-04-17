@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
       source: source || 'Brochure Download',
       status: 'New',
       createdAt: new Date(),
+      ...body, // Capture extra fields like 'message' or 'prefs'
     });
 
     return NextResponse.json({ success: true, data: { _id: result.insertedId } });
