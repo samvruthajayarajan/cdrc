@@ -111,7 +111,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
           name: lead.name,
           email: lead.email,
           phone: lead.phone || 'N/A',
-          source: 'Suggest University Quiz',
+          source: 'Suggest University',
           course: `Matched: ${matchedLocal.map(u => u.name).join(', ')} | Prefs: ${prefSummary}`,
         }),
       });
@@ -378,7 +378,16 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                      <button onClick={() => setStep(s => s - 1)} style={{ flex: 1, padding: '14px', borderRadius: 12, background: 'transparent', color: ACCENT, border: `1.5px solid rgba(255,255,255,0.2)`, fontWeight: 700, fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="15 18 9 12 15 6"/></svg> Previous
                      </button>
-                     <button onClick={() => { if(answers.budget){ setAnimate(false); setTimeout(() => { setStep(leadStep); setAnimate(true);}, 220); } }} disabled={!answers.budget} style={{ flex: 1, padding: '14px', borderRadius: 12, background: answers.budget ? ACCENT : 'rgba(255,255,255,0.1)', color: answers.budget ? '#000' : 'rgba(255,255,255,0.4)', border: 'none', fontWeight: 700, fontSize: '1rem', cursor: answers.budget ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all 0.2s' }}>
+                     <button onClick={() => { 
+                       if(answers.budget){ 
+                         setAnimate(false); 
+                         setTimeout(() => { 
+                           if (step === totalSteps) setStep(leadStep);
+                           else setStep(s => s + 1);
+                           setAnimate(true);
+                         }, 220); 
+                       } 
+                     }} disabled={!answers.budget} style={{ flex: 1, padding: '14px', borderRadius: 12, background: answers.budget ? ACCENT : 'rgba(255,255,255,0.1)', color: answers.budget ? '#000' : 'rgba(255,255,255,0.4)', border: 'none', fontWeight: 700, fontSize: '1rem', cursor: answers.budget ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all 0.2s' }}>
                         Next <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="9 18 15 12 9 6"/></svg>
                      </button>
                   </div>

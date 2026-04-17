@@ -9,25 +9,23 @@ const BLANK_OPTION = { label: '' };
 const BLANK_Q = { question: '', options: [{ label: '' }], field: '', order: 0, isActive: true };
 
 export default function SuggestUniversityAdminPage() {
+  const [activeTab, setActiveTab] = useState<'questions' | 'leads'>('questions');
   const [questions, setQuestions] = useState<any[]>([]);
+  const [leads, setLeads] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isMobile, setIsMobile] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
   
   // Delete modal state
-  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: '', text: '' });
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: '', text: '', type: 'question' as 'question' | 'lead' });
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    loadQuestions();
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    if (activeTab === 'questions') loadQuestions();
+    else loadLeads();
+  }, [activeTab]);
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ msg, type });
@@ -46,6 +44,22 @@ export default function SuggestUniversityAdminPage() {
       const data = await res.json();
       setQuestions(Array.isArray(data) ? data.sort((a,b) => (a.order || 0) - (b.order || 0)) : []);
     } catch { showToast('Failed to load questions', 'error'); }
+    finally { setLoading(false); }
+  };
+
+  const loadLeads = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/leads', { headers: getHeaders() });
+      const data = await res.json();
+      if (data.success) {
+        // Filter leads for Suggest University
+        const filtered = data.data.filter((l: any) => 
+          l.source === 'Suggest University' || l.source === 'Suggest University Quiz'
+        );
+        setLeads(filtered);
+      }
+    } catch { showToast('Failed to load leads', 'error'); }
     finally { setLoading(false); }
   };
 
@@ -82,25 +96,54 @@ export default function SuggestUniversityAdminPage() {
   };
 
   const deleteQ = (id: string, text: string) => {
-    setDeleteModal({ isOpen: true, id, text });
+    setDeleteModal({ isOpen: true, id, text, type: 'question' });
+  };
+
+  const deleteLead = (id: string, name: string) => {
+    setDeleteModal({ isOpen: true, id, text: name, type: 'lead' });
   };
 
   const confirmDelete = async () => {
     if (!deleteModal.id) return;
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/admin/suggest-university-questions/${deleteModal.id}`, { method: 'DELETE', headers: getHeaders() });
+      const url = deleteModal.type === 'question' 
+        ? `/api/admin/suggest-university-questions/${deleteModal.id}`
+        : `/api/leads/${deleteModal.id}`;
+      
+      const res = await fetch(url, { method: 'DELETE', headers: getHeaders() });
       if (!res.ok) throw new Error();
       showToast('Deleted successfully');
-      setDeleteModal({ isOpen: false, id: '', text: '' });
-      loadQuestions();
+      setDeleteModal({ isOpen: false, id: '', text: '', type: 'question' });
+      if (activeTab === 'questions') loadQuestions();
+      else loadLeads();
     } catch { showToast('Delete failed', 'error'); }
     finally { setIsDeleting(false); }
   };
 
-  const filtered = questions.filter(q => 
+  const updateLeadStatus = async (id: string, status: string) => {
+    try {
+      const res = await fetch(`/api/leads/${id}`, {
+        method: 'PATCH',
+        headers: getHeaders(),
+        body: JSON.stringify({ status }),
+      });
+      if (res.ok) {
+        setLeads(prev => prev.map(l => l._id === id ? { ...l, status } : l));
+        showToast('Status updated');
+      }
+    } catch { showToast('Failed to update status', 'error'); }
+  };
+
+  const filteredQuestions = questions.filter(q => 
     q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (q.field || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredLeads = leads.filter(l => 
+    l.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    l.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    l.phone.includes(searchTerm)
   );
 
   return (
@@ -120,10 +163,28 @@ export default function SuggestUniversityAdminPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20 }}>
             <div>
               <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.25rem)', fontWeight: 700, margin: '0 0 6px', color: '#111827' }}>Suggest University</h1>
-              <p style={{ color: '#6b7280', margin: 0 }}>{questions.length} assessment questions configured</p>
+              <p style={{ color: '#6b7280', margin: 0 }}>Manage assessment and track incoming leads</p>
             </div>
-            <button onClick={openAdd} style={{ padding: '12px 24px', background: RBL, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s' }}>
-              <Plus size={20} color="#fff" /> Add Question
+            {activeTab === 'questions' && (
+              <button onClick={openAdd} style={{ padding: '12px 24px', background: RBL, color: '#fff', border: 'none', borderRadius: 10, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s' }}>
+                <Plus size={20} color="#fff" /> Add Question
+              </button>
+            )}
+          </div>
+
+          {/* Tabs */}
+          <div style={{ display: 'flex', gap: 24, marginTop: 32, borderBottom: '1px solid #e5e7eb' }}>
+            <button 
+              onClick={() => setActiveTab('questions')}
+              style={{ paddingBottom: 16, borderBottom: `2px solid ${activeTab === 'questions' ? RBL : 'transparent'}`, color: activeTab === 'questions' ? RBL : '#64748b', fontWeight: 600, background: 'none', border: 'none', borderBottomWidth: 2, cursor: 'pointer', transition: 'all 0.2s' }}
+            >
+              Questions ({questions.length})
+            </button>
+            <button 
+              onClick={() => setActiveTab('leads')}
+              style={{ paddingBottom: 16, borderBottom: `2px solid ${activeTab === 'leads' ? RBL : 'transparent'}`, color: activeTab === 'leads' ? RBL : '#64748b', fontWeight: 600, background: 'none', border: 'none', borderBottomWidth: 2, cursor: 'pointer', transition: 'all 0.2s' }}
+            >
+              Leads ({leads.length})
             </button>
           </div>
         </div>
@@ -133,17 +194,24 @@ export default function SuggestUniversityAdminPage() {
         {/* Search */}
         <div style={{ background: '#fff', borderRadius: 12, padding: 16, marginBottom: 24, boxShadow: '0 4px 20px rgba(0,0,0,0.06)', position: 'relative' }}>
           <Search size={20} color="#94a3b8" style={{ position: 'absolute', left: 28, top: '50%', transform: 'translateY(-50%)' }} />
-          <input placeholder="Search questions..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} style={{ width: '100%', padding: '12px 12px 12px 42px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none', fontSize: '1rem', fontFamily: 'inherit' }} onFocus={e => e.target.style.borderColor = RBL} onBlur={e => e.target.style.borderColor = '#e2e8f0'} />
+          <input 
+            placeholder={activeTab === 'questions' ? "Search questions..." : "Search leads by name, email, or phone..."} 
+            value={searchTerm} 
+            onChange={e => setSearchTerm(e.target.value)} 
+            style={{ width: '100%', padding: '12px 12px 12px 42px', borderRadius: 10, border: '2px solid #e2e8f0', outline: 'none', fontSize: '1rem', fontFamily: 'inherit' }} 
+            onFocus={e => e.target.style.borderColor = RBL} 
+            onBlur={e => e.target.style.borderColor = '#e2e8f0'} 
+          />
         </div>
 
         {loading ? (
           <div style={{ textAlign: 'center', padding: '4rem', color: '#94a3b8' }}>Loading...</div>
-        ) : (
+        ) : activeTab === 'questions' ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {filtered.length === 0 ? (
+            {filteredQuestions.length === 0 ? (
               <div style={{ background: '#f8fafc', padding: '4rem', borderRadius: 12, textAlign: 'center', color: '#64748b', border: '2px dashed #e2e8f0' }}>No questions found.</div>
             ) : (
-              filtered.map((q, i) => (
+              filteredQuestions.map((q, i) => (
                 <div key={q._id} style={{ background: '#fff', borderRadius: 16, padding: '24px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20 }}>
                   <div style={{ flex: 1, minWidth: '250px' }}>
                     <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
@@ -168,6 +236,61 @@ export default function SuggestUniversityAdminPage() {
                 </div>
               ))
             )}
+          </div>
+        ) : (
+          <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #e2e8f0', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                    {['Name', 'Email', 'Phone', 'Matched / Prefs', 'Status', 'Actions'].map(h => (
+                      <th key={h} style={{ padding: '16px', textAlign: 'left', fontSize: '0.75rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredLeads.length === 0 ? (
+                    <tr><td colSpan={6} style={{ padding: '4rem', textAlign: 'center', color: '#94a3b8' }}>No leads found for Suggest University.</td></tr>
+                  ) : (
+                    filteredLeads.map(l => (
+                      <tr key={l._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ padding: '16px', fontSize: '0.9rem', fontWeight: 500, color: '#1e293b' }}>{l.name}</td>
+                        <td style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b' }}>{l.email}</td>
+                        <td style={{ padding: '16px', fontSize: '0.85rem', color: '#64748b' }}>{l.phone}</td>
+                        <td style={{ padding: '16px', fontSize: '0.8rem', color: '#64748b', maxWidth: 300 }}>
+                          <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={l.course}>{l.course}</div>
+                        </td>
+                        <td style={{ padding: '16px' }}>
+                          <select 
+                            value={l.status || 'New'} 
+                            onChange={e => updateLeadStatus(l._id, e.target.value)}
+                            style={{ 
+                              padding: '6px 12px', 
+                              borderRadius: 50, 
+                              border: 'none', 
+                              fontSize: '0.75rem', 
+                              fontWeight: 600,
+                              background: l.status === 'Converted' ? '#dcfce7' : l.status === 'Contacted' ? '#fef9c3' : '#eff6ff',
+                              color: l.status === 'Converted' ? '#15803d' : l.status === 'Contacted' ? '#a16207' : '#1e40af'
+                            }}
+                          >
+                            <option value="New">New</option>
+                            <option value="Contacted">Contacted</option>
+                            <option value="Converted">Converted</option>
+                            <option value="Lost">Lost</option>
+                          </select>
+                        </td>
+                        <td style={{ padding: '16px' }}>
+                          <button onClick={() => deleteLead(l._id, l.name)} style={{ background: '#fff1f2', border: 'none', padding: '8px', borderRadius: 8, cursor: 'pointer' }}>
+                            <Trash2 size={16} color="#ef4444" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
@@ -227,7 +350,7 @@ export default function SuggestUniversityAdminPage() {
 
       <ConfirmModal
         isOpen={deleteModal.isOpen}
-        title="Delete Question?"
+        title={deleteModal.type === 'question' ? "Delete Question?" : "Delete Lead?"}
         message={`Are you sure you want to delete "${deleteModal.text}"? This action cannot be undone.`}
         confirmLabel="Delete"
         isLoading={isDeleting}

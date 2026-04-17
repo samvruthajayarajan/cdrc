@@ -15,6 +15,12 @@ export async function POST() {
       { $set: { source: 'Course Finder' } }
     );
 
+    // Fix leads that have 'Suggest University Quiz' source → 'Suggest University'
+    const suggestUniResult = await db.collection('leads').updateMany(
+      { source: { $in: ['Suggest University Quiz', 'suggest-university'] } },
+      { $set: { source: 'Suggest University' } }
+    );
+
     // Fix leads that have no source set at all and no interest → Brochure Download
     const brochureResult = await db.collection('leads').updateMany(
       { interest: { $exists: false }, source: { $exists: false } },
@@ -24,6 +30,7 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       courseFinderFixed: courseFinderResult.modifiedCount,
+      suggestUniFixed: suggestUniResult.modifiedCount,
       brochureFixed: brochureResult.modifiedCount,
     });
   } catch (error) {
