@@ -123,7 +123,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
           name: lead.name,
           email: lead.email,
           phone: lead.phone || 'N/A',
-          course: `Course: ${selectedCourseLabel} | University: ${matchedU.map(u => u.name).join(', ') || 'None'} | how_can_we_help_you_join_: ${lead.helpText || 'None'}`,
+          course: `Course: ${selectedCourseLabel} | University: ${matchedU.map(u => u.name).join(', ') || 'None'} | Assistance: ${lead.helpText || 'None'}`,
           source: 'Suggest University',
         }),
       });
