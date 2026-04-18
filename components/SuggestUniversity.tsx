@@ -239,7 +239,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
       console.log(`🎯 Detected type filter: "${requestedType}", place filter: "${requestedPlace}"`);
 
       // Stage 1: Find all universities offering the requested course/specialization
-      const allCourseMatches = universities.map((u: any) => {
+      let currentMatches = universities.map((u: any) => {
         const uId = u._id;
         const uNameNS = (u.name || '').toLowerCase().replace(/[\s.\-]/g, '');
         const uProgs = programs.filter((p: any) => {
@@ -259,49 +259,41 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
         return { ...u, _programs: uProgs };
       }).filter(u => u._programs.length > 0);
 
-      // Stage 2: Filter by Strict Type and Place
-      const strictTypePlaceMatches = allCourseMatches.filter((u: any) => {
-        // Strict Type Filtering
-        if (requestedType && requestedType !== 'any') {
+      const allCourseMatches = [...currentMatches];
+
+      // Stage 2: Filter by Strict Type (Type is a MUST-HAVE, do not fall back to different types)
+      if (requestedType && requestedType !== 'any') {
+        const rType = requestedType.toLowerCase().trim();
+        currentMatches = currentMatches.filter((u: any) => {
           const uType = (u.type || '').toLowerCase().trim();
-          const rType = requestedType.toLowerCase().trim();
-          console.log(`  Checking ${u.name}: uType="${uType}" vs rType="${rType}"`);
-
+          
           if (rType === 'govt' || rType === 'government') {
-            if (!['govt', 'government', 'public', 'central', 'state'].some(t => uType.includes(t))) {
-              console.log(`    ❌ Excluded (not govt type)`);
-              return false;
-            }
+            return ['govt', 'government', 'public', 'central', 'state'].some(t => uType.includes(t));
           } else if (rType === 'private') {
-            if (['govt', 'government', 'public', 'central', 'state'].some(t => uType.includes(t))) {
-              console.log(`    ❌ Excluded (is govt, not private)`);
-              return false;
-            }
+            return !(['govt', 'government', 'public', 'central', 'state'].some(t => uType.includes(t)));
           } else if (rType === 'deemed') {
-            if (!uType.includes('deemed')) {
-              console.log(`    ❌ Excluded (not deemed)`);
-              return false;
-            }
+            return uType.includes('deemed');
           } else {
-            if (!uType.includes(rType) && !rType.includes(uType)) {
-              console.log(`    ❌ Excluded (type mismatch)`);
-              return false;
-            }
+            return uType.includes(rType) || rType.includes(uType);
           }
-        }
+        });
+      }
+      
+      const typeMatches = [...currentMatches];
 
-        // Strict Place Filtering
-        if (requestedPlace && requestedPlace !== 'any') {
+      // Stage 3: Filter by Strict Place
+      if (requestedPlace && requestedPlace !== 'any') {
+        const rPlace = requestedPlace.toLowerCase();
+        currentMatches = currentMatches.filter((u: any) => {
           const uLoc = (u.location || u.city || u.state || '').toLowerCase();
-          const rPlace = requestedPlace.toLowerCase();
-          if (!uLoc.includes(rPlace)) return false;
-        }
+          return uLoc.includes(rPlace);
+        });
+      }
+      
+      const typePlaceMatches = [...currentMatches];
 
-        return true;
-      });
-
-      // Stage 3: Filter by Budget
-      const fullStrictMatches = strictTypePlaceMatches.map(u => {
+      // Stage 4: Filter by Budget
+      const fullStrictMatches = typePlaceMatches.map(u => {
          const budgetProgs = u._programs.filter((p: any) => {
             if (ans.budget) return isWithinBudget(p.fee, ans.budget);
             return true;
@@ -309,14 +301,17 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
          return { ...u, _programs: budgetProgs };
       }).filter(u => u._programs.length > 0);
 
-      console.log(`📊 allCourseMatches: ${allCourseMatches.length}, strictTypePlaceMatches: ${strictTypePlaceMatches.length}, fullStrictMatches: ${fullStrictMatches.length}`);
+      console.log(`📊 Course: ${allCourseMatches.length}, Type: ${typeMatches.length}, Place: ${typePlaceMatches.length}, Budget(Strict): ${fullStrictMatches.length}`);
 
-      // Return Logic
+      // Return Logic (Fallback chain)
       if (fullStrictMatches.length > 0) return { results: fullStrictMatches.slice(0, 4), isSimilar: false };
 
-      if (strictTypePlaceMatches.length > 0) return { results: strictTypePlaceMatches.slice(0, 4), isSimilar: true };
+      if (typePlaceMatches.length > 0) return { results: typePlaceMatches.slice(0, 4), isSimilar: true };
 
-      if (allCourseMatches.length > 0) return { results: allCourseMatches.slice(0, 4), isSimilar: true };
+      if (typeMatches.length > 0) return { results: typeMatches.slice(0, 4), isSimilar: true };
+
+      // Finally, if no type matches were found at all, but course match exists (VERY relaxed fallback, but only if type matching yielded 0 results initially to prevent showing wrong types when correct ones exist but failed later filters)
+      if (typeMatches.length === 0 && allCourseMatches.length > 0) return { results: allCourseMatches.slice(0, 4), isSimilar: true };
 
       return { results: [], isSimilar: false };
     } catch (err) {
