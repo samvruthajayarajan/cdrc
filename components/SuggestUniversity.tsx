@@ -249,9 +249,22 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
         }).filter((p: any) => {
           let matchesCriteria = true;
           if (courseKeywords.length > 0 || specKeywords.length > 0) {
-            const pn = (p.name || '').toLowerCase().replace(/[\s.\-]/g, '');
-            const courseMatch = courseKeywords.some(k => pn.includes(k));
-            const specMatch = specKeywords.some(k => pn.includes(k));
+            // Pad with spaces and normalize punctuation to spaces for accurate whole-word/acronym matching
+            const pn = ` ${(p.name || '').toLowerCase().replace(/[.\-\/]/g, ' ')} `;
+            
+            const isMatch = (keywords: string[]) => keywords.some(k => {
+              if (k.length <= 3) {
+                // For short acronyms like 'ba', 'ma', 'msc', ensure they match as standalone words
+                // otherwise 'ba' matches 'bachelor' and 'ma' matches 'master' or 'management'
+                return pn.includes(` ${k} `) || pn.includes(` ${k}s `);
+              }
+              // For longer keywords, substring match is fine, but we use the spaced 'pn'
+              return pn.includes(k);
+            });
+
+            const courseMatch = courseKeywords.length > 0 ? isMatch(courseKeywords) : false;
+            const specMatch = specKeywords.length > 0 ? isMatch(specKeywords) : false;
+            
             matchesCriteria = courseMatch || specMatch;
           }
           return matchesCriteria;
