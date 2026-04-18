@@ -87,14 +87,25 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (!/^\d{10}$/.test(form.phone.replace(/\D/g, ''))) {
+      setError('Please enter a valid 10-digit phone number.');
+      return;
+    }
+
     setLoading(true);
     try {
       await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, source: 'Course Finder' }),
+        body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone.replace(/\D/g, ''), source: 'Course Finder' }),
       });
-      onSuccess(form);
+      onSuccess({ ...form, phone: form.phone.replace(/\D/g, '') });
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -119,7 +130,7 @@ function EnquiryGate({ onSuccess }: { onSuccess: (data: { name: string, email: s
         </div>
         <div className="cf-field">
           <span className="cf-field-icon"><IconPhone /></span>
-          <input className="cf-input" type="tel" placeholder="Phone Number" required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+          <input className="cf-input" type="tel" placeholder="10-Digit Phone Number" required value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '') })} />
         </div>
         <button type="submit" className="cf-submit-btn" disabled={loading}>
           {loading ? 'Submitting...' : <><IconArrow /> Continue to Quiz</>}

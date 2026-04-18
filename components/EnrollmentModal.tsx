@@ -132,7 +132,7 @@ export default function EnrollmentModal({ university, program, onClose }: Props)
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 500, color: '#374151', marginBottom: '0.35rem' }}>Phone <span style={{ color: '#ef4444' }}>*</span></label>
                   <input type="tel" placeholder="10-digit number" value={form.phone}
-                    onChange={e => { setForm(p => ({ ...p, phone: e.target.value })); setErrors(p => ({ ...p, phone: '' })); }}
+                    onChange={e => { setForm(p => ({ ...p, phone: e.target.value.replace(/\D/g, '') })); setErrors(p => ({ ...p, phone: '' })); }}
                     style={field(!!errors.phone)}
                     onFocus={e => { e.currentTarget.style.borderColor = RB; e.currentTarget.style.background = '#fff'; }}
                     onBlur={e => { e.currentTarget.style.borderColor = errors.phone ? '#ef4444' : '#e2e8f0'; e.currentTarget.style.background = '#f8fafc'; }}

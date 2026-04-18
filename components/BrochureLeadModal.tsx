@@ -19,7 +19,7 @@ export default function BrochureLeadModal({ programName, brochureUrl, onClose }:
     const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = 'Name is required';
     if (!form.phone.trim()) e.phone = 'Phone is required';
-    else if (!/^[6-9]\d{9}$/.test(form.phone.replace(/\s/g, ''))) e.phone = 'Enter a valid 10-digit mobile number';
+    else if (!/^\d{10}$/.test(form.phone.replace(/\D/g, ''))) e.phone = 'Enter a valid 10-digit mobile number';
     if (!form.email.trim()) e.email = 'Email is required';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Invalid email';
     return e;
@@ -37,7 +37,7 @@ export default function BrochureLeadModal({ programName, brochureUrl, onClose }:
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name,
-          phone: form.phone,
+          phone: form.phone.replace(/\D/g, ''),
           email: form.email,
           course: form.course,
           source: 'Brochure Download',
@@ -63,7 +63,9 @@ export default function BrochureLeadModal({ programName, brochureUrl, onClose }:
     value: form[field],
     placeholder,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm(p => ({ ...p, [field]: e.target.value }));
+      let val = e.target.value;
+      if (field === 'phone') val = val.replace(/\D/g, '');
+      setForm(p => ({ ...p, [field]: val }));
       setErrors(p => ({ ...p, [field]: '' }));
     },
     style: {
