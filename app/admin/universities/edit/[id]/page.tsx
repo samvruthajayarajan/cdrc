@@ -28,6 +28,7 @@ function EditUniversity() {
     logoInitial: '',
     image: '',
     logo: '',
+    type: 'Private',
     description: '',
     facilities: [''],
     ranking: '',
@@ -49,6 +50,7 @@ function EditUniversity() {
               logoInitial: uni.logoInitial || '',
               image: uni.image || '',
               logo: uni.logo || '',
+              type: uni.type || 'Private',
               description: uni.description || '',
               facilities: uni.facilities && uni.facilities.length > 0 ? uni.facilities : [''],
               ranking: uni.ranking || '',
@@ -197,6 +199,29 @@ function EditUniversity() {
                     URL: /universities/{formData.slug}
                   </p>
                 )}
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: '#1e293b' }}>
+                  University Type
+                </label>
+                <select
+                  name="type"
+                  value={formData.type}
+                  onChange={handleInputChange}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '0.5rem',
+                    fontSize: '1rem',
+                    background: '#fff'
+                  }}
+                >
+                  {['Private', 'Govt', 'Public', 'Deemed', 'Central', 'State', 'Autonomous'].map(v => (
+                    <option key={v} value={v}>{v}</option>
+                  ))}
+                </select>
               </div>
 
               <div>

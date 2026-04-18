@@ -191,7 +191,7 @@ export default function CreateUniversity() {
                 <div>
                   <label style={S.label}>University Type</label>
                   <select value={form.type} onChange={e => set('type', e.target.value)} style={S.input}>
-                    {['Private', 'Public', 'Deemed', 'Central', 'State', 'Autonomous'].map(v => <option key={v}>{v}</option>)}
+                    {['Private', 'Govt', 'Public', 'Deemed', 'Central', 'State', 'Autonomous'].map(v => <option key={v}>{v}</option>)}
                   </select>
                 </div>
                 <Field label="Established Year" name="established" placeholder="e.g., 2003" value={form.established} onChange={v => set('established', v)} />

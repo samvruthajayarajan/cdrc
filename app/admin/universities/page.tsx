@@ -13,6 +13,7 @@ interface University {
   naac: string;
   accreditation: string;
   logoInitial: string;
+  type?: string;
   programs: Array<{ name: string; duration: string }>;
 }
 
@@ -213,8 +214,8 @@ export default function UniversitiesManagement() {
                     <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
                       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>University</th>
                       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Location</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>University Type</th>
                       <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>NAAC</th>
-                      <th style={{ padding: '1rem', textAlign: 'left', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Programs</th>
                       <th style={{ padding: '1rem', textAlign: 'center', fontWeight: 500, color: '#1e293b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>Actions</th>
                     </tr>
                   </thead>
@@ -246,6 +247,9 @@ export default function UniversitiesManagement() {
                         <td style={{ padding: '1rem', color: '#64748b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>
                           {uni.location || 'N/A'}
                         </td>
+                        <td style={{ padding: '1rem', color: '#64748b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>
+                          {uni.type || 'N/A'}
+                        </td>
                         <td style={{ padding: '1rem' }}>
                           <span style={{
                             padding: '0.375rem 0.75rem',
@@ -257,9 +261,6 @@ export default function UniversitiesManagement() {
                           }}>
                             {uni.naac || uni.accreditation}
                           </span>
-                        </td>
-                        <td style={{ padding: '1rem', color: '#64748b', fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}>
-                          {uni.programs?.length || 0} programs
                         </td>
                         <td style={{ padding: '1rem' }}>
                           <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -397,6 +398,12 @@ export default function UniversitiesManagement() {
                         </span>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#64748b', fontWeight: 500 }}>University Type:</span>
+                        <span style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1rem)', color: '#1e293b', fontWeight: 600 }}>
+                          {uni.type || 'N/A'}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#64748b', fontWeight: 500 }}>NAAC:</span>
                         <span style={{
                           padding: '0.25rem 0.75rem',
@@ -407,12 +414,6 @@ export default function UniversitiesManagement() {
                           fontWeight: 600
                         }}>
                           {uni.naac || uni.accreditation}
-                        </span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#64748b', fontWeight: 500 }}>Programs:</span>
-                        <span style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1rem)', color: '#1e293b', fontWeight: 600 }}>
-                          {uni.programs?.length || 0} programs
                         </span>
                       </div>
                     </div>

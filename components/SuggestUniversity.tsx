@@ -45,7 +45,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
   const [specOpen, setSpecOpen] = useState(false);
   const [specSearch, setSpecSearch] = useState('');
   const [results, setResults] = useState<any[]>([]);
-  const [fallback, setFallback] = useState<any[]>([]);
+  const [isSimilar, setIsSimilar] = useState(false);
   const [searching, setSearching] = useState(false);
   const [animate, setAnimate] = useState(true);
 
@@ -105,14 +105,16 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
     try {
       prefSummary = Object.entries(answers).map(([k, v]) => `${k}: ${v}`).join(' | ');
       
+      
       // Get the readable label for the course
       const courseQ = questions.find(q => q.field === 'course');
       if (courseQ) {
         selectedCourseLabel = courseQ.options.find((o: any) => o.value === answers.course)?.label || answers.course;
       }
       
-      matchedU = await getMatches(answers);
-      setResults(matchedU);
+      const matchData = await getMatches(answers);
+      setResults(matchData.results);
+      setIsSimilar(matchData.isSimilar);
     } catch (e) { console.error('Matching failed', e); }
 
     try {
@@ -137,112 +139,11 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
     }, 220);
   };
 
-  const getMatches = async (ans: Record<string, string>) => {
-    try {
-      const [uniRes, progRes] = await Promise.all([
-        fetch('/api/universities'),
-        fetch('/api/public/programs'),
-      ]);
-      const uniData = await uniRes.json();
-      const progData = await progRes.json();
-      const universities: any[] = uniData?.data || uniData || [];
-      const programs: any[] = Array.isArray(progData) ? progData : progData?.data || [];
-
-      const courseLabel = questions
-        .find(q => q.field === 'course')
-        ?.options.find((o: any) => o.value === ans.course)?.label || ans.course || '';
-      
-      const synonyms: Record<string, string[]> = {
-        arts: ['ba', 'ma'],
-        commerce: ['bcom', 'mcom'],
-        management: ['mba', 'bba'],
-        tech: ['btech', 'mtech', 'bca', 'mca', 'bsc cs', 'msc cs', 'bsccs', 'msccs'],
-        science: ['msc', 'bsc']
-      };
-
-      const getExpandedKeywords = (label: string) => {
-        const normalized = label.toLowerCase();
-        let keywords = [normalized.replace(/[\s.\-]/g, '')];
-        for (const [key, syns] of Object.entries(synonyms)) {
-          if (normalized.includes(key)) keywords = [...keywords, ...syns];
-        }
-        return keywords;
-      };
-
-      const courseKeywords = courseLabel ? getExpandedKeywords(courseLabel) : [];
-      const specKeywords = ans.specialization ? getExpandedKeywords(ans.specialization) : [];
-
-      const uniOfferingCourse = universities.map((u: any) => {
-        const uId = u._id;
-        const uNameNS = (u.name || '').toLowerCase().replace(/[\s.\-]/g, '');
-        const uProgs = programs.filter((p: any) => {
-          // Priority 1: ID Match
-          if (p.universityId && uId && p.universityId === uId) return true;
-          // Priority 2: Name Match (Backup)
-          const pUni = (p.university || '').toLowerCase().replace(/[\s.\-]/g, '');
-          return pUni && (pUni === uNameNS || pUni.includes(uNameNS) || uNameNS.includes(pUni));
-        }).filter((p: any) => {
-          
-          let matchesCriteria = true;
-          if (courseKeywords.length > 0 || specKeywords.length > 0) {
-            const pn = (p.name || '').toLowerCase().replace(/[\s.\-]/g, '');
-            const courseMatch = courseKeywords.some(k => pn.includes(k));
-            const specMatch = specKeywords.some(k => pn.includes(k));
-            matchesCriteria = courseMatch || specMatch;
-          }
-          return matchesCriteria;
-        });
-        return { ...u, _programs: uProgs };
-      }).filter(u => u._programs.length > 0);
-
-      const matchedWithBudget = uniOfferingCourse.map(u => {
-         const budgetProgs = u._programs.filter((p: any) => {
-            if (ans.budget) return isWithinBudget(p.fee, ans.budget);
-            return true;
-         });
-         return { ...u, _programs: budgetProgs };
-      }).filter(u => u._programs.length > 0);
-
-      const finalResults = matchedWithBudget.slice(0, 4);
-
-      if (finalResults.length === 0) {
-        // Fallback: Show any universities in this category (ignore budget/specialization if needed)
-        return uniOfferingCourse.slice(0, 4);
-      }
-
-      return finalResults;
-    } catch {
-      return [];
-    }
-  };
-
-  const handleOption = (field: string, value: string) => {
-    const newAnswers = { ...answers, [field]: value };
-    if (field === 'course' && selectedSpec) {
-      newAnswers['specialization'] = selectedSpec;
-    }
-    setAnswers(newAnswers);
-
-    if (isBudgetTriggerQ) return;
-
-    if (step === totalSteps) {
-      setAnimate(false);
-      setTimeout(() => { 
-        setStep(leadStep);
-        setAnimate(true);
-      }, 220);
-      return;
-    } else {
-      setAnimate(false);
-      setTimeout(() => { setStep(s => s + 1); setAnimate(true); }, 220);
-    }
-  };
-
   const isWithinBudget = (feeStr: any, budgetVal: string) => {
     if (!budgetVal) return true;
     if (!feeStr) return false;
     const feeNum = parseInt(String(feeStr).replace(/[^0-9]/g, ''));
-    if (isNaN(feeNum) || feeNum === 0) return true; // If fee is unknown, don't filter it out
+    if (isNaN(feeNum) || feeNum === 0) return true;
 
     const extractNum = (nStr: string, unit: string) => {
       let n = parseInt(nStr);
@@ -270,11 +171,190 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
     return true;
   };
 
+  const getMatches = async (ans: Record<string, string>) => {
+    try {
+      const [uniRes, progRes] = await Promise.all([
+        fetch('/api/universities'),
+        fetch('/api/public/programs'),
+      ]);
+      const uniData = await uniRes.json();
+      const progData = await progRes.json();
+      const universities: any[] = uniData?.data || uniData || [];
+      const programs: any[] = Array.isArray(progData) ? progData : progData?.data || [];
+
+      // ── DEBUG: Remove after fixing ──
+      console.log('🔍 ANSWERS:', JSON.stringify(ans));
+      console.log('🏛️ UNIVERSITIES (first 5):', universities.slice(0, 5).map(u => ({ name: u.name, type: u.type, location: u.location })));
+      // ── END DEBUG ──
+
+      const courseLabel = questions
+        .find(q => q.field === 'course')
+        ?.options.find((o: any) => o.value === ans.course)?.label || ans.course || '';
+      
+      const synonyms: Record<string, string[]> = {
+        arts: ['ba', 'ma'],
+        commerce: ['bcom', 'mcom'],
+        management: ['mba', 'bba'],
+        tech: ['btech', 'mtech', 'bca', 'mca', 'bsc cs', 'msc cs', 'bsccs', 'msccs'],
+        science: ['msc', 'bsc']
+      };
+
+      const getExpandedKeywords = (label: string) => {
+        const normalized = label.toLowerCase();
+        let keywords = [normalized.replace(/[\s.\-]/g, '')];
+        for (const [key, syns] of Object.entries(synonyms)) {
+          if (normalized.includes(key)) keywords = [...keywords, ...syns];
+        }
+        return keywords;
+      };
+
+      const courseKeywords = courseLabel ? getExpandedKeywords(courseLabel) : [];
+      const specKeywords = ans.specialization ? getExpandedKeywords(ans.specialization) : [];
+
+      // ── Smart Type Detection ──
+      // Scan ALL answer values to find one that looks like a university type
+      // This makes filtering work regardless of what the admin named the question field
+      const KNOWN_UNI_TYPES = ['private', 'govt', 'government', 'public', 'central', 'state', 'deemed', 'autonomous'];
+      const allAnswerValues = Object.values(ans);
+
+      // Check explicit field names first, then fall back to scanning all values
+      let requestedType = ans.type || ans.university_type || ans.uni_type || ans.college_type || '';
+      if (!requestedType) {
+        requestedType = allAnswerValues.find(v =>
+          KNOWN_UNI_TYPES.includes((v || '').toLowerCase().trim())
+        ) || '';
+      }
+
+      // ── Smart Place Detection ──
+      let requestedPlace = ans.place || ans.city || ans.location || ans.state || '';
+      // If not found via field name, look for answer values that appear in university locations
+      if (!requestedPlace) {
+        const locationWords = universities.flatMap(u => [u.location, u.city, u.state].filter(Boolean).map((s: string) => s.toLowerCase()));
+        requestedPlace = allAnswerValues.find(v => {
+          const vl = (v || '').toLowerCase();
+          return vl.length > 2 && !KNOWN_UNI_TYPES.includes(vl) && locationWords.some(loc => loc.includes(vl) || vl.includes(loc));
+        }) || '';
+      }
+
+      console.log(`🎯 Detected type filter: "${requestedType}", place filter: "${requestedPlace}"`);
+
+      // Stage 1: Find all universities offering the requested course/specialization
+      const allCourseMatches = universities.map((u: any) => {
+        const uId = u._id;
+        const uNameNS = (u.name || '').toLowerCase().replace(/[\s.\-]/g, '');
+        const uProgs = programs.filter((p: any) => {
+          if (p.universityId && uId && p.universityId === uId) return true;
+          const pUni = (p.university || '').toLowerCase().replace(/[\s.\-]/g, '');
+          return pUni && (pUni === uNameNS || pUni.includes(uNameNS) || uNameNS.includes(pUni));
+        }).filter((p: any) => {
+          let matchesCriteria = true;
+          if (courseKeywords.length > 0 || specKeywords.length > 0) {
+            const pn = (p.name || '').toLowerCase().replace(/[\s.\-]/g, '');
+            const courseMatch = courseKeywords.some(k => pn.includes(k));
+            const specMatch = specKeywords.some(k => pn.includes(k));
+            matchesCriteria = courseMatch || specMatch;
+          }
+          return matchesCriteria;
+        });
+        return { ...u, _programs: uProgs };
+      }).filter(u => u._programs.length > 0);
+
+      // Stage 2: Filter by Strict Type and Place
+      const strictTypePlaceMatches = allCourseMatches.filter((u: any) => {
+        // Strict Type Filtering
+        if (requestedType && requestedType !== 'any') {
+          const uType = (u.type || '').toLowerCase().trim();
+          const rType = requestedType.toLowerCase().trim();
+          console.log(`  Checking ${u.name}: uType="${uType}" vs rType="${rType}"`);
+
+          if (rType === 'govt' || rType === 'government') {
+            if (!['govt', 'government', 'public', 'central', 'state'].some(t => uType.includes(t))) {
+              console.log(`    ❌ Excluded (not govt type)`);
+              return false;
+            }
+          } else if (rType === 'private') {
+            if (['govt', 'government', 'public', 'central', 'state'].some(t => uType.includes(t))) {
+              console.log(`    ❌ Excluded (is govt, not private)`);
+              return false;
+            }
+          } else if (rType === 'deemed') {
+            if (!uType.includes('deemed')) {
+              console.log(`    ❌ Excluded (not deemed)`);
+              return false;
+            }
+          } else {
+            if (!uType.includes(rType) && !rType.includes(uType)) {
+              console.log(`    ❌ Excluded (type mismatch)`);
+              return false;
+            }
+          }
+        }
+
+        // Strict Place Filtering
+        if (requestedPlace && requestedPlace !== 'any') {
+          const uLoc = (u.location || u.city || u.state || '').toLowerCase();
+          const rPlace = requestedPlace.toLowerCase();
+          if (!uLoc.includes(rPlace)) return false;
+        }
+
+        return true;
+      });
+
+      // Stage 3: Filter by Budget
+      const fullStrictMatches = strictTypePlaceMatches.map(u => {
+         const budgetProgs = u._programs.filter((p: any) => {
+            if (ans.budget) return isWithinBudget(p.fee, ans.budget);
+            return true;
+         });
+         return { ...u, _programs: budgetProgs };
+      }).filter(u => u._programs.length > 0);
+
+      console.log(`📊 allCourseMatches: ${allCourseMatches.length}, strictTypePlaceMatches: ${strictTypePlaceMatches.length}, fullStrictMatches: ${fullStrictMatches.length}`);
+
+      // Return Logic
+      if (fullStrictMatches.length > 0) return { results: fullStrictMatches.slice(0, 4), isSimilar: false };
+
+      if (strictTypePlaceMatches.length > 0) return { results: strictTypePlaceMatches.slice(0, 4), isSimilar: true };
+
+      if (allCourseMatches.length > 0) return { results: allCourseMatches.slice(0, 4), isSimilar: true };
+
+      return { results: [], isSimilar: false };
+    } catch (err) {
+      console.error('getMatches error:', err);
+      return { results: [], isSimilar: false };
+    }
+  };
+
+  const handleOption = (field: string, value: string) => {
+    const newAnswers = { ...answers, [field]: value };
+    if (field === 'course' && selectedSpec) {
+      newAnswers['specialization'] = selectedSpec;
+    }
+    setAnswers(newAnswers);
+
+    if (isBudgetTriggerQ) return;
+
+    if (step === totalSteps) {
+      setAnimate(false);
+      setTimeout(() => { 
+        setStep(leadStep);
+        setAnimate(true);
+      }, 220);
+      return;
+    } else {
+      setAnimate(false);
+      setTimeout(() => { setStep(s => s + 1); setAnimate(true); }, 220);
+    }
+  };
+
+
+
   const findUniversities = async (ans: Record<string, string>) => {
     setSearching(true);
     setStep(resultsStep);
-    const matched = await getMatches(ans);
-    setResults(matched);
+    const matchData = await getMatches(ans);
+    setResults(matchData.results);
+    setIsSimilar(matchData.isSimilar);
     setSearching(false);
   };
 
@@ -306,7 +386,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                     <div key={s} style={{ display: 'flex', alignItems: 'center' }}>
                       <div style={{ 
                         width: 24, height: 24, borderRadius: '50%', 
-                        background: active ? ACCENT : (done ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.1)'),
+                        background: active ? ACCENT : (done ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.1)'),
                         color: active || done ? '#000' : '#fff',
                         fontSize: '0.7rem', fontWeight: 800,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -432,7 +512,14 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                  <div style={{ padding: '4rem' }}><div style={{ width: 44, height: 44, border: '4px solid rgba(255,255,255,0.1)', borderTopColor: ACCENT, borderRadius: '50%', animation: 'suSpin 1s linear infinite', margin: '0 auto 2rem' }} /><p style={{ color: TEXT_SECONDARY, fontWeight: 600 }}>Crafting your academic roadmap...</p></div>
                ) : (
                  <>
-                   <h2 style={{ fontSize: '1.85rem', fontWeight: 800, marginBottom: '2.5rem', color: TEXT_PRIMARY }}>Recommended for You</h2>
+                    <h2 style={{ fontSize: '1.85rem', fontWeight: 800, marginBottom: isSimilar ? '0.5rem' : '2.5rem', color: TEXT_PRIMARY }}>
+                      {isSimilar ? 'Similar Recommendations' : 'Recommended for You'}
+                    </h2>
+                    {isSimilar && results.length > 0 && (
+                      <p style={{ color: TEXT_SECONDARY, fontSize: '0.9rem', marginBottom: '2.5rem' }}>
+                        We couldn&apos;t find an exact match for all your preferences, but these universities offer your selected course:
+                      </p>
+                    )}
                    {results.length === 0 ? (
                       <div style={{ padding: '3rem 1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: 20, border: '1px dashed rgba(255,255,255,0.15)', marginBottom: '3rem' }}>
                          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔍</div>
@@ -440,20 +527,20 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                          <p style={{ color: TEXT_SECONDARY, fontSize: '0.95rem', lineHeight: 1.6, margin: 0 }}>We couldn't find a program matching your exact criteria based on your current constraints.</p>
                       </div>
                    ) : (
-                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '3rem' }}>
-                       {results.map((u, i) => (
-                         <div key={i} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '1.25rem', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-                           <div style={{ width: 56, height: 56, background: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
-                             {u.logo ? <img src={u.logo} style={{ width: '70%', height: '70%', objectFit: 'contain' }} /> : '🏛️'}
-                           </div>
-                           <div style={{ flex: 1, textAlign: 'left' }}>
-                              <div style={{ fontWeight: 700, fontSize: '1.05rem', color: TEXT_PRIMARY }}>{u.name}</div>
-                              <div style={{ fontSize: '0.85rem', color: TEXT_SECONDARY }}>{u.location}</div>
-                           </div>
-                           <Link href={`/universities/${u.slug}`} onClick={onClose} style={{ background: ACCENT, color: '#000', padding: '10px 18px', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(255,255,255,0.1)' }}>View Details</Link>
-                         </div>
-                       ))}
-                     </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '3rem' }}>
+                        {results.map((u, i) => (
+                          <div key={i} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '1.25rem', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 16, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                            <div style={{ width: 56, height: 56, background: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                              {u.logo ? <img src={u.logo} style={{ width: '70%', height: '70%', objectFit: 'contain' }} /> : '🏛️'}
+                            </div>
+                            <div style={{ flex: 1, textAlign: 'left' }}>
+                               <div style={{ fontWeight: 700, fontSize: '1.05rem', color: TEXT_PRIMARY }}>{u.name}</div>
+                               <div style={{ fontSize: '0.85rem', color: TEXT_SECONDARY }}>{u.location}</div>
+                            </div>
+                            <Link href={`/universities/${u.slug}`} onClick={onClose} style={{ background: ACCENT, color: '#000', padding: '10px 18px', borderRadius: 12, textDecoration: 'none', fontWeight: 700, fontSize: '0.85rem', boxShadow: '0 4px 12px rgba(255,255,255,0.1)' }}>View Details</Link>
+                          </div>
+                        ))}
+                      </div>
                    )}
                    <button onClick={onClose} style={{ width: '100%', padding: '18px', background: ACCENT, color: '#000', border: 'none', borderRadius: 16, fontWeight: 700, fontSize: '1rem', cursor: 'pointer', boxShadow: '0 10px 25px rgba(0,0,0,0.3)' }}>Finish & Close</button>
                  </>
@@ -465,7 +552,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
           {step === leadStep && (
             <div style={{ animation: animate ? 'suFadeIn 0.4s ease' : 'none' }}>
               <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-                <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: TEXT_PRIMARY, marginBottom: '0.75rem' }}>Where should we send your matches?</h3>
+                <h3 style={{ fontSize: '1.75rem', fontWeight: 800, color: TEXT_PRIMARY, marginBottom: '0.75rem' }}>Enter Your Details</h3>
                 <p style={{ color: TEXT_SECONDARY, fontSize: '0.95rem', lineHeight: 1.6, maxWidth: 380, margin: '0 auto' }}>Enter your details to generate your curated academic report.</p>
               </div>
               <form onSubmit={handleLeadSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -493,7 +580,7 @@ export default function SuggestUniversity({ onClose }: { onClose: () => void }) 
                 </div>
                 
                 <button type="submit" disabled={submitting} style={{ width: '100%', padding: '18px', marginTop: 12, background: ACCENT, color: '#000', border: 'none', borderRadius: 14, fontWeight: 800, fontSize: '1.05rem', cursor: submitting ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 10px 25px rgba(0,0,0,0.3)', transition: 'transform 0.2s' }}>
-                  {submitting ? 'Retrieving Report...' : 'Send to my Email'} <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  {submitting ? 'Retrieving Report...' : 'Submit'} <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </button>
               </form>
             </div>
